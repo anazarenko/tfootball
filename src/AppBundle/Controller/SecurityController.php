@@ -18,9 +18,22 @@ class SecurityController extends Controller
         $user = new User();
         $form = $this->createRegistrationForm($user, 'register');
 
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
         return $this->render(
             'AppBundle:Security:index.html.twig',
-            array('active' => 'login', 'form' => $form->createView())
+            array(
+                'active' => 'login',
+                'form' => $form->createView(),
+                'last_username' => $lastUsername,
+                'error'         => $error,
+            )
         );
     }
 
@@ -65,7 +78,12 @@ class SecurityController extends Controller
 
         return $this->render(
             'AppBundle:Security:index.html.twig',
-            array('active' => 'registration', 'form' => $form->createView())
+            array(
+                'active' => 'registration',
+                'form' => $form->createView(),
+                'last_username' => '',
+                'error'         => '',
+            )
         );
     }
 

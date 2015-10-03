@@ -52,13 +52,12 @@ filter='cssrewrite' output='css/compiled/login.css' %}
                     <h3>Login</h3>
                     <div>
                         <label for="username">Username:</label>
-                        <input id="username" type="text" name="_username" required="" />
-                        <span class="error">This is an error</span>
+                        <input id="username" type="text" name="_username" required="" value="{{ last_username }}" />
+                        <ul><li>{% if error %}Invalid login or password{% endif %}</li></ul>
                     </div>
                     <div>
                         <label for="password">Password: <a href="{{ path('forgot_pass') }}" rel="forgot_password" class="forgot linkform">Forgot your password?</a></label>
                         <input id="password" type="password" name="_password" required="" />
-                        <span class="error">This is an error</span>
                     </div>
                     <div class="bottom">
                         <input type="submit" value="Login">

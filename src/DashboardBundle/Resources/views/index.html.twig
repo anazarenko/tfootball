@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block title %}Bootstrap Admin Template{% endblock %}</title>
+    <title>TFootball{% block title %}{% endblock %}</title>
 
     {% block stylesheets %}
 
@@ -51,23 +51,23 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="{{ path('dashboard') }}">Admin Dashboard</a>
+                        <a class="navbar-brand" href="{{ path('dashboard') }}">Dashboard</a>
                     </div>
                     <!-- Top Menu Items -->
                     <ul class="nav navbar-right top-nav">
                         {% block topnav %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user.username }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                                    <a href="#"><i class="fa fa-fw fa-user"></i> Профиль</a>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                                    <a href="#"><i class="fa fa-fw fa-gear"></i> Настройки</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="{{ path('logout') }}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                                    <a href="{{ path('logout') }}"><i class="fa fa-fw fa-power-off"></i> Выход</a>
                                 </li>
                             </ul>
                         </li>
@@ -78,10 +78,7 @@
                         <ul class="nav navbar-nav side-nav">
                             {% block leftnav %}
                             <li class="{% if active == 'dashboard' %}active{% endif %}">
-                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i>Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('dashboard_help') }}"><i class="glyphicon glyphicon-eye-open"></i>Help</a>
+                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i>Главная</a>
                             </li>
                             {% endblock %}
                         </ul>
