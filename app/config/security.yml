@@ -13,7 +13,7 @@ security:
             algorithm: bcrypt
 
     access_control:
-        - { path: ^/dashboard, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -21,9 +21,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        login:
+            pattern: ^/login$
+            security: false
+
         default:
-            # activate different ways to authenticate
-            anonymous: ~
+            pattern: ^/
 
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
             http_basic: ~
@@ -32,12 +35,12 @@ security:
 
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
             form_login:
-                login_path: /login
-                check_path: /login_check
+                login_path: login_route
+                check_path: login_check_route
                 use_referer: true
                 default_target_path: /
 #                always_use_default_target_path: true
             logout: true
             logout:
-                pattern: /logout
+                pattern: logout
                 target: /

@@ -1,6 +1,6 @@
 {% extends 'AppBundle::base.html.twig' %}
 
-{% block title %}{{ active|capitalize }}{% endblock %}
+{% block title %} - {{ active|capitalize }}{% endblock %}
 
 {% block stylesheets %}
 {% stylesheets
@@ -48,7 +48,7 @@ filter='cssrewrite' output='css/compiled/login.css' %}
                         <div class="clear"></div>
                     </div>
                 {{ form_end(form) }}
-                <form class="login {% if active == 'login' %}active{% endif %}" action="{{ path('login_check') }}" method="post">
+                <form class="login {% if active == 'login' %}active{% endif %}" action="{{ path('login_check_route') }}" method="post">
                     <h3>Login</h3>
                     <div>
                         <label for="username">Username:</label>
