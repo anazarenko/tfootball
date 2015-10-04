@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}AppBundle{% endblock %}
+{% block title %} - Welcome!{% endblock %}
 
 {% block stylesheets %}
     {% stylesheets
     'bundles/app/bootstrap/css/bootstrap.min.css'
+    'bundles/app/fonts/font-awesome/css/font-awesome.min.css'
+    'bundles/app/css/main.css'
+    'bundles/app/less/main.less'
     filter='cssrewrite' output='css/compiled/app.css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
-{% block body %}{% endblock %}
+{% block body %}
+    {% block header %}
+        {% include '@App/header.html.twig' %}
+    {% endblock %}
+    {% block content %}{% endblock %}
+{% endblock %}
 
 {% block javascripts %}
     {% javascripts

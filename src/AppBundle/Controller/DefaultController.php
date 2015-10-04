@@ -9,13 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
-     * @Template()
+     * @Route("/", name="_main_page")
      */
     public function indexAction()
     {
-        return $this->render('AppBundle:Default:index.html.twig', array(
-            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
-        ));
+        return $this->render('AppBundle:Default:index.html.twig');
     }
 }

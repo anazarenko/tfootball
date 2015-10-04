@@ -1,0 +1,73 @@
+@font-face {
+  font-family: 'RobotoRegular';
+  src: url('../fonts/Roboto/RobotoRegular.eot');
+  src: url('../fonts/Roboto/RobotoRegular.eot') format('embedded-opentype'),
+  url('../fonts/Roboto/RobotoRegular.woff2') format('woff2'),
+  url('../fonts/Roboto/RobotoRegular.woff') format('woff'),
+  url('../fonts/Roboto/RobotoRegular.ttf') format('truetype'),
+  url('../fonts/Roboto/RobotoRegular.svg#RobotoRegular') format('svg');
+}
+
+@font-face {
+  font-family: 'Blogger_Sans';
+  src: url('../fonts/BloggerSans/Blogger_Sans.eot');
+  src: url('../fonts/BloggerSans/Blogger_Sans.eot') format('embedded-opentype'),
+  url('../fonts/BloggerSans/Blogger_Sans.woff2') format('woff2'),
+  url('../fonts/BloggerSans/Blogger_Sans.woff') format('woff'),
+  url('../fonts/BloggerSans/Blogger_Sans.ttf') format('truetype'),
+  url('../fonts/BloggerSans/Blogger_Sans.svg#Blogger_Sans') format('svg');
+}
+
+@font-face {
+  font-family: 'Blogger_SansMedium';
+  src: url('../fonts/BloggerSans/Blogger_SansMedium.eot');
+  src: url('../fonts/BloggerSans/Blogger_SansMedium.eot') format('embedded-opentype'),
+  url('../fonts/BloggerSans/Blogger_SansMedium.woff2') format('woff2'),
+  url('../fonts/BloggerSans/Blogger_SansMedium.woff') format('woff'),
+  url('../fonts/BloggerSans/Blogger_SansMedium.ttf') format('truetype'),
+  url('../fonts/BloggerSans/Blogger_SansMedium.svg#Blogger_SansMedium') format('svg');
+}
+
+@font-size: 16px;
+@font-weight: 500;
+@font-family: 'RobotoRegular';
+
+body{
+  font-family: @font-family;
+  font-weight: @font-weight;
+  font-size: @font-size;
+  line-height: 1.1;
+  color: #000;
+  margin: 0;
+  padding: 0;
+
+  .navbar-default {
+    background-color: #fff;
+    border-color: #eee;
+    position: relative;
+
+    .navbar-nav a {
+      color: #000 !important;
+      &:hover{
+        color: #000;
+        background-color: #eee;
+      }
+    }
+
+    .navbar-brand{
+      color: #000 !important;
+      img{
+        height: 40px;
+        position: absolute;
+        top: 5px;
+      }
+      span{
+        padding-left: 70px;
+        font-family: 'Blogger_SansMedium';
+        font-size: 1.4em;
+      }
+    }
+
+  }
+
+}

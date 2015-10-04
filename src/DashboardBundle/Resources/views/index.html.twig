@@ -5,10 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
 
-    <title>TFootball{% block title %}{% endblock %}</title>
+    <title>TFootball|Admin{% block title %}{% endblock %}</title>
 
     {% block stylesheets %}
 
@@ -60,14 +59,14 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user.username }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#"><i class="fa fa-fw fa-user"></i> Профиль</a>
+                                    <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-fw fa-gear"></i> Настройки</a>
+                                    <a href="#"><i class="fa fa-fw fa-gear"></i> Setting</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="{{ path('logout') }}"><i class="fa fa-fw fa-power-off"></i> Выход</a>
+                                    <a href="{{ path('logout') }}"><i class="fa fa-fw fa-power-off"></i> Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -78,7 +77,19 @@
                         <ul class="nav navbar-nav side-nav">
                             {% block leftnav %}
                             <li class="{% if active == 'dashboard' %}active{% endif %}">
-                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i>Главная</a>
+                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-dashboard"></i>Dashboard</a>
+                            </li>
+                            <li class="{% if active == 'matches' %}active{% endif %}">
+                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-futbol-o"></i>Matches</a>
+                            </li>
+                            <li class="{% if active == 'tournaments' %}active{% endif %}">
+                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-trophy"></i>Tournaments</a>
+                            </li>
+                            <li class="{% if active == 'players' %}active{% endif %}">
+                                <a href="{{ path('dashboard') }}"><i class="fa fa-fw fa-users"></i>Players</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('_main_page') }}"><i class="fa fa-fw fa-arrow-left"></i>Return to Main</a>
                             </li>
                             {% endblock %}
                         </ul>
