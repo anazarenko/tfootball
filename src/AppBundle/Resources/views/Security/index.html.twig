@@ -51,7 +51,7 @@ filter='cssrewrite' output='css/compiled/login.css' %}
                 <form class="login {% if active == 'login' %}active{% endif %}" action="{{ path('login_check_route') }}" method="post">
                     <h3>Login</h3>
                     <div>
-                        <label for="username">Username:</label>
+                        <label for="username">Username or Email:</label>
                         <input id="username" type="text" name="_username" required="" value="{{ last_username }}" />
                         <ul><li>{% if error %}Invalid login or password{% endif %}</li></ul>
                     </div>

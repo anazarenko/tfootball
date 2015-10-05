@@ -25,6 +25,10 @@ security:
             pattern: ^/login$
             security: false
 
+        registration:
+            pattern: ^/registration$
+            security: false
+
         default:
             pattern: ^/
 

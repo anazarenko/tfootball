@@ -71,7 +71,7 @@ class SecurityController extends Controller
 
             $eManager = $this->getDoctrine()->getManager();
             $eManager->persist($user);
-//            $eManager->flush();
+            $eManager->flush();
 
             return $this->redirectToRoute('login_route');
         }
