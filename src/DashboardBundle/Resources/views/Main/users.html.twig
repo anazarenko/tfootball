@@ -1,0 +1,56 @@
+{% extends 'DashboardBundle::index.html.twig' %}
+
+{% block content %}
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Players
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{{ path('_dashboard') }}">Dashboard</a></li>
+                <li class="active">Players</li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12 section-nav">
+            <button type="button" data-href="{{ path('_dashboard_user_create') }}" class="btn btn-primary user-modal">Create</button>
+        </div>
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{% for role in user.roles %}{{ role }}{% endfor %}</td>
+                                <td><a data-href="{{ path('_dashboard_user_update', {'id' : user.id}) }}" class="cursor user-modal"><i class="fa fa-pencil-square-o"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    "@DashboardBundle/Resources/public/js/user.js" %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

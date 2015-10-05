@@ -14,6 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, \Serializable
 {
+
+    public $availableRoles = array(
+        0 => 'ROLE_ADMIN',
+        1 => 'ROLE_USER'
+    );
     /**
      * @var integer
      *
