@@ -16,8 +16,8 @@ class User implements UserInterface, \Serializable
 {
 
     public $availableRoles = array(
-        0 => 'ROLE_ADMIN',
-        1 => 'ROLE_USER'
+        'ROLE_ADMIN' => 'ROLE_ADMIN',
+        'ROLE_USER' => 'ROLE_USER'
     );
     /**
      * @var integer

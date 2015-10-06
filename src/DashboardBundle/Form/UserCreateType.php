@@ -8,6 +8,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserCreateType extends AbstractType
 {
+
+    public function __construct($options = array())
+    {
+        $this->roles = $options['roles'];
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,6 +32,11 @@ class UserCreateType extends AbstractType
                     'label' => 'Role',
                     'attr' => array('class' => 'form-control')
                 )
+//            ->add('roles', 'choice', array(
+//                    'required' => true,
+//                    'multiple' => true,
+//                    'choices' => $this->roles
+//                )
             );
     }
 

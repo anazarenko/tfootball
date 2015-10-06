@@ -1,6 +1,6 @@
 <?php
 
-namespace DashboardBundle\Controller;
+namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use DashboardBundle\Form\UserCreateType;
@@ -13,19 +13,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/admin")
+ * @Route("/player")
  */
-class DashboardController extends Controller
+class PlayerController extends Controller
 {
     /**
-     * @Route("/", name="_dashboard")
+     * @Route("/", name="_player")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function playerAction()
     {
+        $eManager = $this->getDoctrine()->getManager();
+        $players = $eManager->getRepository('AppBundle:User')->findAll();
         return $this->render(
-            'DashboardBundle:Main:main.html.twig',
-            array('active' => 'dashboard')
+            'AppBundle:Player:index.html.twig',
+            array('active' => 'players', 'players' => $players)
         );
     }
 }
