@@ -11,15 +11,33 @@ class GameCreateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstPlayer', 'entity', array(
+            ->add('xFirstPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
-                'choice_label' => 'username'
+                'choice_label' => 'username',
+                'label' => 'Player'
             ))
-            ->add('firstGoals', 'integer')
-            ->add('secondGoals', 'integer')
-            ->add('secondPlayer', 'entity', array(
+            ->add('xSecondPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
-                'choice_label' => 'username'
+                'choice_label' => 'username',
+                'required' => false,
+                'label' => 'Player'
+            ))
+            ->add('firstGoals', 'number', array('invalid_message' => 'Invalid number'))
+            ->add('secondGoals', 'number', array('invalid_message' => 'Invalid number'))
+            ->add('yFirstPlayer', 'entity', array(
+                'class' => 'AppBundle\Entity\User',
+                'choice_label' => 'username',
+                'label' => 'Player'
+            ))
+            ->add('ySecondPlayer', 'entity', array(
+                'class' => 'AppBundle\Entity\User',
+                'choice_label' => 'username',
+                'required' => false,
+                'label' => 'Player'
+            ))
+            ->add('form', 'choice', array(
+                'choices' => array(0 => '1x1', 1 => '2x2'),
+                'data' => 0
             ));
     }
 

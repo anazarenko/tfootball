@@ -50,14 +50,24 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="firstPlayer")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="xFirstPlayer")
      **/
-    private $firstPositions;
+    private $xFirstPlayers;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="secondPlayer")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="xSecondPlayer")
      **/
-    private $secondPositions;
+    private $xSecondPlayers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="yFirstPlayer")
+     **/
+    private $yFirstPlayers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="ySecondPlayer")
+     **/
+    private $ySecondPlayers;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="winner")
@@ -224,7 +234,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -260,7 +270,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -283,7 +293,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get modifiedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getModifiedAt()
     {
@@ -306,77 +316,11 @@ class User implements UserInterface, \Serializable
     /**
      * Get isActive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsActive()
     {
         return $this->isActive;
-    }
-
-    /**
-     * Add firstPositions
-     *
-     * @param \AppBundle\Entity\Game $firstPositions
-     * @return User
-     */
-    public function addFirstPosition(\AppBundle\Entity\Game $firstPositions)
-    {
-        $this->firstPositions[] = $firstPositions;
-
-        return $this;
-    }
-
-    /**
-     * Remove firstPositions
-     *
-     * @param \AppBundle\Entity\Game $firstPositions
-     */
-    public function removeFirstPosition(\AppBundle\Entity\Game $firstPositions)
-    {
-        $this->firstPositions->removeElement($firstPositions);
-    }
-
-    /**
-     * Get firstPositions
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFirstPositions()
-    {
-        return $this->firstPositions;
-    }
-
-    /**
-     * Add secondPositions
-     *
-     * @param \AppBundle\Entity\Game $secondPositions
-     * @return User
-     */
-    public function addSecondPosition(\AppBundle\Entity\Game $secondPositions)
-    {
-        $this->secondPositions[] = $secondPositions;
-
-        return $this;
-    }
-
-    /**
-     * Remove secondPositions
-     *
-     * @param \AppBundle\Entity\Game $secondPositions
-     */
-    public function removeSecondPosition(\AppBundle\Entity\Game $secondPositions)
-    {
-        $this->secondPositions->removeElement($secondPositions);
-    }
-
-    /**
-     * Get secondPositions
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSecondPositions()
-    {
-        return $this->secondPositions;
     }
 
     /**
@@ -405,11 +349,35 @@ class User implements UserInterface, \Serializable
     /**
      * Get wonGames
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getWonGames()
     {
         return $this->wonGames;
+    }
+
+    /**
+     * Get single won games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSingleWonGames()
+    {
+        return $this->wonGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
+    }
+
+    /**
+     * Get double won games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDoubleWonGames()
+    {
+        return $this->wonGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
     }
 
     /**
@@ -438,11 +406,35 @@ class User implements UserInterface, \Serializable
     /**
      * Get lostGames
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getLostGames()
     {
         return $this->lostGames;
+    }
+
+    /**
+     * Get single lost games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSingleLostGames()
+    {
+        return $this->lostGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
+    }
+
+    /**
+     * Get double lost games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDoubleLostGames()
+    {
+        return $this->lostGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
     }
 
     /**
@@ -471,11 +463,35 @@ class User implements UserInterface, \Serializable
     /**
      * Get drawnGames
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDrawnGames()
     {
         return $this->drawnGames;
+    }
+
+    /**
+     * Get single drawn games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSingleDrawnGames()
+    {
+        return $this->drawnGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
+    }
+
+    /**
+     * Get double drawn games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDoubleDrawnGames()
+    {
+        return $this->drawnGames->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
     }
 
     /**
@@ -504,10 +520,166 @@ class User implements UserInterface, \Serializable
     /**
      * Get games
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getGames()
     {
         return $this->games;
+    }
+
+    /**
+     * Get single games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSingleGames()
+    {
+        return $this->games->filter(function ($game) {
+            return ($game->getForm() == 0);
+        });
+    }
+
+    /**
+     * Get double games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDoubleGames()
+    {
+        return $this->games->filter(function ($game) {
+            return ($game->getForm() == 1);
+        });
+    }
+
+    /**
+     * Add xFirstPlayers
+     *
+     * @param \AppBundle\Entity\Game $xFirstPlayers
+     * @return User
+     */
+    public function addXFirstPlayer(\AppBundle\Entity\Game $xFirstPlayers)
+    {
+        $this->xFirstPlayers[] = $xFirstPlayers;
+
+        return $this;
+    }
+
+    /**
+     * Remove xFirstPlayers
+     *
+     * @param \AppBundle\Entity\Game $xFirstPlayers
+     */
+    public function removeXFirstPlayer(\AppBundle\Entity\Game $xFirstPlayers)
+    {
+        $this->xFirstPlayers->removeElement($xFirstPlayers);
+    }
+
+    /**
+     * Get xFirstPlayers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getXFirstPlayers()
+    {
+        return $this->xFirstPlayers;
+    }
+
+    /**
+     * Add xSecondPlayers
+     *
+     * @param \AppBundle\Entity\Game $xSecondPlayers
+     * @return User
+     */
+    public function addXSecondPlayer(\AppBundle\Entity\Game $xSecondPlayers)
+    {
+        $this->xSecondPlayers[] = $xSecondPlayers;
+
+        return $this;
+    }
+
+    /**
+     * Remove xSecondPlayers
+     *
+     * @param \AppBundle\Entity\Game $xSecondPlayers
+     */
+    public function removeXSecondPlayer(\AppBundle\Entity\Game $xSecondPlayers)
+    {
+        $this->xSecondPlayers->removeElement($xSecondPlayers);
+    }
+
+    /**
+     * Get xSecondPlayers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getXSecondPlayers()
+    {
+        return $this->xSecondPlayers;
+    }
+
+    /**
+     * Add yFirstPlayers
+     *
+     * @param \AppBundle\Entity\Game $yFirstPlayers
+     * @return User
+     */
+    public function addYFirstPlayer(\AppBundle\Entity\Game $yFirstPlayers)
+    {
+        $this->yFirstPlayers[] = $yFirstPlayers;
+
+        return $this;
+    }
+
+    /**
+     * Remove yFirstPlayers
+     *
+     * @param \AppBundle\Entity\Game $yFirstPlayers
+     */
+    public function removeYFirstPlayer(\AppBundle\Entity\Game $yFirstPlayers)
+    {
+        $this->yFirstPlayers->removeElement($yFirstPlayers);
+    }
+
+    /**
+     * Get yFirstPlayers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getYFirstPlayers()
+    {
+        return $this->yFirstPlayers;
+    }
+
+    /**
+     * Add ySecondPlayers
+     *
+     * @param \AppBundle\Entity\Game $ySecondPlayers
+     * @return User
+     */
+    public function addYSecondPlayer(\AppBundle\Entity\Game $ySecondPlayers)
+    {
+        $this->ySecondPlayers[] = $ySecondPlayers;
+
+        return $this;
+    }
+
+    /**
+     * Remove ySecondPlayers
+     *
+     * @param \AppBundle\Entity\Game $ySecondPlayers
+     */
+    public function removeYSecondPlayer(\AppBundle\Entity\Game $ySecondPlayers)
+    {
+        $this->ySecondPlayers->removeElement($ySecondPlayers);
+    }
+
+    /**
+     * Get ySecondPlayers
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getYSecondPlayers()
+    {
+        return $this->ySecondPlayers;
     }
 }

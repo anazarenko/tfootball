@@ -71,8 +71,8 @@ class GameController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $firstPlayer = $game->getFirstPlayer();
-            $secondPlayer = $game->getSecondPlayer();
+            $firstPlayer = $game->getXFirstPlayer();
+            $secondPlayer = $game->getYFirstPlayer();
 
             $game->addPlayer($firstPlayer);
             $game->addPlayer($secondPlayer);
@@ -94,6 +94,8 @@ class GameController extends Controller
 
             $game->setStatus(1);
 
+            dump($game);
+            exit();
 
             $eManager = $this->getDoctrine()->getManager();
             $eManager->persist($game);

@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Game
@@ -57,16 +58,28 @@ class Game
     private $type = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="firstPositions")
-     * @ORM\JoinColumn(name="user_first_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="xFirstPlayers")
+     * @ORM\JoinColumn(name="user_x_first_id", referencedColumnName="id")
      */
-    private $firstPlayer;
+    private $xFirstPlayer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="secondPositions")
-     * @ORM\JoinColumn(name="user_second_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="xSecondPlayers")
+     * @ORM\JoinColumn(name="user_x_second_id", referencedColumnName="id")
      */
-    private $secondPlayer;
+    private $xSecondPlayer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="yFirstPlayers")
+     * @ORM\JoinColumn(name="user_y_first_id", referencedColumnName="id")
+     */
+    private $yFirstPlayer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="ySecondPlayers")
+     * @ORM\JoinColumn(name="user_y_second_id", referencedColumnName="id")
+     */
+    private $ySecondPlayer;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="wonGames")
@@ -87,11 +100,13 @@ class Game
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\GreaterThanOrEqual(value = 0)
      */
     private $firstGoals;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\GreaterThanOrEqual(value = 0)
      */
     private $secondGoals;
 
@@ -254,52 +269,6 @@ class Game
     }
 
     /**
-     * Set firstPlayer
-     *
-     * @param \AppBundle\Entity\User $firstPlayer
-     * @return Game
-     */
-    public function setFirstPlayer($firstPlayer)
-    {
-        $this->firstPlayer = $firstPlayer;
-
-        return $this;
-    }
-
-    /**
-     * Get firstPlayer
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getFirstPlayer()
-    {
-        return $this->firstPlayer;
-    }
-
-    /**
-     * Set secondPlayer
-     *
-     * @param \AppBundle\Entity\User $secondPlayer
-     * @return Game
-     */
-    public function setSecondPlayer($secondPlayer)
-    {
-        $this->secondPlayer = $secondPlayer;
-
-        return $this;
-    }
-
-    /**
-     * Get secondPlayer
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getSecondPlayer()
-    {
-        return $this->secondPlayer;
-    }
-
-    /**
      * Set winner
      *
      * @param \AppBundle\Entity\User $winner
@@ -445,5 +414,97 @@ class Game
     public function getDrawn()
     {
         return $this->drawn;
+    }
+
+    /**
+     * Set xFirstPlayer
+     *
+     * @param \AppBundle\Entity\User $xFirstPlayer
+     * @return Game
+     */
+    public function setXFirstPlayer(\AppBundle\Entity\User $xFirstPlayer = null)
+    {
+        $this->xFirstPlayer = $xFirstPlayer;
+
+        return $this;
+    }
+
+    /**
+     * Get xFirstPlayer
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getXFirstPlayer()
+    {
+        return $this->xFirstPlayer;
+    }
+
+    /**
+     * Set xSecondPlayer
+     *
+     * @param \AppBundle\Entity\User $xSecondPlayer
+     * @return Game
+     */
+    public function setXSecondPlayer(\AppBundle\Entity\User $xSecondPlayer = null)
+    {
+        $this->xSecondPlayer = $xSecondPlayer;
+
+        return $this;
+    }
+
+    /**
+     * Get xSecondPlayer
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getXSecondPlayer()
+    {
+        return $this->xSecondPlayer;
+    }
+
+    /**
+     * Set yFirstPlayer
+     *
+     * @param \AppBundle\Entity\User $yFirstPlayer
+     * @return Game
+     */
+    public function setYFirstPlayer(\AppBundle\Entity\User $yFirstPlayer = null)
+    {
+        $this->yFirstPlayer = $yFirstPlayer;
+
+        return $this;
+    }
+
+    /**
+     * Get yFirstPlayer
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getYFirstPlayer()
+    {
+        return $this->yFirstPlayer;
+    }
+
+    /**
+     * Set ySecondPlayer
+     *
+     * @param \AppBundle\Entity\User $ySecondPlayer
+     * @return Game
+     */
+    public function setYSecondPlayer(\AppBundle\Entity\User $ySecondPlayer = null)
+    {
+        $this->ySecondPlayer = $ySecondPlayer;
+
+        return $this;
+    }
+
+    /**
+     * Get ySecondPlayer
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getYSecondPlayer()
+    {
+        return $this->ySecondPlayer;
     }
 }

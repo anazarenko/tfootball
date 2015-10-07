@@ -21,14 +21,14 @@
             {% for player in players %}
                 <tr>
                     <td>{{ player.username }}</td>
-                    <td>{{ player.games|length }}</td>
+                    <td>{{ player.singleGames|length }}</td>
                     <td>
-                        {% if player.games|length > 0 %}
-                            {{ ((player.wonGames|length/player.games|length)*100)|number_format(1, '.', ',') }}
+                        {% if player.singleGames|length > 0 %}
+                            {{ ((player.wonGames|length/player.singleGames|length)*100)|number_format(1, '.', ',') }}
                         {% endif %}
                     </td>
-                    <td>{{ player.wonGames|length }}</td>
-                    <td>{{ player.drawnGames|length }}</td>
+                    <td>{{ player.singleWonGames|length }}</td>
+                    <td>{{ player.singleDrawnGames|length }}</td>
                     <td>{{ player.lostGames|length }}</td>
                     <td>0</td>
                     <td>0</td>

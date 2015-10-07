@@ -15,9 +15,9 @@
         <tbody>
         {% for game in games %}
             <tr>
-                <td>{{ game.firstPlayer.username }}</td>
+                <td>{{ game.xFirstPlayer.username }}</td>
                 <td>{{ game.firstGoals }} - {{ game.secondGoals }}</td>
-                <td>{{ game.secondPlayer.username }}</td>
+                <td>{{ game.yFirstPlayer.username }}</td>
                 <td>{{ game.createdAt|date('H:i:s d-m-Y') }}</td>
             </tr>
         {% endfor %}
