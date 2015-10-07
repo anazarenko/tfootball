@@ -18,7 +18,7 @@
                 <td>{{ game.firstPlayer.username }}</td>
                 <td>{{ game.firstGoals }} - {{ game.secondGoals }}</td>
                 <td>{{ game.secondPlayer.username }}</td>
-                <td>{{ game.createdAt|date('h:i:s d-m-Y') }}</td>
+                <td>{{ game.createdAt|date('H:i:s d-m-Y') }}</td>
             </tr>
         {% endfor %}
         </tbody>

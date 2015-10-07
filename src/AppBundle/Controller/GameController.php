@@ -71,12 +71,25 @@ class GameController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $firstPlayer = $game->getFirstPlayer();
+            $secondPlayer = $game->getSecondPlayer();
+
+            $game->addPlayer($firstPlayer);
+            $game->addPlayer($secondPlayer);
+
+            $firstPlayer->addGame($game);
+            $secondPlayer->addGame($game);
+
             if ($game->getFirstGoals() > $game->getSecondGoals()) {
-                $game->setWinner($game->getFirstPlayer());
-                $game->setLoser($game->getSecondPlayer());
+                $game->setWinner($firstPlayer);
+                $game->setLoser($secondPlayer);
             } elseif ($game->getFirstGoals() < $game->getSecondGoals()) {
-                $game->setWinner($game->getSecondPlayer());
-                $game->setLoser($game->getFirstPlayer());
+                $game->setWinner($secondPlayer);
+                $game->setLoser($firstPlayer);
+            } elseif ($game->getFirstGoals() == $game->getSecondGoals()) {
+                $game->setDrawn(1);
+                $firstPlayer->addDrawnGame($game);
+                $secondPlayer->addDrawnGame($game);
             }
 
             $game->setStatus(1);

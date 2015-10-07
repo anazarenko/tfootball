@@ -75,6 +75,11 @@ class Game
     private $winner;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $drawn = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="lostGames")
      * @ORM\JoinColumn(name="user_loser_id", referencedColumnName="id")
      */
@@ -101,6 +106,11 @@ class Game
     private $modifiedAt;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="games")
+     **/
+    private $players;
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
@@ -111,6 +121,10 @@ class Game
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    public function __construct() {
+        $this->players = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -242,7 +256,7 @@ class Game
     /**
      * Set firstPlayer
      *
-     * @param integer $firstPlayer
+     * @param \AppBundle\Entity\User $firstPlayer
      * @return Game
      */
     public function setFirstPlayer($firstPlayer)
@@ -255,7 +269,7 @@ class Game
     /**
      * Get firstPlayer
      *
-     * @return integer 
+     * @return \AppBundle\Entity\User
      */
     public function getFirstPlayer()
     {
@@ -265,7 +279,7 @@ class Game
     /**
      * Set secondPlayer
      *
-     * @param integer $secondPlayer
+     * @param \AppBundle\Entity\User $secondPlayer
      * @return Game
      */
     public function setSecondPlayer($secondPlayer)
@@ -278,7 +292,7 @@ class Game
     /**
      * Get secondPlayer
      *
-     * @return integer 
+     * @return \AppBundle\Entity\User
      */
     public function getSecondPlayer()
     {
@@ -288,7 +302,7 @@ class Game
     /**
      * Set winner
      *
-     * @param integer $winner
+     * @param \AppBundle\Entity\User $winner
      * @return Game
      */
     public function setWinner($winner)
@@ -301,7 +315,7 @@ class Game
     /**
      * Get winner
      *
-     * @return integer 
+     * @return \AppBundle\Entity\User
      */
     public function getWinner()
     {
@@ -311,7 +325,7 @@ class Game
     /**
      * Set loser
      *
-     * @param integer $loser
+     * @param \AppBundle\Entity\User $loser
      * @return Game
      */
     public function setLoser($loser)
@@ -324,7 +338,7 @@ class Game
     /**
      * Get loser
      *
-     * @return integer 
+     * @return \AppBundle\Entity\User
      */
     public function getLoser()
     {
@@ -375,5 +389,61 @@ class Game
     public function getSecondGoals()
     {
         return $this->secondGoals;
+    }
+
+    /**
+     * Add players
+     *
+     * @param \AppBundle\Entity\User $players
+     * @return Game
+     */
+    public function addPlayer(\AppBundle\Entity\User $players)
+    {
+        $this->players[] = $players;
+
+        return $this;
+    }
+
+    /**
+     * Remove players
+     *
+     * @param \AppBundle\Entity\User $players
+     */
+    public function removePlayer(\AppBundle\Entity\User $players)
+    {
+        $this->players->removeElement($players);
+    }
+
+    /**
+     * Get players
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPlayers()
+    {
+        return $this->players;
+    }
+
+    /**
+     * Set drawn
+     *
+     * @param integer $drawn
+     * @return Game
+     */
+    public function setDrawn($drawn)
+    {
+        $this->drawn = $drawn;
+
+        return $this;
+    }
+
+    /**
+     * Get drawn
+     *
+     * @return integer 
+     */
+    public function getDrawn()
+    {
+        return $this->drawn;
     }
 }

@@ -65,6 +65,15 @@ class User implements UserInterface, \Serializable
     private $wonGames;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Game")
+     * @ORM\JoinTable(name="games_drawn",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $drawnGames;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="loser")
      **/
     private $lostGames;
@@ -84,11 +93,19 @@ class User implements UserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Game", inversedBy="players")
+     * @ORM\JoinTable(name="players_games")
+     **/
+    private $games;
+
     public function __construct()
     {
         $this->isActive = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid(null, true));
+
+        $this->games = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -426,5 +443,71 @@ class User implements UserInterface, \Serializable
     public function getLostGames()
     {
         return $this->lostGames;
+    }
+
+    /**
+     * Add drawnGames
+     *
+     * @param \AppBundle\Entity\Game $drawnGames
+     * @return User
+     */
+    public function addDrawnGame(\AppBundle\Entity\Game $drawnGames)
+    {
+        $this->drawnGames[] = $drawnGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove drawnGames
+     *
+     * @param \AppBundle\Entity\Game $drawnGames
+     */
+    public function removeDrawnGame(\AppBundle\Entity\Game $drawnGames)
+    {
+        $this->drawnGames->removeElement($drawnGames);
+    }
+
+    /**
+     * Get drawnGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDrawnGames()
+    {
+        return $this->drawnGames;
+    }
+
+    /**
+     * Add games
+     *
+     * @param \AppBundle\Entity\Game $games
+     * @return User
+     */
+    public function addGame(\AppBundle\Entity\Game $games)
+    {
+        $this->games[] = $games;
+
+        return $this;
+    }
+
+    /**
+     * Remove games
+     *
+     * @param \AppBundle\Entity\Game $games
+     */
+    public function removeGame(\AppBundle\Entity\Game $games)
+    {
+        $this->games->removeElement($games);
+    }
+
+    /**
+     * Get games
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGames()
+    {
+        return $this->games;
     }
 }

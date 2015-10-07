@@ -23,6 +23,8 @@ class PlayerController extends Controller
      */
     public function playerAction()
     {
+        $players = $this->getDoctrine()->getRepository('AppBundle:User')->findOneBy(array('id' => 1));
+
         $players = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
 
         return $this->render(
