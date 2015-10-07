@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -47,6 +48,26 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="array")
      */
     private $roles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="firstPlayer")
+     **/
+    private $firstPositions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="secondPlayer")
+     **/
+    private $secondPositions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="winner")
+     **/
+    private $wonGames;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="loser")
+     **/
+    private $lostGames;
 
     /**
      * @ORM\Column(type="datetime")
@@ -273,5 +294,137 @@ class User implements UserInterface, \Serializable
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Add firstPositions
+     *
+     * @param \AppBundle\Entity\Game $firstPositions
+     * @return User
+     */
+    public function addFirstPosition(\AppBundle\Entity\Game $firstPositions)
+    {
+        $this->firstPositions[] = $firstPositions;
+
+        return $this;
+    }
+
+    /**
+     * Remove firstPositions
+     *
+     * @param \AppBundle\Entity\Game $firstPositions
+     */
+    public function removeFirstPosition(\AppBundle\Entity\Game $firstPositions)
+    {
+        $this->firstPositions->removeElement($firstPositions);
+    }
+
+    /**
+     * Get firstPositions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFirstPositions()
+    {
+        return $this->firstPositions;
+    }
+
+    /**
+     * Add secondPositions
+     *
+     * @param \AppBundle\Entity\Game $secondPositions
+     * @return User
+     */
+    public function addSecondPosition(\AppBundle\Entity\Game $secondPositions)
+    {
+        $this->secondPositions[] = $secondPositions;
+
+        return $this;
+    }
+
+    /**
+     * Remove secondPositions
+     *
+     * @param \AppBundle\Entity\Game $secondPositions
+     */
+    public function removeSecondPosition(\AppBundle\Entity\Game $secondPositions)
+    {
+        $this->secondPositions->removeElement($secondPositions);
+    }
+
+    /**
+     * Get secondPositions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSecondPositions()
+    {
+        return $this->secondPositions;
+    }
+
+    /**
+     * Add wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     * @return User
+     */
+    public function addWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames[] = $wonGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     */
+    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames->removeElement($wonGames);
+    }
+
+    /**
+     * Get wonGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonGames()
+    {
+        return $this->wonGames;
+    }
+
+    /**
+     * Add lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     * @return User
+     */
+    public function addLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames[] = $lostGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     */
+    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames->removeElement($lostGames);
+    }
+
+    /**
+     * Get lostGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostGames()
+    {
+        return $this->lostGames;
     }
 }

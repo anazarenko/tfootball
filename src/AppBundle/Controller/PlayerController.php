@@ -23,8 +23,8 @@ class PlayerController extends Controller
      */
     public function playerAction()
     {
-        $eManager = $this->getDoctrine()->getManager();
-        $players = $eManager->getRepository('AppBundle:User')->findAll();
+        $players = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
+
         return $this->render(
             'AppBundle:Player:index.html.twig',
             array('active' => 'players', 'players' => $players)

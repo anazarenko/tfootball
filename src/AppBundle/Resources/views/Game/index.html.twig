@@ -1,0 +1,31 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Players{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>First Player</th>
+            <th>Score</th>
+            <th>Second Player</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in games %}
+            <tr>
+                <td>{{ game.firstPlayer.username }}</td>
+                <td>{{ game.firstGoals }} - {{ game.secondGoals }}</td>
+                <td>{{ game.secondPlayer.username }}</td>
+                <td>{{ game.createdAt|date('h:i:s d-m-Y') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit"/>
+    {{ form_end(form) }}
+{% endblock %}

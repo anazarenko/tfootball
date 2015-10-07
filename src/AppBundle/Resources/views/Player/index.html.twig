@@ -8,7 +8,8 @@
             <tr>
                 <th>Username</th>
                 <th title="Played">Pld</th>
-                <th title="Win">W</th>
+                <th>%</th>
+                <th title="Won">W</th>
                 <th title="Drawn">D</th>
                 <th title="Lost">L</th>
                 <th title="Goal for">GF</th>
@@ -20,10 +21,11 @@
             {% for player in players %}
                 <tr>
                     <td>{{ player.username }}</td>
+                    <td>{{ player.wonGames|length + player.lostGames|length }}</td>
+                    <td>{{ (player.wonGames|length/(player.wonGames|length + player.lostGames|length)*100)|number_format(1, '.', ',') }}</td>
+                    <td>{{ player.wonGames|length }}</td>
                     <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>{{ player.lostGames|length }}</td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
