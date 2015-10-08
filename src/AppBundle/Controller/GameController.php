@@ -94,8 +94,6 @@ class GameController extends Controller
 
             $game->setStatus(1);
 
-            dump($game);
-            exit();
 
             $eManager = $this->getDoctrine()->getManager();
             $eManager->persist($game);
