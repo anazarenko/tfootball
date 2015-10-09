@@ -87,7 +87,8 @@ class GameController extends Controller
                 $game->setWinner($secondPlayer);
                 $game->setLoser($firstPlayer);
             } elseif ($game->getFirstGoals() == $game->getSecondGoals()) {
-                $game->setDrawn(1);
+                $game->addDrawn($firstPlayer);
+                $game->addDrawn($secondPlayer);
                 $firstPlayer->addDrawnGame($game);
                 $secondPlayer->addDrawnGame($game);
             }

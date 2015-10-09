@@ -75,11 +75,8 @@ class User implements UserInterface, \Serializable
     private $wonGames;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Game")
-     * @ORM\JoinTable(name="games_drawn",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Game", inversedBy="drawn")
+     * @ORM\JoinTable(name="drawn_games")
      **/
     private $drawnGames;
 
@@ -116,6 +113,7 @@ class User implements UserInterface, \Serializable
         // $this->salt = md5(uniqid(null, true));
 
         $this->games = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->drawnGames = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -324,234 +322,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Add wonGames
-     *
-     * @param \AppBundle\Entity\Game $wonGames
-     * @return User
-     */
-    public function addWonGame(\AppBundle\Entity\Game $wonGames)
-    {
-        $this->wonGames[] = $wonGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove wonGames
-     *
-     * @param \AppBundle\Entity\Game $wonGames
-     */
-    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
-    {
-        $this->wonGames->removeElement($wonGames);
-    }
-
-    /**
-     * Get wonGames
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getWonGames()
-    {
-        return $this->wonGames;
-    }
-
-    /**
-     * Get single won games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSingleWonGames()
-    {
-        return $this->wonGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Get double won games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDoubleWonGames()
-    {
-        return $this->wonGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Add lostGames
-     *
-     * @param \AppBundle\Entity\Game $lostGames
-     * @return User
-     */
-    public function addLostGame(\AppBundle\Entity\Game $lostGames)
-    {
-        $this->lostGames[] = $lostGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove lostGames
-     *
-     * @param \AppBundle\Entity\Game $lostGames
-     */
-    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
-    {
-        $this->lostGames->removeElement($lostGames);
-    }
-
-    /**
-     * Get lostGames
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLostGames()
-    {
-        return $this->lostGames;
-    }
-
-    /**
-     * Get single lost games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSingleLostGames()
-    {
-        return $this->lostGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Get double lost games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDoubleLostGames()
-    {
-        return $this->lostGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Add drawnGames
-     *
-     * @param \AppBundle\Entity\Game $drawnGames
-     * @return User
-     */
-    public function addDrawnGame(\AppBundle\Entity\Game $drawnGames)
-    {
-        $this->drawnGames[] = $drawnGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove drawnGames
-     *
-     * @param \AppBundle\Entity\Game $drawnGames
-     */
-    public function removeDrawnGame(\AppBundle\Entity\Game $drawnGames)
-    {
-        $this->drawnGames->removeElement($drawnGames);
-    }
-
-    /**
-     * Get drawnGames
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDrawnGames()
-    {
-        return $this->drawnGames;
-    }
-
-    /**
-     * Get single drawn games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSingleDrawnGames()
-    {
-        return $this->drawnGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Get double drawn games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDoubleDrawnGames()
-    {
-        return $this->drawnGames->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Add games
-     *
-     * @param \AppBundle\Entity\Game $games
-     * @return User
-     */
-    public function addGame(\AppBundle\Entity\Game $games)
-    {
-        $this->games[] = $games;
-
-        return $this;
-    }
-
-    /**
-     * Remove games
-     *
-     * @param \AppBundle\Entity\Game $games
-     */
-    public function removeGame(\AppBundle\Entity\Game $games)
-    {
-        $this->games->removeElement($games);
-    }
-
-    /**
-     * Get games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getGames()
-    {
-        return $this->games;
-    }
-
-    /**
-     * Get single games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSingleGames()
-    {
-        return $this->games->filter(function ($game) {
-            return ($game->getForm() == 0);
-        });
-    }
-
-    /**
-     * Get double games
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDoubleGames()
-    {
-        return $this->games->filter(function ($game) {
-            return ($game->getForm() == 1);
-        });
-    }
-
-    /**
      * Add xFirstPlayers
      *
      * @param \AppBundle\Entity\Game $xFirstPlayers
@@ -681,5 +451,137 @@ class User implements UserInterface, \Serializable
     public function getYSecondPlayers()
     {
         return $this->ySecondPlayers;
+    }
+
+    /**
+     * Add wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     * @return User
+     */
+    public function addWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames[] = $wonGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     */
+    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames->removeElement($wonGames);
+    }
+
+    /**
+     * Get wonGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonGames()
+    {
+        return $this->wonGames;
+    }
+
+    /**
+     * Add drawnGames
+     *
+     * @param \AppBundle\Entity\Game $drawnGames
+     * @return User
+     */
+    public function addDrawnGame(\AppBundle\Entity\Game $drawnGames)
+    {
+        $this->drawnGames[] = $drawnGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove drawnGames
+     *
+     * @param \AppBundle\Entity\Game $drawnGames
+     */
+    public function removeDrawnGame(\AppBundle\Entity\Game $drawnGames)
+    {
+        $this->drawnGames->removeElement($drawnGames);
+    }
+
+    /**
+     * Get drawnGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDrawnGames()
+    {
+        return $this->drawnGames;
+    }
+
+    /**
+     * Add lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     * @return User
+     */
+    public function addLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames[] = $lostGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     */
+    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames->removeElement($lostGames);
+    }
+
+    /**
+     * Get lostGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostGames()
+    {
+        return $this->lostGames;
+    }
+
+    /**
+     * Add games
+     *
+     * @param \AppBundle\Entity\Game $games
+     * @return User
+     */
+    public function addGame(\AppBundle\Entity\Game $games)
+    {
+        $this->games[] = $games;
+
+        return $this;
+    }
+
+    /**
+     * Remove games
+     *
+     * @param \AppBundle\Entity\Game $games
+     */
+    public function removeGame(\AppBundle\Entity\Game $games)
+    {
+        $this->games->removeElement($games);
+    }
+
+    /**
+     * Get games
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGames()
+    {
+        return $this->games;
     }
 }

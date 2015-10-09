@@ -18,6 +18,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Game
 {
 
+    const TYPE_FRIENDLY = 0;
+    const TYPE_TOURNAMENT = 1;
+
+    const STATUS_NEW = 0;
+    const STATUS_COMPLETED = 1;
+
+    const FORM_SINGLE = 0;
+    const FORM_DOUBLE = 1;
+
     public $availableStatus = array(
         0 => 'New',
         1 => 'Completed'
@@ -88,9 +97,9 @@ class Game
     private $winner;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $drawn = 0;
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="drawnGames")
+     **/
+    private $drawn;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="lostGames")
@@ -140,6 +149,7 @@ class Game
 
     public function __construct() {
         $this->players = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->drawn = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -151,7 +161,6 @@ class Game
     {
         return $this->id;
     }
-
 
     /**
      * Set status
@@ -223,98 +232,6 @@ class Game
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     * @return Game
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime 
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set modifiedAt
-     *
-     * @param \DateTime $modifiedAt
-     * @return Game
-     */
-    public function setModifiedAt($modifiedAt)
-    {
-        $this->modifiedAt = $modifiedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get modifiedAt
-     *
-     * @return \DateTime 
-     */
-    public function getModifiedAt()
-    {
-        return $this->modifiedAt;
-    }
-
-    /**
-     * Set winner
-     *
-     * @param \AppBundle\Entity\User $winner
-     * @return Game
-     */
-    public function setWinner($winner)
-    {
-        $this->winner = $winner;
-
-        return $this;
-    }
-
-    /**
-     * Get winner
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getWinner()
-    {
-        return $this->winner;
-    }
-
-    /**
-     * Set loser
-     *
-     * @param \AppBundle\Entity\User $loser
-     * @return Game
-     */
-    public function setLoser($loser)
-    {
-        $this->loser = $loser;
-
-        return $this;
-    }
-
-    /**
-     * Get loser
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getLoser()
-    {
-        return $this->loser;
-    }
-
-    /**
      * Set firstGoals
      *
      * @param integer $firstGoals
@@ -361,59 +278,49 @@ class Game
     }
 
     /**
-     * Add players
+     * Set createdAt
      *
-     * @param \AppBundle\Entity\User $players
+     * @param \DateTime $createdAt
      * @return Game
      */
-    public function addPlayer(\AppBundle\Entity\User $players)
+    public function setCreatedAt($createdAt)
     {
-        $this->players[] = $players;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * Remove players
+     * Get createdAt
      *
-     * @param \AppBundle\Entity\User $players
+     * @return \DateTime 
      */
-    public function removePlayer(\AppBundle\Entity\User $players)
+    public function getCreatedAt()
     {
-        $this->players->removeElement($players);
+        return $this->createdAt;
     }
 
     /**
-     * Get players
+     * Set modifiedAt
      *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPlayers()
-    {
-        return $this->players;
-    }
-
-    /**
-     * Set drawn
-     *
-     * @param integer $drawn
+     * @param \DateTime $modifiedAt
      * @return Game
      */
-    public function setDrawn($drawn)
+    public function setModifiedAt($modifiedAt)
     {
-        $this->drawn = $drawn;
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
 
     /**
-     * Get drawn
+     * Get modifiedAt
      *
-     * @return integer 
+     * @return \DateTime 
      */
-    public function getDrawn()
+    public function getModifiedAt()
     {
-        return $this->drawn;
+        return $this->modifiedAt;
     }
 
     /**
@@ -506,5 +413,117 @@ class Game
     public function getYSecondPlayer()
     {
         return $this->ySecondPlayer;
+    }
+
+    /**
+     * Set winner
+     *
+     * @param \AppBundle\Entity\User $winner
+     * @return Game
+     */
+    public function setWinner(\AppBundle\Entity\User $winner = null)
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    /**
+     * Get winner
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * Add drawn
+     *
+     * @param \AppBundle\Entity\User $drawn
+     * @return Game
+     */
+    public function addDrawn(\AppBundle\Entity\User $drawn)
+    {
+        $this->drawn[] = $drawn;
+
+        return $this;
+    }
+
+    /**
+     * Remove drawn
+     *
+     * @param \AppBundle\Entity\User $drawn
+     */
+    public function removeDrawn(\AppBundle\Entity\User $drawn)
+    {
+        $this->drawn->removeElement($drawn);
+    }
+
+    /**
+     * Get drawn
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDrawn()
+    {
+        return $this->drawn;
+    }
+
+    /**
+     * Set loser
+     *
+     * @param \AppBundle\Entity\User $loser
+     * @return Game
+     */
+    public function setLoser(\AppBundle\Entity\User $loser = null)
+    {
+        $this->loser = $loser;
+
+        return $this;
+    }
+
+    /**
+     * Get loser
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getLoser()
+    {
+        return $this->loser;
+    }
+
+    /**
+     * Add players
+     *
+     * @param \AppBundle\Entity\User $players
+     * @return Game
+     */
+    public function addPlayer(\AppBundle\Entity\User $players)
+    {
+        $this->players[] = $players;
+
+        return $this;
+    }
+
+    /**
+     * Remove players
+     *
+     * @param \AppBundle\Entity\User $players
+     */
+    public function removePlayer(\AppBundle\Entity\User $players)
+    {
+        $this->players->removeElement($players);
+    }
+
+    /**
+     * Get players
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPlayers()
+    {
+        return $this->players;
     }
 }

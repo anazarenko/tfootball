@@ -19,6 +19,7 @@
         </thead>
         <tbody>
             {% for player in players %}
+                {{ dump(player.drawnGames.toArray) }}
                 <tr>
                     <td>{{ player.username }}</td>
                     <td>{{ player.games|length }}</td>
