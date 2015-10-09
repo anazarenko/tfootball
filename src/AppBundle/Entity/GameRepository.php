@@ -29,4 +29,16 @@ class GameRepository extends EntityRepository
 
         return $games;
     }
+
+    public function getUserWonGames($user) {
+
+        $qb = $this->createQueryBuilder('g');
+        $games = $qb->select('g')
+            ->where('g.winner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        return $games;
+    }
 }

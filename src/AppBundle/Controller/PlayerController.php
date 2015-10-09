@@ -23,6 +23,8 @@ class PlayerController extends Controller
      */
     public function playerAction()
     {
+//        $gameRepo = $this->getDoctrine()->getRepository('AppBundle:Game');
+
         $players = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
 
         return $this->render(

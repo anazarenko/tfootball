@@ -71,8 +71,8 @@ class GameController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $firstPlayer = $game->getXFirstPlayer();
-            $secondPlayer = $game->getYFirstPlayer();
+            $firstPlayer = $game->getFirstPlayer();
+            $secondPlayer = $game->getSecondPlayer();
 
             $game->addPlayer($firstPlayer);
             $game->addPlayer($secondPlayer);
