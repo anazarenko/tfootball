@@ -20,12 +20,19 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <div id="notify" class="alert alert-success alert-dismissible fade in" role="alert">
+        <button type="button" class="close"><span>×</span></button>
+        <p><strong>Success!</strong> New game was created. Wait for confirmation from other players.</p>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}
     {% javascripts
     'bundles/app/js/jquery-2.1.4.min.js'
     'bundles/app/bootstrap/js/bootstrap.min.js'
+    'bundles/app/js/main.js'
      output='js/compiled/lib.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

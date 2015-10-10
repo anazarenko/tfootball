@@ -14,18 +14,27 @@ class GameCreateType extends AbstractType
             ->add('firstPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
                 'choice_label' => 'username',
-                'label' => 'Player'
+                'label' => 'Player',
+                'attr' => array('class' => 'form-control')
             ))
-            ->add('firstGoals', 'number', array('invalid_message' => 'Invalid number'))
-            ->add('secondGoals', 'number', array('invalid_message' => 'Invalid number'))
+            ->add('firstGoals', 'number', array(
+                'invalid_message' => 'Invalid number',
+                'attr' => array('class' => 'form-control')
+            ))
+            ->add('secondGoals', 'number', array(
+                'invalid_message' => 'Invalid number',
+                'attr' => array('class' => 'form-control')
+            ))
             ->add('secondPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
                 'choice_label' => 'username',
-                'label' => 'Player'
+                'label' => 'Player',
+                'attr' => array('class' => 'form-control')
             ))
             ->add('form', 'choice', array(
                 'choices' => array(0 => '1x1', 1 => '2x2'),
-                'data' => 0
+                'data' => 0,
+                'attr' => array('class' => 'form-control')
             ));
     }
 

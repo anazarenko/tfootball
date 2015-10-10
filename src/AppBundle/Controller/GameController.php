@@ -100,9 +100,28 @@ class GameController extends Controller
             $eManager->persist($game);
             $eManager->flush();
 
+            if ($request->isXmlHttpRequest()) {
+
+                $data = array('status' => 1);
+
+                $json = json_encode($data);
+                $response = new Response($json, 200);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+
             // Add Flash message
             $this->addFlash('success', 'New Game was added!');
         } else {
+            if ($request->isXmlHttpRequest()) {
+
+                $data = array('status' => 0, 'error' => 'Oops. Something went wrong. Please try again.');
+
+                $json = json_encode($data);
+                $response = new Response($json, 200);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
             $this->addFlash('error', 'Error!');
         }
 

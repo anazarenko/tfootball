@@ -40,17 +40,23 @@ body{
   color: #000;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 
   .navbar-default {
     background-color: #fff;
     border-color: #eee;
     position: relative;
 
-    .navbar-nav a {
-      color: #000 !important;
-      &:hover{
-        color: #000;
-        background-color: #eee;
+    .navbar-nav {
+      li{
+        line-height: 50px;
+      }
+      a {
+        color: #000 !important;
+        &:hover {
+          color: #000;
+          background-color: #eee;
+        }
       }
     }
 
@@ -68,6 +74,50 @@ body{
       }
     }
 
+  }
+
+  .create-game-btn{
+    margin: 0 10px;
+  }
+
+  .create-game-popup{
+    .content {
+      padding: 36px 15px 10px;
+      form {
+        text-align: center;
+        .player{
+          margin: 0 20px;
+        }
+        .goal input {
+          width: 36px;
+          padding: 6px;
+          text-align: center;
+        }
+        .form-choice{
+          display: none;
+        }
+      }
+      .form-error {
+        text-align: center;
+        color: red;
+        height: 18px;
+        margin-top: 10px;
+      }
+      #createGame{
+        position: absolute;
+      }
+    }
+  }
+
+  #notify{
+    width: 300px;
+    position: absolute;
+    right: -300px;
+    bottom: 25px;
+    transition: right 0.5s;
+    &.show{
+      right: 25px;
+    }
   }
 
 }
