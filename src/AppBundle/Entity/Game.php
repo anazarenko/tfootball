@@ -23,6 +23,7 @@ class Game
 
     const STATUS_NEW = 0;
     const STATUS_COMPLETED = 1;
+    const STATUS_REJECTED = 2;
 
     const FORM_SINGLE = 0;
     const FORM_DOUBLE = 1;
@@ -33,7 +34,8 @@ class Game
 
     public $availableStatus = array(
         0 => 'New',
-        1 => 'Completed'
+        1 => 'Confirmed',
+        2 => 'Rejected'
     );
 
     public $availableForm = array(
@@ -119,6 +121,28 @@ class Game
     private $secondGoals;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $confirmedFirst = 0;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $confirmedSecond = 0;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
+     */
+    private $gameDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="createdGames")
+     * @ORM\JoinColumn(name="user_creator_id", referencedColumnName="id")
+     */
+    private $creator;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -143,6 +167,10 @@ class Game
 
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
+        }
+
+        if ($this->getGameDate() == null) {
+            $this->setGameDate(new \DateTime('now'));
         }
     }
 
@@ -501,5 +529,97 @@ class Game
     public function getPlayers()
     {
         return $this->players;
+    }
+
+    /**
+     * Set confirmedFirst
+     *
+     * @param integer $confirmedFirst
+     * @return Game
+     */
+    public function setConfirmedFirst($confirmedFirst)
+    {
+        $this->confirmedFirst = $confirmedFirst;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmedFirst
+     *
+     * @return integer 
+     */
+    public function getConfirmedFirst()
+    {
+        return $this->confirmedFirst;
+    }
+
+    /**
+     * Set confirmedSecond
+     *
+     * @param integer $confirmedSecond
+     * @return Game
+     */
+    public function setConfirmedSecond($confirmedSecond)
+    {
+        $this->confirmedSecond = $confirmedSecond;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmedSecond
+     *
+     * @return integer 
+     */
+    public function getConfirmedSecond()
+    {
+        return $this->confirmedSecond;
+    }
+
+    /**
+     * Set gameDate
+     *
+     * @param \DateTime $gameDate
+     * @return Game
+     */
+    public function setGameDate($gameDate)
+    {
+        $this->gameDate = $gameDate;
+
+        return $this;
+    }
+
+    /**
+     * Get gameDate
+     *
+     * @return \DateTime 
+     */
+    public function getGameDate()
+    {
+        return $this->gameDate;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \AppBundle\Entity\User $creator
+     * @return Game
+     */
+    public function setCreator(\AppBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 }

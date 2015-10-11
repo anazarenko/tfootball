@@ -27,7 +27,7 @@ class GameController extends Controller
     {
         $games = $this->getDoctrine()
             ->getRepository('AppBundle:Game')
-            ->findBy(array(), array('createdAt' => 'DESC'));
+            ->findBy(array('status' => 1), array('gameDate' => 'DESC'));
 
         $game = new Game();
         $form = $this->createForm(
@@ -74,11 +74,35 @@ class GameController extends Controller
             $firstPlayer = $game->getFirstPlayer();
             $secondPlayer = $game->getSecondPlayer();
 
+            if ($firstPlayer == $secondPlayer) {
+                if ($request->isXmlHttpRequest()) {
+                    $data = array('status' => 0, 'error' => 'Oops. Players must be different.');
+                    $json = json_encode($data);
+                    $response = new Response($json, 200);
+                    $response->headers->set('Content-Type', 'application/json');
+                    return $response;
+                } else {
+                    return false;
+                }
+            }
+
+            /** @var \AppBundle\Entity\User $user */
+            $user = $this->getUser();
+
+            $game->setCreator($user);
+
             $game->addPlayer($firstPlayer);
             $game->addPlayer($secondPlayer);
 
             $firstPlayer->addGame($game);
             $secondPlayer->addGame($game);
+
+            if ($firstPlayer == $user) {
+                $game->setConfirmedFirst(1);
+            }
+            if ($secondPlayer == $user) {
+                $game->setConfirmedSecond(1);
+            }
 
             if ($game->getFirstGoals() > $game->getSecondGoals()) {
                 $game->setWinner($firstPlayer);
@@ -93,8 +117,7 @@ class GameController extends Controller
                 $secondPlayer->addDrawnGame($game);
             }
 
-            $game->setStatus(1);
-
+            $game->setStatus(0);
 
             $eManager = $this->getDoctrine()->getManager();
             $eManager->persist($game);

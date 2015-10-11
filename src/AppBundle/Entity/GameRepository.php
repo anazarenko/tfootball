@@ -41,4 +41,28 @@ class GameRepository extends EntityRepository
 
         return $games;
     }
+
+    public function getNotify($user) {
+
+        $qb = $this->createQueryBuilder('g');
+        $games = $qb->select('g')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.firstPlayer', ':user'),
+                        $qb->expr()->eq('g.confirmedFirst', 0)
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.secondPlayer', ':user'),
+                        $qb->expr()->eq('g.confirmedSecond', 0)
+                    )
+                )
+            )
+            ->orderBy('g.gameDate', 'DESC')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        return $games;
+    }
 }

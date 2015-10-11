@@ -66,6 +66,11 @@ class User implements UserInterface, \Serializable
     private $lostGames;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="creator")
+     **/
+    private $createdGames;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -329,9 +334,16 @@ class User implements UserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getWonGames()
+    public function getWonGames($status = null)
     {
-        return $this->wonGames;
+        if ($status) {
+            return $this->wonGames->filter(function($game) use ($status) {
+                /** @var \AppBundle\Entity\Game $game */
+                return $game->getStatus() == $status;
+            });
+        } else {
+            return $this->wonGames;
+        }
     }
 
     /**
@@ -362,9 +374,16 @@ class User implements UserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getDrawnGames()
+    public function getDrawnGames($status = null)
     {
-        return $this->drawnGames;
+        if ($status) {
+            return $this->drawnGames->filter(function($game) use ($status) {
+                /** @var \AppBundle\Entity\Game $game */
+                return $game->getStatus() == $status;
+            });
+        } else {
+            return $this->drawnGames;
+        }
     }
 
     /**
@@ -395,9 +414,16 @@ class User implements UserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getLostGames()
+    public function getLostGames($status = null)
     {
-        return $this->lostGames;
+        if ($status) {
+            return $this->lostGames->filter(function($game) use ($status) {
+                /** @var \AppBundle\Entity\Game $game */
+                return $game->getStatus() == $status;
+            });
+        } else {
+            return $this->lostGames;
+        }
     }
 
     /**
@@ -428,8 +454,48 @@ class User implements UserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getGames()
+    public function getGames($status = null)
     {
-        return $this->games;
+        if ($status) {
+            return $this->games->filter(function($game) use ($status) {
+                /** @var \AppBundle\Entity\Game $game */
+                return $game->getStatus() == $status;
+            });
+        } else {
+            return $this->games;
+        }
+    }
+
+    /**
+     * Add createdGames
+     *
+     * @param \AppBundle\Entity\Game $createdGames
+     * @return User
+     */
+    public function addCreatedGame(\AppBundle\Entity\Game $createdGames)
+    {
+        $this->createdGames[] = $createdGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove createdGames
+     *
+     * @param \AppBundle\Entity\Game $createdGames
+     */
+    public function removeCreatedGame(\AppBundle\Entity\Game $createdGames)
+    {
+        $this->createdGames->removeElement($createdGames);
+    }
+
+    /**
+     * Get createdGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCreatedGames()
+    {
+        return $this->createdGames;
     }
 }

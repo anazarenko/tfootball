@@ -17,30 +17,4 @@ class DefaultController extends Controller
     {
         return $this->render('AppBundle:Default:index.html.twig', array('active' => 'main'));
     }
-
-    /**
-     * @Route("/header/game", name="_header_game_popup")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function headerGamePopupAction()
-    {
-        $game = new Game();
-        $form = $this->createForm(
-            new GameCreateType(array(
-                'type' => $game->availableType,
-                'status' => $game->availableStatus,
-                'form' => $game->availableForm
-            )),
-            $game,
-            array(
-                'action' => $this->generateUrl('_game_create'),
-                'method' => 'POST'
-            )
-        );
-
-        return $this->render(
-            'AppBundle::headerGamePopup.html.twig',
-            array('form' => $form->createView())
-        );
-    }
 }

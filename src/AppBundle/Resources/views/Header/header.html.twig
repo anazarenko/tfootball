@@ -13,38 +13,14 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
-                <li class="{% if active == 'main' %}active{% endif %}"><a href="#">Main</a></li>
+                <li class="{% if active == 'main' %}active{% endif %}"><a href="{{ path('_main_page') }}">Main</a></li>
                 <li class="{% if active == 'games' %}active{% endif %}"><a href="{{ path('_games') }}">Games</a></li>
                 <li class="{% if active == 'tournaments' %}active{% endif %}"><a href="#">Tournaments</a></li>
                 <li class="{% if active == 'players' %}active{% endif %}"><a href="{{ path('_player') }}">Players</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><button type="button" class="create-game-btn btn btn-primary" data-toggle="modal" data-target=".create-game-popup">Create Game</button></li>
-                <li class="dropdown game-notify">
-                    <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="text-muted small">12 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
+                {% render(controller('AppBundle:Header:headerGameNotify')) %}
                 <li><a aria-expanded="false" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user.username }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
@@ -64,4 +40,4 @@
     </div>
 </div>
 
-{% render(controller('AppBundle:Default:headerGamePopup')) %}
+{% render(controller('AppBundle:Header:headerGamePopup')) %}
