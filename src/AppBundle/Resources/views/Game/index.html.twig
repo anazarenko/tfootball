@@ -8,10 +8,22 @@
         <tbody>
         {% for game in games %}
             <tr class="game">
-                <td class="game-player {% if game.firstGoals > game.secondGoals %}winner{% endif %}">{{ game.firstPlayer.username }}</td>
+                <td class="game-player {% if game.firstGoals > game.secondGoals %}winner{% endif %}">
+                    {% if game.firstGoals > game.secondGoals %}
+                        <i class="fa fa-soccer-ball-o"></i>
+                    {% endif %}
+                    {{ game.firstPlayer.username }}
+                </td>
+                {#<td>{% if game.firstGoals > game.secondGoals %}<i class="fa fa-soccer-ball-o"></i>{% endif %}</td>#}
                 <td class="game-score">{{ game.firstGoals }}</td>
                 <td class="game-score">{{ game.secondGoals }}</td>
-                <td class="game-player {% if game.firstGoals < game.secondGoals %}winner{% endif %}">{{ game.secondPlayer.username }}</td>
+                {#<td>{% if game.firstGoals < game.secondGoals %}<i class="fa fa-soccer-ball-o"></i>{% endif %}</td>#}
+                <td class="game-player {% if game.firstGoals < game.secondGoals %}winner{% endif %}">
+                    {% if game.firstGoals < game.secondGoals %}
+                        <i class="fa fa-soccer-ball-o"></i>
+                    {% endif %}
+                    {{ game.secondPlayer.username }}
+                </td>
                 <td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>
                 <td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>
             </tr>
