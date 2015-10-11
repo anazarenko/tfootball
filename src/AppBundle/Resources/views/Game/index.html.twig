@@ -3,24 +3,40 @@
 {% block title %} - Players{% endblock %}
 
 {% block content %}
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>First Player</th>
-            <th>Score</th>
-            <th>Second Player</th>
-            <th>Date</th>
-        </tr>
-        </thead>
+
+    <table class="game-table">
         <tbody>
         {% for game in games %}
-            <tr>
-                <td>{{ game.firstPlayer.username }}</td>
-                <td>{{ game.firstGoals }} - {{ game.secondGoals }}</td>
-                <td>{{ game.secondPlayer.username }}</td>
-                <td>{{ game.createdAt|date('H:i:s d-m-Y') }}</td>
+            <tr class="game">
+                <td class="game-player {% if game.firstGoals > game.secondGoals %}winner{% endif %}">{{ game.firstPlayer.username }}</td>
+                <td class="game-score">{{ game.firstGoals }}</td>
+                <td class="game-score">{{ game.secondGoals }}</td>
+                <td class="game-player {% if game.firstGoals < game.secondGoals %}winner{% endif %}">{{ game.secondPlayer.username }}</td>
+                <td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>
+                <td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    {#<table class="table table-bordered">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>First Player</th>#}
+            {#<th>Score</th>#}
+            {#<th>Second Player</th>#}
+            {#<th>Date</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+        {#{% for game in games %}#}
+            {#<tr>#}
+                {#<td>{{ game.firstPlayer.username }}</td>#}
+                {#<td>{{ game.firstGoals }} - {{ game.secondGoals }}</td>#}
+                {#<td>{{ game.secondPlayer.username }}</td>#}
+                {#<td>{{ game.createdAt|date('H:i:s d-m-Y') }}</td>#}
+            {#</tr>#}
+        {#{% endfor %}#}
+        {#</tbody>#}
+    {#</table>#}
 {% endblock %}

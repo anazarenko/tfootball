@@ -27,7 +27,7 @@ class GameController extends Controller
     {
         $games = $this->getDoctrine()
             ->getRepository('AppBundle:Game')
-            ->findAll();
+            ->findBy(array(), array('createdAt' => 'DESC'));
 
         $game = new Game();
         $form = $this->createForm(

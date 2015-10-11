@@ -40,7 +40,7 @@ body{
   color: #000;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
 
   .navbar-default {
     background-color: #fff;
@@ -72,6 +72,10 @@ body{
         font-family: 'Blogger_SansMedium';
         font-size: 1.4em;
       }
+    }
+
+    .dropdown-alerts{
+      width: 300px;
     }
 
   }
@@ -117,6 +121,35 @@ body{
     transition: right 0.5s;
     &.show{
       right: 25px;
+    }
+  }
+
+  .game-table {
+    border-collapse:separate;
+    border-spacing:20px;
+    margin: auto;
+    .game {
+      height: 50px;
+      text-align: center;
+      td {
+        font-size: 1.2em;
+        line-height: 50px;
+        &.winner{
+          font-weight: bold;
+        }
+        &.game-score {
+          width: 50px;
+          background-color: #286090;
+          border: 1px solid #fff;
+          color: #fff;
+        }
+        &.game-player {
+          padding: 0 20px;
+        }
+        &.game-date{
+          font-size: 1em;
+        }
+      }
     }
   }
 
