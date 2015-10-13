@@ -13,6 +13,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 
 /**
  * @Route("/game")
@@ -149,5 +151,91 @@ class GameController extends Controller
         }
 
         return $this->redirectToRoute('_games');
+    }
+
+    /**
+     * @Route("/{id}/accept", name="_game_accept")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @param Game $game
+     * @return Response
+     */
+    public function gameAcceptAction(Request $request, Game $game)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $data = array('status' => 0);
+
+            /** @var \AppBundle\Entity\User $user */
+            $user = $this->getUser();
+
+            if ($game->getFirstPlayer() == $user || $game->getSecondPlayer() == $user) {
+
+                if ($game->getFirstPlayer() == $user) {
+                    $game->setConfirmedFirst($game::STATUS_COMPLETED);
+                } elseif ($game->getSecondPlayer() == $user) {
+                    $game->setConfirmedSecond($game::STATUS_COMPLETED);
+                }
+
+                if ($game->getConfirmedFirst() == $game::STATUS_COMPLETED && $game->getConfirmedSecond() == $game::STATUS_COMPLETED) {
+                    $game->setStatus($game::STATUS_COMPLETED);
+                }
+
+                $eManager = $this->getDoctrine()->getManager();
+//                $eManager->persist($game);
+                $eManager->flush();
+
+                $data = array('status' => 1);
+            }
+            $json = json_encode($data);
+            $response = new Response($json, 200);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        throw new NotFoundHttpException('Page not found');
+    }
+
+    /**
+     * @Route("/{id}/decline", name="_game_decline")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @param Game $game
+     * @return Response
+     */
+    public function gameDeclineAction(Request $request, Game $game)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $data = array('status' => 0);
+
+            /** @var \AppBundle\Entity\User $user */
+            $user = $this->getUser();
+
+            if ($game->getFirstPlayer() == $user || $game->getSecondPlayer() == $user) {
+
+                if ($game->getFirstPlayer() == $user) {
+                    $game->setConfirmedFirst($game::STATUS_REJECTED);
+                } elseif ($game->getSecondPlayer() == $user) {
+                    $game->setConfirmedSecond($game::STATUS_REJECTED);
+                }
+
+                $game->setStatus($game::STATUS_REJECTED);
+
+                $eManager = $this->getDoctrine()->getManager();
+//                $eManager->persist($game);
+                $eManager->flush();
+
+                $data = array('status' => 1);
+            }
+            $json = json_encode($data);
+            $response = new Response($json, 200);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        throw new NotFoundHttpException('Page not found');
     }
 }

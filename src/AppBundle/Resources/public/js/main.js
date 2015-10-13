@@ -47,4 +47,34 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    $('.dropdown-menu').click(function(e) {
+        e.stopPropagation();
+    });
+
+    $('.notify-btn').click(function(){
+
+        var notifies = $('.notify-item').length;
+        var btn = $(this);
+        btn.button('loading');
+
+        $.ajax({
+            type        : 'POST',
+            url         : $(this).data('href'),
+            dataType    : 'json'
+        }).success(function(data){
+            if (data.status == 0) {
+                btn.button('reset');
+            } else {
+                btn.closest('.notify-item').remove();
+                notifies--;
+                if (notifies == 0) {
+                    $('.dropdown-menu').append('<li class="notify-item">' +
+                    '<div>No matches for confirmation</div>' +
+                    '</li>');
+                    $('.game-notify').removeClass('notify-active');
+                }
+            }
+        });
+    });
+
 });

@@ -75,7 +75,7 @@ body{
     }
 
     .dropdown-alerts{
-      width: 300px;
+      width: 500px;
     }
 
   }
@@ -163,6 +163,51 @@ body{
         color: #f00;
       }
     }
-  }
+    .notify-item{
+      text-align: center;
+      font-size: 1.1em;
+      position: relative;
+      &:after{
+        content: '';
+        display: block;
+        line-height: 50px;
+        height: 1px;
+        margin: 9px 0px;
+        overflow: hidden;
+        background-color: #E5E5E5;
+      }
+      &:last-child{
+        &:after{
+          display: none;
+        }
+      }
+      .player{
+        padding: 0 10px;
+      }
+      .time{
+        padding: 0 15px 0 5px;
+      }
+      .notify-btn{
+        cursor: pointer;
+        border-radius: 5px;
+        position: relative;
+        text-align: center;
+        color: #fff;
+        i{
+          color: #fff;
+          margin-left: 5px;
+        }
+        &:hover{
+          opacity: 0.8;
+        }
+        &.accept-game{
+          background-color: #286090;
+        }
+        &.decline-game{
+          background-color: #f00;
 
+        }
+      }
+    }
+  }
 }
