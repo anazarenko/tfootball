@@ -8,10 +8,10 @@
             <tr>
                 <th>Username</th>
                 <th title="Played">Pld</th>
-                <th title="Won">W</th>
-                <th title="Drawn">D</th>
-                <th title="Lost">L</th>
-                <th>%</th>
+                {#<th title="Won">W</th>#}
+                {#<th title="Drawn">D</th>#}
+                {#<th title="Lost">L</th>#}
+                {#<th>%</th>#}
                 {#<th title="Goal for">GF</th>#}
                 {#<th title="Goal against">GA</th>#}
                 {#<th title="Goal difference">GD</th>#}
@@ -21,15 +21,15 @@
             {% for player in players %}
                 <tr>
                     <td>{{ player.username }}</td>
-                    <td>{{ player.games(1)|length }}</td>
-                    <td>{{ player.wonGames(1)|length }}</td>
-                    <td>{{ player.drawnGames(1)|length }}</td>
-                    <td>{{ player.lostGames(1)|length }}</td>
-                    <td>
-                        {% if player.games(1)|length > 0 %}
-                            {{ ((player.wonGames(1)|length/player.games(1)|length)*100)|number_format(1, '.', ',') }}
-                        {% endif %}
-                    </td>
+                    <td>{{ player.games|length }}</td>
+                    {#<td>{{ player.wonGames(1)|length }}</td>#}
+                    {#<td>{{ player.drawnGames(1)|length }}</td>#}
+                    {#<td>{{ player.lostGames(1)|length }}</td>#}
+                    {#<td>#}
+                        {#{% if player.games(1)|length > 0 %}#}
+                            {#{{ ((player.wonGames(1)|length/player.games(1)|length)*100)|number_format(1, '.', ',') }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
                     {#<td>0</td>#}
                     {#<td>0</td>#}
                     {#<td>0</td>#}

@@ -50,27 +50,6 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="winner")
-     **/
-    private $wonGames;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Game", inversedBy="drawn")
-     * @ORM\JoinTable(name="drawn_games")
-     **/
-    private $drawnGames;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="loser")
-     **/
-    private $lostGames;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="creator")
-     **/
-    private $createdGames;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -98,7 +77,6 @@ class User implements UserInterface, \Serializable
         // $this->salt = md5(uniqid(null, true));
 
         $this->games = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->drawnGames = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -174,7 +152,6 @@ class User implements UserInterface, \Serializable
         }
     }
 
-
     /**
      * Set username
      *
@@ -217,7 +194,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get email
      *
-     * @return string
+     * @return string 
      */
     public function getEmail()
     {
@@ -253,7 +230,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get createdAt
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getCreatedAt()
     {
@@ -276,7 +253,7 @@ class User implements UserInterface, \Serializable
     /**
      * Get modifiedAt
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getModifiedAt()
     {
@@ -299,131 +276,11 @@ class User implements UserInterface, \Serializable
     /**
      * Get isActive
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getIsActive()
     {
         return $this->isActive;
-    }
-
-    /**
-     * Add wonGames
-     *
-     * @param \AppBundle\Entity\Game $wonGames
-     * @return User
-     */
-    public function addWonGame(\AppBundle\Entity\Game $wonGames)
-    {
-        $this->wonGames[] = $wonGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove wonGames
-     *
-     * @param \AppBundle\Entity\Game $wonGames
-     */
-    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
-    {
-        $this->wonGames->removeElement($wonGames);
-    }
-
-    /**
-     * Get wonGames
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getWonGames($status = null)
-    {
-        if ($status) {
-            return $this->wonGames->filter(function($game) use ($status) {
-                /** @var \AppBundle\Entity\Game $game */
-                return $game->getStatus() == $status;
-            });
-        } else {
-            return $this->wonGames;
-        }
-    }
-
-    /**
-     * Add drawnGames
-     *
-     * @param \AppBundle\Entity\Game $drawnGames
-     * @return User
-     */
-    public function addDrawnGame(\AppBundle\Entity\Game $drawnGames)
-    {
-        $this->drawnGames[] = $drawnGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove drawnGames
-     *
-     * @param \AppBundle\Entity\Game $drawnGames
-     */
-    public function removeDrawnGame(\AppBundle\Entity\Game $drawnGames)
-    {
-        $this->drawnGames->removeElement($drawnGames);
-    }
-
-    /**
-     * Get drawnGames
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDrawnGames($status = null)
-    {
-        if ($status) {
-            return $this->drawnGames->filter(function($game) use ($status) {
-                /** @var \AppBundle\Entity\Game $game */
-                return $game->getStatus() == $status;
-            });
-        } else {
-            return $this->drawnGames;
-        }
-    }
-
-    /**
-     * Add lostGames
-     *
-     * @param \AppBundle\Entity\Game $lostGames
-     * @return User
-     */
-    public function addLostGame(\AppBundle\Entity\Game $lostGames)
-    {
-        $this->lostGames[] = $lostGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove lostGames
-     *
-     * @param \AppBundle\Entity\Game $lostGames
-     */
-    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
-    {
-        $this->lostGames->removeElement($lostGames);
-    }
-
-    /**
-     * Get lostGames
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getLostGames($status = null)
-    {
-        if ($status) {
-            return $this->lostGames->filter(function($game) use ($status) {
-                /** @var \AppBundle\Entity\Game $game */
-                return $game->getStatus() == $status;
-            });
-        } else {
-            return $this->lostGames;
-        }
     }
 
     /**
@@ -454,48 +311,8 @@ class User implements UserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getGames($status = null)
+    public function getGames()
     {
-        if ($status) {
-            return $this->games->filter(function($game) use ($status) {
-                /** @var \AppBundle\Entity\Game $game */
-                return $game->getStatus() == $status;
-            });
-        } else {
-            return $this->games;
-        }
-    }
-
-    /**
-     * Add createdGames
-     *
-     * @param \AppBundle\Entity\Game $createdGames
-     * @return User
-     */
-    public function addCreatedGame(\AppBundle\Entity\Game $createdGames)
-    {
-        $this->createdGames[] = $createdGames;
-
-        return $this;
-    }
-
-    /**
-     * Remove createdGames
-     *
-     * @param \AppBundle\Entity\Game $createdGames
-     */
-    public function removeCreatedGame(\AppBundle\Entity\Game $createdGames)
-    {
-        $this->createdGames->removeElement($createdGames);
-    }
-
-    /**
-     * Get createdGames
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCreatedGames()
-    {
-        return $this->createdGames;
+        return $this->games;
     }
 }

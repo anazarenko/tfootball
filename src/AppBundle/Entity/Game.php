@@ -85,18 +85,13 @@ class Game
     private $secondPlayer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="wonGames")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user_winner_id", referencedColumnName="id")
      */
     private $winner;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="drawnGames")
-     **/
-    private $drawn;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="lostGames")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user_loser_id", referencedColumnName="id")
      */
     private $loser;
@@ -137,7 +132,7 @@ class Game
     private $gameDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="createdGames")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user_creator_id", referencedColumnName="id")
      */
     private $creator;
@@ -176,7 +171,6 @@ class Game
 
     public function __construct() {
         $this->players = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->drawn = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -328,6 +322,75 @@ class Game
     }
 
     /**
+     * Set confirmedFirst
+     *
+     * @param integer $confirmedFirst
+     * @return Game
+     */
+    public function setConfirmedFirst($confirmedFirst)
+    {
+        $this->confirmedFirst = $confirmedFirst;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmedFirst
+     *
+     * @return integer 
+     */
+    public function getConfirmedFirst()
+    {
+        return $this->confirmedFirst;
+    }
+
+    /**
+     * Set confirmedSecond
+     *
+     * @param integer $confirmedSecond
+     * @return Game
+     */
+    public function setConfirmedSecond($confirmedSecond)
+    {
+        $this->confirmedSecond = $confirmedSecond;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmedSecond
+     *
+     * @return integer 
+     */
+    public function getConfirmedSecond()
+    {
+        return $this->confirmedSecond;
+    }
+
+    /**
+     * Set gameDate
+     *
+     * @param \DateTime $gameDate
+     * @return Game
+     */
+    public function setGameDate($gameDate)
+    {
+        $this->gameDate = $gameDate;
+
+        return $this;
+    }
+
+    /**
+     * Get gameDate
+     *
+     * @return \DateTime 
+     */
+    public function getGameDate()
+    {
+        return $this->gameDate;
+    }
+
+    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -443,39 +506,6 @@ class Game
     }
 
     /**
-     * Add drawn
-     *
-     * @param \AppBundle\Entity\User $drawn
-     * @return Game
-     */
-    public function addDrawn(\AppBundle\Entity\User $drawn)
-    {
-        $this->drawn[] = $drawn;
-
-        return $this;
-    }
-
-    /**
-     * Remove drawn
-     *
-     * @param \AppBundle\Entity\User $drawn
-     */
-    public function removeDrawn(\AppBundle\Entity\User $drawn)
-    {
-        $this->drawn->removeElement($drawn);
-    }
-
-    /**
-     * Get drawn
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDrawn()
-    {
-        return $this->drawn;
-    }
-
-    /**
      * Set loser
      *
      * @param \AppBundle\Entity\User $loser
@@ -496,6 +526,29 @@ class Game
     public function getLoser()
     {
         return $this->loser;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \AppBundle\Entity\User $creator
+     * @return Game
+     */
+    public function setCreator(\AppBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     /**
@@ -529,97 +582,5 @@ class Game
     public function getPlayers()
     {
         return $this->players;
-    }
-
-    /**
-     * Set confirmedFirst
-     *
-     * @param integer $confirmedFirst
-     * @return Game
-     */
-    public function setConfirmedFirst($confirmedFirst)
-    {
-        $this->confirmedFirst = $confirmedFirst;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmedFirst
-     *
-     * @return integer 
-     */
-    public function getConfirmedFirst()
-    {
-        return $this->confirmedFirst;
-    }
-
-    /**
-     * Set confirmedSecond
-     *
-     * @param integer $confirmedSecond
-     * @return Game
-     */
-    public function setConfirmedSecond($confirmedSecond)
-    {
-        $this->confirmedSecond = $confirmedSecond;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmedSecond
-     *
-     * @return integer 
-     */
-    public function getConfirmedSecond()
-    {
-        return $this->confirmedSecond;
-    }
-
-    /**
-     * Set gameDate
-     *
-     * @param \DateTime $gameDate
-     * @return Game
-     */
-    public function setGameDate($gameDate)
-    {
-        $this->gameDate = $gameDate;
-
-        return $this;
-    }
-
-    /**
-     * Get gameDate
-     *
-     * @return \DateTime 
-     */
-    public function getGameDate()
-    {
-        return $this->gameDate;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param \AppBundle\Entity\User $creator
-     * @return Game
-     */
-    public function setCreator(\AppBundle\Entity\User $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return \AppBundle\Entity\User 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 }

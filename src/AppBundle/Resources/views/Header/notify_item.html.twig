@@ -12,8 +12,8 @@
                 <span>{{ game.secondGoals }}</span>
                 <span class="player">{{ game.secondPlayer.username }}</span>
                 <span class="text-muted small time">{{ game.gameDate|date('H:i:s d-m-y') }}</span>
-                <span class="accept-game notify-btn btn-sm" data-loading-text="Accepting..." data-href="{{ path('_game_accept', {'id' : game.id}) }}">Accept<i class="fa fa-check"></i></span>
                 <span class="decline-game notify-btn btn-sm" data-loading-text="Declining..." data-href="{{ path('_game_decline', {'id' : game.id}) }}">Decline<i class="fa fa-times"></i></span>
+                <span class="accept-game notify-btn btn-sm" data-loading-text="Accepting..." data-href="{{ path('_game_accept', {'id' : game.id}) }}">Accept<i class="fa fa-check"></i></span>
             </div>
         </li>
     {% endfor %}

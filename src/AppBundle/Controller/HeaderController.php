@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class HeaderController extends Controller
 {
     /**
-     * @Route("/header/game/popup", name="_header_game_popup")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function headerGamePopupAction()
@@ -37,7 +36,6 @@ class HeaderController extends Controller
     }
 
     /**
-     * @Route("/header/game/notify", name="_header_game_notify")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function headerGameNotifyAction()

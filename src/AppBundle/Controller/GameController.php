@@ -109,17 +109,16 @@ class GameController extends Controller
             if ($game->getFirstGoals() > $game->getSecondGoals()) {
                 $game->setWinner($firstPlayer);
                 $game->setLoser($secondPlayer);
+                $game->setResult($game::RESULT_FIRST_WINNER);
             } elseif ($game->getFirstGoals() < $game->getSecondGoals()) {
                 $game->setWinner($secondPlayer);
                 $game->setLoser($firstPlayer);
+                $game->setResult($game::RESULT_SECOND_WINNER);
             } elseif ($game->getFirstGoals() == $game->getSecondGoals()) {
-                $game->addDrawn($firstPlayer);
-                $game->addDrawn($secondPlayer);
-                $firstPlayer->addDrawnGame($game);
-                $secondPlayer->addDrawnGame($game);
+                $game->setResult($game::RESULT_DRAW);
             }
 
-            $game->setStatus(0);
+            $game->setStatus($game::STATUS_NEW);
 
             $eManager = $this->getDoctrine()->getManager();
             $eManager->persist($game);
