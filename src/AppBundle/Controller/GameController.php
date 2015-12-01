@@ -27,6 +27,13 @@ class GameController extends Controller
      */
     public function matchAction()
     {
+//        $games = $this->getDoctrine()
+//            ->getRepository('AppBundle:Game')
+//            ->getGamesByDate(new \DateTime('2015-10-11 16:26:33'), new \DateTime('now'));
+//
+//        dump($games);
+//        die;
+
         $games = $this->getDoctrine()
             ->getRepository('AppBundle:Game')
             ->findBy(array('status' => 1), array('gameDate' => 'DESC'));

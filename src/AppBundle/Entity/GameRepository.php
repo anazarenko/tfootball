@@ -37,6 +37,24 @@ class GameRepository extends EntityRepository
         return $games;
     }
 
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return array
+     */
+    public function getGamesByDate(\DateTime $startDate, \DateTime $endDate) {
+        $qb = $this->createQueryBuilder('g');
+        $games = $qb->select('g')
+            ->where('g.status = 1')
+            ->andWhere($qb->expr()->between('g.gameDate', ':start', ':end'))
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
+            ->getQuery()
+            ->getResult();
+
+        return $games;
+    }
+
     public function getSingleGames($user) {
 
         $qb = $this->createQueryBuilder('g');
