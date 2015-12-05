@@ -70,6 +70,16 @@ class User implements UserInterface, \Serializable
      **/
     private $games;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Confirm", mappedBy="user")
+     */
+    private $confirms;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", mappedBy="users")
+     */
+    private $teams;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -314,5 +324,71 @@ class User implements UserInterface, \Serializable
     public function getGames()
     {
         return $this->games;
+    }
+
+    /**
+     * Add confirms
+     *
+     * @param \AppBundle\Entity\Confirm $confirms
+     * @return User
+     */
+    public function addConfirm(\AppBundle\Entity\Confirm $confirms)
+    {
+        $this->confirms[] = $confirms;
+
+        return $this;
+    }
+
+    /**
+     * Remove confirms
+     *
+     * @param \AppBundle\Entity\Confirm $confirms
+     */
+    public function removeConfirm(\AppBundle\Entity\Confirm $confirms)
+    {
+        $this->confirms->removeElement($confirms);
+    }
+
+    /**
+     * Get confirms
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getConfirms()
+    {
+        return $this->confirms;
+    }
+
+    /**
+     * Add teams
+     *
+     * @param \AppBundle\Entity\Team $teams
+     * @return User
+     */
+    public function addTeam(\AppBundle\Entity\Team $teams)
+    {
+        $this->teams[] = $teams;
+
+        return $this;
+    }
+
+    /**
+     * Remove teams
+     *
+     * @param \AppBundle\Entity\Team $teams
+     */
+    public function removeTeam(\AppBundle\Entity\Team $teams)
+    {
+        $this->teams->removeElement($teams);
+    }
+
+    /**
+     * Get teams
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTeams()
+    {
+        return $this->teams;
     }
 }
