@@ -22,7 +22,7 @@ class Game
     const TYPE_TOURNAMENT = 1;
 
     const STATUS_NEW = 0;
-    const STATUS_COMPLETED = 1;
+    const STATUS_CONFIRMED = 1;
     const STATUS_REJECTED = 2;
 
     const FORM_SINGLE = 0;
@@ -33,19 +33,19 @@ class Game
     const RESULT_DRAW = 0;
 
     public $availableStatus = array(
-        0 => 'New',
-        1 => 'Confirmed',
-        2 => 'Rejected'
+        self::STATUS_NEW => 'New',
+        self::STATUS_CONFIRMED => 'Confirmed',
+        self::STATUS_REJECTED => 'Rejected'
     );
 
     public $availableForm = array(
-        0 => '1x1',
-        1 => '2x2'
+        self::FORM_SINGLE => '1x1',
+        self::FORM_DOUBLE => '2x2'
     );
 
     public $availableType = array(
-        0 => 'Friendly',
-        1 => 'Tournament'
+        self::TYPE_FRIENDLY => 'Friendly',
+        self::TYPE_TOURNAMENT => 'Tournament'
     );
 
     /**
@@ -73,28 +73,16 @@ class Game
     private $type = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="first_player_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
-    private $firstPlayer;
+    private $firstTeam;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="second_player_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
-    private $secondPlayer;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_winner_id", referencedColumnName="id")
-     */
-    private $winner;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_loser_id", referencedColumnName="id")
-     */
-    private $loser;
+    private $secondTeam;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -107,23 +95,13 @@ class Game
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\GreaterThanOrEqual(value = 0)
      */
-    private $firstGoals;
+    private $firstScore;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\GreaterThanOrEqual(value = 0)
      */
-    private $secondGoals;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $confirmedFirst = 0;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $confirmedSecond = 0;
+    private $secondScore;
 
     /**
      * @ORM\Column(type="datetime")
@@ -138,6 +116,16 @@ class Game
     private $creator;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Confirm", mappedBy="game", cascade={"remove"})
+     */
+    private $confirms;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="games")
+     **/
+    private $players;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -146,11 +134,6 @@ class Game
      * @ORM\Column(type="datetime")
      */
     private $modifiedAt;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="games")
-     **/
-    private $players;
 
     /**
      * @ORM\PrePersist
@@ -276,95 +259,49 @@ class Game
     }
 
     /**
-     * Set firstGoals
+     * Set firstScore
      *
-     * @param integer $firstGoals
+     * @param integer $firstScore
      * @return Game
      */
-    public function setFirstGoals($firstGoals)
+    public function setFirstScore($firstScore)
     {
-        $this->firstGoals = $firstGoals;
+        $this->firstScore = $firstScore;
 
         return $this;
     }
 
     /**
-     * Get firstGoals
+     * Get firstScore
      *
      * @return integer 
      */
-    public function getFirstGoals()
+    public function getFirstScore()
     {
-        return $this->firstGoals;
+        return $this->firstScore;
     }
 
     /**
-     * Set secondGoals
+     * Set secondScore
      *
-     * @param integer $secondGoals
+     * @param integer $secondScore
      * @return Game
      */
-    public function setSecondGoals($secondGoals)
+    public function setSecondScore($secondScore)
     {
-        $this->secondGoals = $secondGoals;
+        $this->secondScore = $secondScore;
 
         return $this;
     }
 
     /**
-     * Get secondGoals
+     * Get secondScore
      *
      * @return integer 
      */
-    public function getSecondGoals()
+    public function getSecondScore()
     {
-        return $this->secondGoals;
-    }
-
-    /**
-     * Set confirmedFirst
-     *
-     * @param integer $confirmedFirst
-     * @return Game
-     */
-    public function setConfirmedFirst($confirmedFirst)
-    {
-        $this->confirmedFirst = $confirmedFirst;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmedFirst
-     *
-     * @return integer 
-     */
-    public function getConfirmedFirst()
-    {
-        return $this->confirmedFirst;
-    }
-
-    /**
-     * Set confirmedSecond
-     *
-     * @param integer $confirmedSecond
-     * @return Game
-     */
-    public function setConfirmedSecond($confirmedSecond)
-    {
-        $this->confirmedSecond = $confirmedSecond;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmedSecond
-     *
-     * @return integer 
-     */
-    public function getConfirmedSecond()
-    {
-        return $this->confirmedSecond;
+        return $this->secondScore;
     }
 
     /**
@@ -437,95 +374,49 @@ class Game
     }
 
     /**
-     * Set firstPlayer
+     * Set firstTeam
      *
-     * @param \AppBundle\Entity\User $firstPlayer
+     * @param \AppBundle\Entity\Team $firstTeam
      * @return Game
      */
-    public function setFirstPlayer(\AppBundle\Entity\User $firstPlayer = null)
+    public function setFirstTeam(\AppBundle\Entity\Team $firstTeam = null)
     {
-        $this->firstPlayer = $firstPlayer;
+        $this->firstTeam = $firstTeam;
 
         return $this;
     }
 
     /**
-     * Get firstPlayer
+     * Get firstTeam
      *
-     * @return \AppBundle\Entity\User 
+     * @return \AppBundle\Entity\Team 
      */
-    public function getFirstPlayer()
+    public function getFirstTeam()
     {
-        return $this->firstPlayer;
+        return $this->firstTeam;
     }
 
     /**
-     * Set secondPlayer
+     * Set secondTeam
      *
-     * @param \AppBundle\Entity\User $secondPlayer
+     * @param \AppBundle\Entity\Team $secondTeam
      * @return Game
      */
-    public function setSecondPlayer(\AppBundle\Entity\User $secondPlayer = null)
+    public function setSecondTeam(\AppBundle\Entity\Team $secondTeam = null)
     {
-        $this->secondPlayer = $secondPlayer;
+        $this->secondTeam = $secondTeam;
 
         return $this;
     }
 
     /**
-     * Get secondPlayer
+     * Get secondTeam
      *
-     * @return \AppBundle\Entity\User 
+     * @return \AppBundle\Entity\Team 
      */
-    public function getSecondPlayer()
+    public function getSecondTeam()
     {
-        return $this->secondPlayer;
-    }
-
-    /**
-     * Set winner
-     *
-     * @param \AppBundle\Entity\User $winner
-     * @return Game
-     */
-    public function setWinner(\AppBundle\Entity\User $winner = null)
-    {
-        $this->winner = $winner;
-
-        return $this;
-    }
-
-    /**
-     * Get winner
-     *
-     * @return \AppBundle\Entity\User 
-     */
-    public function getWinner()
-    {
-        return $this->winner;
-    }
-
-    /**
-     * Set loser
-     *
-     * @param \AppBundle\Entity\User $loser
-     * @return Game
-     */
-    public function setLoser(\AppBundle\Entity\User $loser = null)
-    {
-        $this->loser = $loser;
-
-        return $this;
-    }
-
-    /**
-     * Get loser
-     *
-     * @return \AppBundle\Entity\User 
-     */
-    public function getLoser()
-    {
-        return $this->loser;
+        return $this->secondTeam;
     }
 
     /**
@@ -549,6 +440,39 @@ class Game
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Add confirms
+     *
+     * @param \AppBundle\Entity\Confirm $confirms
+     * @return Game
+     */
+    public function addConfirm(\AppBundle\Entity\Confirm $confirms)
+    {
+        $this->confirms[] = $confirms;
+
+        return $this;
+    }
+
+    /**
+     * Remove confirms
+     *
+     * @param \AppBundle\Entity\Confirm $confirms
+     */
+    public function removeConfirm(\AppBundle\Entity\Confirm $confirms)
+    {
+        $this->confirms->removeElement($confirms);
+    }
+
+    /**
+     * Get confirms
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getConfirms()
+    {
+        return $this->confirms;
     }
 
     /**
