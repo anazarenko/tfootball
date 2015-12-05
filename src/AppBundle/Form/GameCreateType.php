@@ -14,6 +14,7 @@ class GameCreateType extends AbstractType
             ->add('firstPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
                 'choice_label' => 'username',
+                'multiple' => true,
                 'label' => 'Player',
                 'attr' => array('class' => 'form-control')
             ))
@@ -28,6 +29,7 @@ class GameCreateType extends AbstractType
             ->add('secondPlayer', 'entity', array(
                 'class' => 'AppBundle\Entity\User',
                 'choice_label' => 'username',
+                'multiple' => true,
                 'label' => 'Player',
                 'attr' => array('class' => 'form-control')
             ))
