@@ -1,9 +1,9 @@
-<li class="dropdown game-notify {% if games|length > 0 %}notify-active{% endif %}">
+<li class="dropdown game-notify {% if confirms|length > 0 %}notify-active{% endif %}">
     <a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
     </a>
     <ul class="dropdown-menu dropdown-alerts">
-        {{ include('@App/Header/notify_item.html.twig', {'games' : games}) }}
+        {{ include('@App/Header/notify_item.html.twig', {'confirms' : confirms}) }}
     </ul>
     <!-- /.dropdown-alerts -->
 </li>

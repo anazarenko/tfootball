@@ -17,11 +17,7 @@ class HeaderController extends Controller
     {
         $game = new Game();
         $form = $this->createForm(
-            new GameCreateType(array(
-                'type' => $game->availableType,
-                'status' => $game->availableStatus,
-                'form' => $game->availableForm
-            )),
+            new GameCreateType(),
             $game,
             array(
                 'action' => $this->generateUrl('_game_create'),
@@ -40,15 +36,14 @@ class HeaderController extends Controller
      */
     public function headerGameNotifyAction()
     {
+        /** @var \AppBundle\Entity\User $user */
         $user = $this->getUser();
 
-        $games = $this->getDoctrine()
-            ->getRepository('AppBundle:Game')
-            ->getNotify($user);
+        $confirms = $user->getConfirms();
 
         return $this->render(
             'AppBundle:Header:notify.html.twig',
-            array('games' => $games)
+            array('confirms' => $confirms)
         );
     }
 }

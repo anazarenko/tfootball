@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Confirm
  *
- * @ORM\Table()
+ * @ORM\Table(name="confirms")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ConfirmRepository")
  * @ORM\HasLifecycleCallbacks
  */

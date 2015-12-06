@@ -76,6 +76,9 @@ class GameController extends Controller
             )
         );
 
+        dump($request);
+        die;
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
