@@ -30,6 +30,16 @@ class Team
     private $playerCount;
 
     /**
+     * @ORM\Column(type="array")
+     */
+    private $players;
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $playerNames;
+
+    /**
      * @ORM\ManyToMany(targetEntity="User", inversedBy="teams")
      * @ORM\JoinTable(name="users_teams")
      */
@@ -176,5 +186,51 @@ class Team
     public function getModifiedAt()
     {
         return $this->modifiedAt;
+    }
+
+    /**
+     * Set players
+     *
+     * @param array $players
+     * @return Team
+     */
+    public function setPlayers($players)
+    {
+        $this->players = $players;
+
+        return $this;
+    }
+
+    /**
+     * Get players
+     *
+     * @return array 
+     */
+    public function getPlayers()
+    {
+        return $this->players;
+    }
+
+    /**
+     * Set playerNames
+     *
+     * @param array $playerNames
+     * @return Team
+     */
+    public function setPlayerNames($playerNames)
+    {
+        $this->playerNames = $playerNames;
+
+        return $this;
+    }
+
+    /**
+     * Get playerNames
+     *
+     * @return array 
+     */
+    public function getPlayerNames()
+    {
+        return $this->playerNames;
     }
 }
