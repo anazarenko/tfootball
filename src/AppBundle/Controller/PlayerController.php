@@ -25,11 +25,11 @@ class PlayerController extends Controller
     {
 //        $gameRepo = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        $players = $this->getDoctrine()->getRepository('AppBundle:User')->findAll();
+        $teams = $this->getDoctrine()->getRepository('AppBundle:Team')->findAll();
 
         return $this->render(
             'AppBundle:Player:index.html.twig',
-            array('active' => 'players', 'players' => $players)
+            array('active' => 'players', 'teams' => $teams)
         );
     }
 }

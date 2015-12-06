@@ -18,10 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for player in players %}
+            {% for team in teams %}
                 <tr>
-                    <td>{{ player.username }}</td>
-                    <td>{{ player.games|length }}</td>
+                    <td>{{ team|members }}</td>
+                    <td>{{ team.games|length }}</td>
                     {#<td>{{ player.wonGames(1)|length }}</td>#}
                     {#<td>{{ player.drawnGames(1)|length }}</td>#}
                     {#<td>{{ player.lostGames(1)|length }}</td>#}
