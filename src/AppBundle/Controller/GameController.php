@@ -36,25 +36,11 @@ class GameController extends Controller
 
         $games = $this->getDoctrine()
             ->getRepository('AppBundle:Game')
-            ->findBy(array('status' => 1), array('gameDate' => 'DESC'));
-
-        $game = new Game();
-        $form = $this->createForm(
-            new GameCreateType(array(
-                'type' => $game->availableType,
-                'status' => $game->availableStatus,
-                'form' => $game->availableForm
-            )),
-            $game,
-            array(
-                'action' => $this->generateUrl('_game_create'),
-                'method' => 'POST'
-            )
-        );
+            ->findBy(array('status' => Game::STATUS_CONFIRMED), array('gameDate' => 'DESC'));
 
         return $this->render(
             'AppBundle:Game:index.html.twig',
-            array('active' => 'games', 'games' => $games, 'form' => $form->createView())
+            array('active' => 'games', 'games' => $games)
         );
     }
 
