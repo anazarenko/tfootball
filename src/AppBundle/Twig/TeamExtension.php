@@ -25,7 +25,7 @@ class TeamExtension extends \Twig_Extension
         /** @var \AppBundle\Entity\User $member */
         foreach ($team->getUsers() as $member) {
             $members .= $member->getUsername();
-            $members.= ' / ';
+            $members.= " $separator ";
         }
 
         return $members;
