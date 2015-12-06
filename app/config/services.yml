@@ -7,6 +7,10 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    team:
+        class: AppBundle\Service\TeamManager
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+
     app.twig_extension:
             class: AppBundle\Twig\TeamExtension
             public: false
