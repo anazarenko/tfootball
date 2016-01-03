@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Game;
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use AppBundle\Form\GameCreateType;
 use DashboardBundle\Form\UserCreateType;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,6 +55,7 @@ class GameController extends Controller
     public function gameCreateAction(Request $request)
     {
         $game = new Game();
+        $referer = $request->headers->get('referer');
         $form = $this->createForm(
             new GameCreateType(),
             $game,
@@ -62,27 +65,60 @@ class GameController extends Controller
             )
         );
 
-        dump($request);
-        die;
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $data = $request->request->get('game_create');
+            $userRepo = $this->getDoctrine()->getRepository('AppBundle:User');
+
+            if (!$this->isValidTeams($data['firstTeam'], $data['secondTeam'])) {
+                return new RedirectResponse($referer);
+            }
+
+            $firstTeamEntities = array();
+            $secondTeamEntities = array();
+
+            foreach($data['firstTeam'] as $userID) {
+                $firstTeamEntities[] = $userRepo->findOneBy(array('id' => $userID));
+            }
+            foreach($data['secondTeam'] as $userID) {
+                $secondTeamEntities[] = $userRepo->findOneBy(array('id' => $userID));
+            }
+
+            $firstTeam = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($firstTeamEntities);
+            $secondTeam = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($secondTeamEntities);
+
+            if (!$firstTeam) {
+                $team = new Team();
+                $team->setPlayerCount(count($firstTeamEntities));
+
+                $names = array();
+
+                /** @var \AppBundle\Entity\User $user */
+                foreach($firstTeamEntities as $user) {
+                    $team->addUser($user);
+                    $user->addTeam($team);
+
+                    $names[] = $user->getUsername();
+                }
+
+                $team->setPlayerNames($names);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($team);
+                $entityManager->flush();
+
+                $firstTeam = $team;
+
+            }
+
+            dump($firstTeam);
+            dump($secondTeam);
+            die;
+
             $firstPlayer = $game->getFirstPlayer();
             $secondPlayer = $game->getSecondPlayer();
-
-            if ($firstPlayer == $secondPlayer) {
-                if ($request->isXmlHttpRequest()) {
-                    $data = array('status' => 0, 'error' => 'Oops. Players must be different.');
-                    $json = json_encode($data);
-                    $response = new Response($json, 200);
-                    $response->headers->set('Content-Type', 'application/json');
-                    return $response;
-                } else {
-                    return false;
-                }
-            }
 
             /** @var \AppBundle\Entity\User $user */
             $user = $this->getUser();
@@ -120,29 +156,19 @@ class GameController extends Controller
             $eManager->persist($game);
             $eManager->flush();
 
-            if ($request->isXmlHttpRequest()) {
-
-                $data = array('status' => 1);
-
-                $json = json_encode($data);
-                $response = new Response($json, 200);
-                $response->headers->set('Content-Type', 'application/json');
-                return $response;
-            }
-
-            // Add Flash message
-            $this->addFlash('success', 'New Game was added!');
         } else {
-            if ($request->isXmlHttpRequest()) {
+//            if ($request->isXmlHttpRequest()) {
+//
+//                $data = array('status' => 0, 'error' => 'Oops. Something went wrong. Please try again.');
+//
+//                $json = json_encode($data);
+//                $response = new Response($json, 200);
+//                $response->headers->set('Content-Type', 'application/json');
+//                return $response;
+//            }
+            $this->addFlash('error', 'Oops. Something went wrong. Please try again.');
+            return new RedirectResponse($referer);
 
-                $data = array('status' => 0, 'error' => 'Oops. Something went wrong. Please try again.');
-
-                $json = json_encode($data);
-                $response = new Response($json, 200);
-                $response->headers->set('Content-Type', 'application/json');
-                return $response;
-            }
-            $this->addFlash('error', 'Error!');
         }
 
         return $this->redirectToRoute('_games');
@@ -232,5 +258,27 @@ class GameController extends Controller
         }
 
         throw new NotFoundHttpException('Page not found');
+    }
+
+    /**
+     * @param array $firstTeam
+     * @param array $secondTeam
+     * @return bool
+     */
+    public function isValidTeams($firstTeam, $secondTeam)
+    {
+        if (count($firstTeam) != count($secondTeam)) {
+            $this->addFlash('error', 'Count of member must be equal');
+            return false;
+        }
+
+        foreach ($firstTeam as $member) {
+            if (in_array($member, $secondTeam)) {
+                $this->addFlash('error', 'Player do not repeated!');
+                return false;
+            }
+        }
+
+        return true;
     }
 }

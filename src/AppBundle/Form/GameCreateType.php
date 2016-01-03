@@ -16,7 +16,8 @@ class GameCreateType extends AbstractType
                 'choice_label' => 'username',
                 'multiple' => true,
                 'label' => 'Player',
-                'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'form-control'),
+                'mapped' => false
             ))
             ->add('firstScore', 'number', array(
                 'invalid_message' => 'Invalid number',
@@ -31,7 +32,8 @@ class GameCreateType extends AbstractType
                 'choice_label' => 'username',
                 'multiple' => true,
                 'label' => 'Player',
-                'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'form-control'),
+                'mapped' => false
             ))
             ->add('form', 'choice', array(
                 'choices' => array(0 => '1x1', 1 => '2x2'),

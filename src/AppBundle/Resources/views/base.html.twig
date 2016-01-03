@@ -18,6 +18,16 @@
         {% include '@App/Header/header.html.twig' %}
     {% endblock %}
     <div class="container">
+
+        {% for flash_message in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger alert-dismissible fade in flash-error" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p><strong>Error!</strong> {{ flash_message }}</p>
+            </div>
+        {% endfor %}
+
         {% block content %}{% endblock %}
     </div>
 

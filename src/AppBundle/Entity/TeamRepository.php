@@ -12,4 +12,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class TeamRepository extends EntityRepository
 {
+    /**
+     * Find team by members
+     *
+     * @param array $teamMembers
+     * @return array
+     */
+    public function findTeamByMembers($teamMembers) {
+
+        $playerCount = count($teamMembers);
+        $qb = $this->createQueryBuilder('t');
+        $builder = $qb->select('t')
+            ->innerJoin('t.users', 'u')
+            ->where('t.playerCount = :playerCount');
+
+        foreach ($teamMembers as $member) {
+            $builder = $builder->andWhere('u.id = :memberID')
+                ->setParameter('memberID', $member->getId());
+        }
+
+        $team = $builder->setMaxResults(1)
+            ->setParameter('playerCount', $playerCount)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $team;
+    }
 }

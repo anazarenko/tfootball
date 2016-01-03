@@ -32,11 +32,6 @@ class Team
     /**
      * @ORM\Column(type="array")
      */
-    private $players;
-
-    /**
-     * @ORM\Column(type="array")
-     */
     private $playerNames;
 
     /**
@@ -186,29 +181,6 @@ class Team
     public function getModifiedAt()
     {
         return $this->modifiedAt;
-    }
-
-    /**
-     * Set players
-     *
-     * @param array $players
-     * @return Team
-     */
-    public function setPlayers($players)
-    {
-        $this->players = $players;
-
-        return $this;
-    }
-
-    /**
-     * Get players
-     *
-     * @return array 
-     */
-    public function getPlayers()
-    {
-        return $this->players;
     }
 
     /**
