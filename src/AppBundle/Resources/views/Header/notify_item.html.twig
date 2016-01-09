@@ -7,17 +7,17 @@
         <li class="notify-item">
             <div>
                 <span class="player">
-                    {% for player in confirm.game.firstTeam %}
-                        {{ player.username }}
+                    {% for player in confirm.game.firstTeam.playerNames %}
+                        {{ player }}
                         {% if not loop.last %}/{% endif %}
                     {% endfor %}
                 </span>
-                <span>{{ confirm.game.firstGoals }}</span>
+                <span>{{ confirm.game.firstScore }}</span>
                 <span>:</span>
-                <span>{{ confirm.game.secondGoals }}</span>
+                <span>{{ confirm.game.secondScore }}</span>
                 <span class="player">
-                    {% for player in confirm.game.secondTeam %}
-                        {{ player.username }}
+                    {% for player in confirm.game.secondTeam.playerNames %}
+                        {{ player }}
                         {% if not loop.last %}/{% endif %}
                     {% endfor %}
                 </span>

@@ -39,7 +39,7 @@ class Confirm
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Game", inversedBy="confirms")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Game", inversedBy="confirms", cascade={"persist"})
      * @ORM\JoinColumn(name="game_id", referencedColumnName="id")
      */
     private $game;

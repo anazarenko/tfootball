@@ -15,7 +15,7 @@ class TeamRepository extends EntityRepository
     /**
      * Find team by members
      *
-     * @param array $teamMembers
+     * @param array $teamMembers array of team members
      * @return array
      */
     public function findTeamByMembers($teamMembers) {

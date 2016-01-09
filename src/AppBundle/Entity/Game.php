@@ -74,13 +74,13 @@ class Game
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="first_team", referencedColumnName="id")
      */
     private $firstTeam;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="second_team", referencedColumnName="id")
      */
     private $secondTeam;
 

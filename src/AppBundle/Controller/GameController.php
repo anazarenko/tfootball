@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Game;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
@@ -71,90 +72,78 @@ class GameController extends Controller
 
             $data = $request->request->get('game_create');
             $userRepo = $this->getDoctrine()->getRepository('AppBundle:User');
+            $entityManager = $this->getDoctrine()->getManager();
 
             if (!$this->isValidTeams($data['firstTeam'], $data['secondTeam'])) {
                 return new RedirectResponse($referer);
             }
 
-            $firstTeamEntities = array();
-            $secondTeamEntities = array();
-
-            foreach($data['firstTeam'] as $userID) {
-                $firstTeamEntities[] = $userRepo->findOneBy(array('id' => $userID));
-            }
-            foreach($data['secondTeam'] as $userID) {
-                $secondTeamEntities[] = $userRepo->findOneBy(array('id' => $userID));
-            }
-
-            $firstTeam = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($firstTeamEntities);
-            $secondTeam = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($secondTeamEntities);
-
-            if (!$firstTeam) {
-                $team = new Team();
-                $team->setPlayerCount(count($firstTeamEntities));
-
-                $names = array();
-
-                /** @var \AppBundle\Entity\User $user */
-                foreach($firstTeamEntities as $user) {
-                    $team->addUser($user);
-                    $user->addTeam($team);
-
-                    $names[] = $user->getUsername();
-                }
-
-                $team->setPlayerNames($names);
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($team);
-                $entityManager->flush();
-
-                $firstTeam = $team;
-
-            }
-
-            dump($firstTeam);
-            dump($secondTeam);
-            die;
-
-            $firstPlayer = $game->getFirstPlayer();
-            $secondPlayer = $game->getSecondPlayer();
-
             /** @var \AppBundle\Entity\User $user */
             $user = $this->getUser();
 
+            $firstTeamEntitiesArray = array();
+            $secondTeamEntitiesArray = array();
+            $userEntitiesArray = array();
+
+            foreach($data['firstTeam'] as $userID) {
+                // Get user in team
+                $currentUser = $userRepo->findOneBy(array('id' => $userID));
+                // Add user entity to team array
+                $firstTeamEntitiesArray[] = $currentUser;
+                // Add user entity to users array
+                $userEntitiesArray[] = $currentUser;
+                // Add current user to game
+                $game->addPlayer($currentUser);
+            }
+
+            foreach($data['secondTeam'] as $userID) {
+                // Get user in team
+                $currentUser = $userRepo->findOneBy(array('id' => $userID));
+                // Add user entity to team array
+                $secondTeamEntitiesArray[] = $currentUser;
+                // Add user entity to users array
+                $userEntitiesArray[] = $currentUser;
+                // Add current user to game
+                $game->addPlayer($currentUser);
+            }
+
+            $firstTeam = $this->findTeam($firstTeamEntitiesArray);
+            $secondTeam = $this->findTeam($secondTeamEntitiesArray);
+
+            $game->setFirstTeam($firstTeam);
+            $game->setSecondTeam($secondTeam);
+            $game->setType(Game::TYPE_FRIENDLY);
             $game->setCreator($user);
 
-            $game->addPlayer($firstPlayer);
-            $game->addPlayer($secondPlayer);
-
-            $firstPlayer->addGame($game);
-            $secondPlayer->addGame($game);
-
-            if ($firstPlayer == $user) {
-                $game->setConfirmedFirst(1);
-            }
-            if ($secondPlayer == $user) {
-                $game->setConfirmedSecond(1);
-            }
-
-            if ($game->getFirstGoals() > $game->getSecondGoals()) {
-                $game->setWinner($firstPlayer);
-                $game->setLoser($secondPlayer);
-                $game->setResult($game::RESULT_FIRST_WINNER);
-            } elseif ($game->getFirstGoals() < $game->getSecondGoals()) {
-                $game->setWinner($secondPlayer);
-                $game->setLoser($firstPlayer);
+            if ($game->getFirstScore() > $game->getSecondScore()) {
+                $game->setResult(Game::RESULT_FIRST_WINNER);
+            } elseif ($game->getFirstScore() < $game->getSecondScore()) {
                 $game->setResult($game::RESULT_SECOND_WINNER);
-            } elseif ($game->getFirstGoals() == $game->getSecondGoals()) {
+            } elseif ($game->getFirstScore() == $game->getSecondScore()) {
                 $game->setResult($game::RESULT_DRAW);
             }
 
             $game->setStatus($game::STATUS_NEW);
 
-            $eManager = $this->getDoctrine()->getManager();
-            $eManager->persist($game);
-            $eManager->flush();
+            $entityManager->persist($game);
+            $entityManager->flush();
+
+            /** @var \AppBundle\Entity\User $currentUser */
+            foreach ($userEntitiesArray as $currentUser) {
+                $currentUser->addGame($game);
+                // Create new confirm entity
+                $confirm = new Confirm();
+                $confirm->setGame($game);
+                $confirm->setUser($currentUser);
+                $confirm->setStatus($currentUser == $user ? Confirm::STATUS_CONFIRMED : Confirm::STATUS_NEW);
+
+                $entityManager->persist($confirm);
+                $entityManager->persist($currentUser);
+            }
+
+            $entityManager->persist($game);
+            $entityManager->flush();
+
 
         } else {
 //            if ($request->isXmlHttpRequest()) {
@@ -281,4 +270,38 @@ class GameController extends Controller
 
         return true;
     }
+
+    /**
+     * @param array $teamMembers array of team members
+     * @return Team|array
+     */
+    public function findTeam($teamMembers)
+    {
+        $team = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($teamMembers);
+
+        if (!$team) {
+            $team = new Team();
+            $team->setPlayerCount(count($teamMembers));
+
+            $names = array();
+
+            /** @var \AppBundle\Entity\User $user */
+            foreach ($teamMembers as $user) {
+                $team->addUser($user);
+                $user->addTeam($team);
+
+                $names[] = $user->getUsername();
+            }
+
+            $team->setPlayerNames($names);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($team);
+            $entityManager->flush();
+        }
+
+        return $team;
+
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Game;
 use AppBundle\Form\GameCreateType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,7 +40,8 @@ class HeaderController extends Controller
         /** @var \AppBundle\Entity\User $user */
         $user = $this->getUser();
 
-        $confirms = $user->getConfirms();
+        $confirmRepo = $this->getDoctrine()->getRepository('AppBundle:Confirm');
+        $confirms = $confirmRepo->findBy(array('user' => $user, 'status' => Confirm::STATUS_NEW));
 
         return $this->render(
             'AppBundle:Header:notify.html.twig',
