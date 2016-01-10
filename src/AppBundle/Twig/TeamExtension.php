@@ -20,13 +20,7 @@ class TeamExtension extends \Twig_Extension
      */
     public function teamMembers(Team $team, $separator = '/')
     {
-        $members = '';
-
-        /** @var \AppBundle\Entity\User $member */
-        foreach ($team->getUsers() as $member) {
-            $members .= $member->getUsername();
-            $members.= " $separator ";
-        }
+        $members = implode(' '.$separator.' ', $team->getPlayerNames());
 
         return $members;
     }

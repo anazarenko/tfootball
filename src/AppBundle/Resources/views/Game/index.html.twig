@@ -16,6 +16,7 @@
                 </td>
                 {#<td>{% if game.firstGoals > game.secondGoals %}<i class="fa fa-soccer-ball-o"></i>{% endif %}</td>#}
                 <td class="game-score">{{ game.firstScore }}</td>
+                <td>:</td>
                 <td class="game-score">{{ game.secondScore }}</td>
                 {#<td>{% if game.firstGoals < game.secondGoals %}<i class="fa fa-soccer-ball-o"></i>{% endif %}</td>#}
                 <td class="game-player {% if game.firstScore < game.secondScore %}winner{% endif %}">
