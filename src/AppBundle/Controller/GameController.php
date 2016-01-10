@@ -208,17 +208,19 @@ class GameController extends Controller
             if ($confirm) {
                 $confirm->setStatus(Confirm::STATUS_CONFIRMED);
 
-                $completeGame = true;
-                /** @var \AppBundle\Entity\Confirm $currentConfirm */
-                foreach ($game->getConfirms() as $currentConfirm) {
-                    if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
-                        $completeGame = false;
-                        break;
+                if ($game->getStatus() != Game::STATUS_REJECTED) {
+                    $completeGame = true;
+                    /** @var \AppBundle\Entity\Confirm $currentConfirm */
+                    foreach ($game->getConfirms() as $currentConfirm) {
+                        if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
+                            $completeGame = false;
+                            break;
+                        }
                     }
-                }
 
-                if ($completeGame) {
-                    $game->setStatus(Game::STATUS_CONFIRMED);
+                    if ($completeGame) {
+                        $game->setStatus(Game::STATUS_CONFIRMED);
+                    }
                 }
 
                 $entityManager = $this->getDoctrine()->getManager();
@@ -252,19 +254,16 @@ class GameController extends Controller
             /** @var \AppBundle\Entity\User $user */
             $user = $this->getUser();
 
-            if ($game->getFirstPlayer() == $user || $game->getSecondPlayer() == $user) {
+            $confirmRepo = $this->getDoctrine()->getRepository('AppBundle:Confirm');
+            $confirm = $confirmRepo->findOneBy(array('user' => $user, 'game' => $game));
 
-                if ($game->getFirstPlayer() == $user) {
-                    $game->setConfirmedFirst($game::STATUS_REJECTED);
-                } elseif ($game->getSecondPlayer() == $user) {
-                    $game->setConfirmedSecond($game::STATUS_REJECTED);
-                }
+            if ($confirm) {
+                $confirm->setStatus(Confirm::STATUS_REJECTED);
 
-                $game->setStatus($game::STATUS_REJECTED);
+                $game->setStatus(Game::STATUS_REJECTED);
 
-                $eManager = $this->getDoctrine()->getManager();
-//                $eManager->persist($game);
-                $eManager->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
 
                 $data = array('status' => 1);
             }
