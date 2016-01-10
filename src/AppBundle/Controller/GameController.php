@@ -73,8 +73,19 @@ class GameController extends Controller
             $data = $request->request->get('game_create');
             $userRepo = $this->getDoctrine()->getRepository('AppBundle:User');
             $entityManager = $this->getDoctrine()->getManager();
+            $errorMsg = '';
 
-            if (!$this->isValidTeams($data['firstTeam'], $data['secondTeam'])) {
+            if (!$this->isValidTeams($data['firstTeam'], $data['secondTeam'], $errorMsg)) {
+                if ($request->isXmlHttpRequest()) {
+
+                    $data = array('status' => 0, 'error' => $errorMsg);
+
+                    $json = json_encode($data);
+                    $response = new Response($json, 200);
+                    $response->headers->set('Content-Type', 'application/json');
+                    return $response;
+                }
+
                 return new RedirectResponse($referer);
             }
 
@@ -144,17 +155,28 @@ class GameController extends Controller
             $entityManager->persist($game);
             $entityManager->flush();
 
+            if ($request->isXmlHttpRequest()) {
+
+                $data = array('status' => 1, 'error' => 'New Game was added!');
+
+                $json = json_encode($data);
+                $response = new Response($json, 200);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+
+            $this->addFlash('success', 'New Game was added!');
 
         } else {
-//            if ($request->isXmlHttpRequest()) {
-//
-//                $data = array('status' => 0, 'error' => 'Oops. Something went wrong. Please try again.');
-//
-//                $json = json_encode($data);
-//                $response = new Response($json, 200);
-//                $response->headers->set('Content-Type', 'application/json');
-//                return $response;
-//            }
+            if ($request->isXmlHttpRequest()) {
+
+                $data = array('status' => 0, 'error' => 'Oops. Something went wrong. Please try again.');
+
+                $json = json_encode($data);
+                $response = new Response($json, 200);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
             $this->addFlash('error', 'Oops. Something went wrong. Please try again.');
             return new RedirectResponse($referer);
 
@@ -250,20 +272,23 @@ class GameController extends Controller
     }
 
     /**
-     * @param array $firstTeam
-     * @param array $secondTeam
+     * @param $firstTeam
+     * @param $secondTeam
+     * @param $errorMsg
      * @return bool
      */
-    public function isValidTeams($firstTeam, $secondTeam)
+    public function isValidTeams($firstTeam, $secondTeam, &$errorMsg)
     {
         if (count($firstTeam) != count($secondTeam)) {
-            $this->addFlash('error', 'Count of member must be equal');
+//            $this->addFlash('error', 'Count of member must be equal');
+            $errorMsg = 'Count of member must be equal';
             return false;
         }
 
         foreach ($firstTeam as $member) {
             if (in_array($member, $secondTeam)) {
-                $this->addFlash('error', 'Player do not repeated!');
+//                $this->addFlash('error', 'Player do not repeated!');
+                $errorMsg = 'Player do not repeated!';
                 return false;
             }
         }
