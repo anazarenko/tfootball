@@ -87,6 +87,8 @@ $(document).ready(function() {
                     '</li>');
                     $('.game-notify').removeClass('notify-active');
                 }
+            } else {
+                console.log(data);
             }
         }).always(function(){
             btn.button('reset');

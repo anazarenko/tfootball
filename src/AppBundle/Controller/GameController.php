@@ -202,21 +202,27 @@ class GameController extends Controller
             /** @var \AppBundle\Entity\User $user */
             $user = $this->getUser();
 
-            if ($game->getFirstPlayer() == $user || $game->getSecondPlayer() == $user) {
+            $confirmRepo = $this->getDoctrine()->getRepository('AppBundle:Confirm');
+            $confirm = $confirmRepo->findOneBy(array('user' => $user, 'game' => $game));
 
-                if ($game->getFirstPlayer() == $user) {
-                    $game->setConfirmedFirst($game::STATUS_COMPLETED);
-                } elseif ($game->getSecondPlayer() == $user) {
-                    $game->setConfirmedSecond($game::STATUS_COMPLETED);
+            if ($confirm) {
+                $confirm->setStatus(Confirm::STATUS_CONFIRMED);
+
+                $completeGame = true;
+                /** @var \AppBundle\Entity\Confirm $currentConfirm */
+                foreach ($game->getConfirms() as $currentConfirm) {
+                    if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
+                        $completeGame = false;
+                        break;
+                    }
                 }
 
-                if ($game->getConfirmedFirst() == $game::STATUS_COMPLETED && $game->getConfirmedSecond() == $game::STATUS_COMPLETED) {
-                    $game->setStatus($game::STATUS_COMPLETED);
+                if ($completeGame) {
+                    $game->setStatus(Game::STATUS_CONFIRMED);
                 }
 
-                $eManager = $this->getDoctrine()->getManager();
-//                $eManager->persist($game);
-                $eManager->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
 
                 $data = array('status' => 1);
             }

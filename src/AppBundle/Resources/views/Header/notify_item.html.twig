@@ -22,8 +22,8 @@
                     {% endfor %}
                 </span>
                 <span class="text-muted small time">{{ confirm.game.gameDate|date('H:i:s d-m-y') }}</span>
-                <button class="decline-game notify-btn btn-sm" type="button" autocomplete="off" data-loading-text="Declining..." data-href="{{ path('_game_decline', {'id' : confirm.id}) }}">Decline<i class="fa fa-times"></i></button>
-                <button class="accept-game notify-btn btn-sm" type="button" autocomplete="off" data-loading-text="Accepting..." data-href="{{ path('_game_accept', {'id' : confirm.id}) }}">Accept<i class="fa fa-check"></i></button>
+                <button class="decline-game notify-btn btn-sm" type="button" autocomplete="off" data-loading-text="Declining..." data-href="{{ path('_game_decline', {'id' : confirm.game.id}) }}">Decline<i class="fa fa-times"></i></button>
+                <button class="accept-game notify-btn btn-sm" type="button" autocomplete="off" data-loading-text="Accepting..." data-href="{{ path('_game_accept', {'id' : confirm.game.id}) }}">Accept<i class="fa fa-check"></i></button>
             </div>
         </li>
     {% endfor %}
