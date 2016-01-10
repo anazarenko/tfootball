@@ -9,6 +9,9 @@ $(document).ready(function() {
         notify.removeClass('show');
     });
 
+    $('#game_create_firstTeam').select2();
+    $('#game_create_secondTeam').select2();
+
      //process the form
     createGameForm.submit(function(event) {
 
