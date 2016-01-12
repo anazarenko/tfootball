@@ -4,6 +4,16 @@
 
 {% block content %}
 
+    <div class="col-md-12 date-filter-container">
+        <form action="">
+            <h4>Date Range</h4>
+            <div class="date-filter-row">
+                <input type="text" id="date-filter" class="form-control">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            </div>
+        </form>
+    </div>
+
     <table class="game-table">
         <tbody>
         {% for game in games %}

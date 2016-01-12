@@ -5,14 +5,26 @@ $(document).ready(function() {
     var notify = $('#notify');
     var notifyClose = $('#notify .close');
 
+    // Hide notify window
     notifyClose.click(function(){
         notify.removeClass('show');
     });
 
+    // Date filter
+    $('#date-filter').daterangepicker({
+        locale: {
+            format: 'DD.MM.YYYY',
+            cancelLabel: 'Clear'
+        }
+    }).andSelf().on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+
+    // Player select in creating game
     $('#game_create_firstTeam').select2();
     $('#game_create_secondTeam').select2();
 
-     //process the form
+    // Create game form
     createGameForm.submit(function(event) {
 
         var submitBtn = $('#createGame');
@@ -66,10 +78,12 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    // Dropdown menu
     $('.dropdown-menu').click(function(e) {
         e.stopPropagation();
     });
 
+    // Notify btn in popup
     $('.notify-btn').click(function(){
 
         var notifies = $('.notify-item').length;
