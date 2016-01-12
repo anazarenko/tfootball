@@ -32,9 +32,11 @@
         {% block content %}{% endblock %}
     </div>
 
-    <div id="notify" class="alert alert-success alert-dismissible fade in" role="alert">
-        <button type="button" class="close"><span>×</span></button>
-        <p><strong>Success!</strong> New game was created. Wait for confirmation from other players.</p>
+    <div id="notify-container">
+        <div id="notify" class="alert alert-success alert-dismissible fade in" role="alert">
+            <button type="button" class="close"><span>×</span></button>
+            <p><strong>Success!</strong> New game was created. Wait for confirmation from other players.</p>
+        </div>
     </div>
 
 {% endblock %}

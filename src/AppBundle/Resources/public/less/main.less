@@ -40,7 +40,11 @@ body{
   color: #000;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  min-width: 1280px;
+
+  .container{
+    min-width: 1280px;
+  }
 
   .navbar-default {
     background-color: #fff;
@@ -113,14 +117,22 @@ body{
     }
   }
 
-  #notify{
-    width: 300px;
+  #notify-container {
+    width: 350px;
+    height: 100%;
     position: absolute;
-    right: -300px;
-    bottom: 25px;
-    transition: right 0.5s;
-    &.show{
-      right: 25px;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    #notify {
+      width: 300px;
+      position: absolute;
+      right: -300px;
+      bottom: 25px;
+      transition: right 0.5s;
+      &.show {
+        right: 25px;
+      }
     }
   }
 
