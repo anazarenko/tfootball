@@ -4,39 +4,61 @@
 
 {% block content %}
 
-    <div class="col-md-12 date-filter-container">
-        <form action="">
-            <h4>Date Range</h4>
-            <div class="date-filter-row">
-                <input type="text" id="date-filter" class="form-control">
-                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-            </div>
-        </form>
+    <div class="row">
+        <div class="col-md-12 date-filter-container">
+            <form action="{{ path('_games') }}" method="post">
+                <h4>Date Range</h4>
+                <div class="date-filter-row">
+                    <input type="text" id="date-filter" name="dateRange" class="form-control" value="">
+                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                </div>
+                <div class="submit">
+                    <input class="btn btn-success" type="submit" value="Apply">
+                </div>
+                <input type="hidden" name="startDate" value="{{ startDate }}">
+                <input type="hidden" name="endDate" value="{{ endDate }}">
+            </form>
+        </div>
     </div>
 
-    <table class="game-table">
-        <tbody>
-        {% for game in games %}
-            <tr class="game">
-                <td class="game-player {% if game.firstScore > game.secondScore %}winner{% endif %}">
-                    {% if game.firstScore > game.secondScore %}
-                        <i class="fa fa-soccer-ball-o"></i>
-                    {% endif %}
-                    {{ game.firstTeam|members }}
-                </td>
-                <td class="game-score">{{ game.firstScore }}</td>
-                <td>:</td>
-                <td class="game-score">{{ game.secondScore }}</td>
-                <td class="game-player {% if game.firstScore < game.secondScore %}winner{% endif %}">
-                    {% if game.firstScore < game.secondScore %}
-                        <i class="fa fa-soccer-ball-o"></i>
-                    {% endif %}
-                    {{ game.secondTeam|members }}
-                </td>
-                <td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>
-                <td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {# total items count #}
+    <div class="row">
+        <div class="count total-item-count col-md-12">
+            <span>
+                {% transchoice pagination.getTotalItemCount %}
+                    {0} No matches|{1} Found 1 match|]1,Inf[Found %count% matches
+                {% endtranschoice %}
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="game-table">
+            <tbody class="game-list">
+                {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if moreBtn %}
+        <div class="row load-more-container">
+            <div data-href="{{ path('_games') }}" data-page="2" class="btn btn-primary more-game">More</div>
+        </div>
+    {% endif %}
+
+    {#<div class="row">#}
+        {#<div class="pagination">#}
+            {#{{ knp_pagination_render(pagination) }}#}
+        {#</div>#}
+    {#</div>#}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'bundles/app/js/game.js'
+    output='js/compiled/game.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

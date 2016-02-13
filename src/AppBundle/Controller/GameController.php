@@ -9,6 +9,9 @@ use AppBundle\Entity\User;
 use AppBundle\Form\GameCreateType;
 use DashboardBundle\Form\UserCreateType;
 use DashboardBundle\Form\UserEditType;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use Knp\Component\Pager\Pagination\AbstractPagination;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,24 +29,60 @@ class GameController extends Controller
 {
     /**
      * @Route("/", name="_games")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @return Response
      */
-    public function matchAction()
+    public function matchAction(Request $request)
     {
-//        $games = $this->getDoctrine()
-//            ->getRepository('AppBundle:Game')
-//            ->getGamesByDate(new \DateTime('2015-10-11 16:26:33'), new \DateTime('now'));
-//
-//        dump($games);
-//        die;
+        // Default date range
+        $dateRange = '01.01.2016-'.date('d.m.Y', time());
+        $dates = explode('-', $dateRange);
 
-        $games = $this->getDoctrine()
-            ->getRepository('AppBundle:Game')
-            ->findBy(array('status' => Game::STATUS_CONFIRMED), array('gameDate' => 'DESC'));
+        // Page
+        $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
+
+        // Game repository
+        $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
+
+        if ($request->getMethod() == 'POST' && $request->request->get('dateRange')) {
+            $dateRange = $request->request->get('dateRange');
+            $dates = explode('-', $dateRange);
+            $games = $gameRepository->getGamesByDate(new \DateTime($dates[0]), new \DateTime($dates[1]));
+        } else {
+            $games = $gameRepository->getGamesByDate(new \DateTime($dates[0]), new \DateTime($dates[1]));
+        }
+
+        $paginator  = $this->get('knp_paginator');
+        /** @var SlidingPagination $pagination */
+        $pagination = $paginator->paginate(
+            $games, /* query NOT result */
+            $page, /* page number */
+            1 /* limit per page */
+        );
+
+        // More btn
+        $moreBtn = ($page >= $pagination->getPageCount()) ? false : true;
+
+        if ($request->isXmlHttpRequest()) {
+
+            $games = $this->renderView('AppBundle:Game:item.html.twig', array('games' => $pagination));
+            $data = array('status' => 1, 'moreBtn' => $moreBtn, 'games' => $games, 'page' => $page + 1);
+
+            $json = json_encode($data);
+            $response = new Response($json, 200);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
 
         return $this->render(
             'AppBundle:Game:index.html.twig',
-            array('active' => 'games', 'games' => $games)
+            array(
+                'active' => 'games',
+                'pagination' => $pagination,
+                'moreBtn' => $moreBtn,
+                'startDate' => $dates[0],
+                'endDate' => $dates[1]
+            )
         );
     }
 

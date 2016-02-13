@@ -155,7 +155,7 @@ body{
         }
         &.game-score {
           width: 50px;
-          background-color: #286090;
+          background-color: #337Ab7;
           border: 1px solid #fff;
           color: #fff;
         }
@@ -184,7 +184,7 @@ body{
         display: block;
         line-height: 50px;
         height: 1px;
-        margin: 9px 0px;
+        margin: 9px 0;
         overflow: hidden;
         background-color: #E5E5E5;
       }
@@ -215,7 +215,7 @@ body{
           opacity: 0.8;
         }
         &.accept-game{
-          background-color: #286090;
+          background-color: #337ab7;
           right: 15px;
         }
         &.decline-game{
@@ -236,10 +236,35 @@ body{
   .date-filter-row{
     position: relative;
     width: 220px;
+    display: inline-block;
+    vertical-align: top;
     i{
       position: absolute;
       right: 9px;
       top: 9px;
+    }
+  }
+  .submit{
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.load-more-container{
+  text-align: center;
+  .btn{
+    background-color: #337ab7;
+  }
+}
+
+div.pagination{
+  display: block;
+  text-align: center;
+  ul.pagination{
+    li.active {
+      a {
+        background-color: #337ab7;
+      }
     }
   }
 }

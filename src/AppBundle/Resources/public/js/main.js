@@ -11,14 +11,18 @@ $(document).ready(function() {
     });
 
     // Date filter
-    $('#date-filter').daterangepicker({
+    var dateFilter = $('#date-filter');
+    dateFilter.daterangepicker({
         locale: {
             format: 'DD.MM.YYYY',
             cancelLabel: 'Clear'
         }
-    }).andSelf().on('cancel.daterangepicker', function(ev, picker) {
+    });
+    dateFilter.on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
     });
+    dateFilter.data('daterangepicker').setStartDate($('input[name="startDate"]').val());
+    dateFilter.data('daterangepicker').setEndDate($('input[name="endDate"]').val());
 
     // Player select in creating game
     $('#game_create_firstTeam').select2();
