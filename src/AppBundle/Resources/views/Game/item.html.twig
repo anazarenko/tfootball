@@ -1,21 +1,22 @@
 {% for game in games %}
-    <tr class="game">
-        <td class="game-player {% if game.firstScore > game.secondScore %}winner{% endif %}">
+    <div class="col-md-12 game game-row">
+        <div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>
+        <div class="game-player first-team {% if game.firstScore > game.secondScore %}winner{% endif %}">
             {% if game.firstScore > game.secondScore %}
                 <i class="fa fa-soccer-ball-o"></i>
             {% endif %}
             {{ game.firstTeam|members }}
-        </td>
-        <td class="game-score">{{ game.firstScore }}</td>
-        <td>:</td>
-        <td class="game-score">{{ game.secondScore }}</td>
-        <td class="game-player {% if game.firstScore < game.secondScore %}winner{% endif %}">
+        </div>
+        <div class="game-score">{{ game.firstScore }}</div>
+        <div class="game-separator">:</div>
+        <div class="game-score">{{ game.secondScore }}</div>
+        <div class="game-player second-team {% if game.firstScore < game.secondScore %}winner{% endif %}">
             {% if game.firstScore < game.secondScore %}
                 <i class="fa fa-soccer-ball-o"></i>
             {% endif %}
             {{ game.secondTeam|members }}
-        </td>
+        </div>
         {#<td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>#}
         {#<td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>#}
-    </tr>
+    </div>
 {% endfor %}

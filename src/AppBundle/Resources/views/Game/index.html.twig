@@ -32,13 +32,11 @@
         </div>
     </div>
 
-    <div class="row">
-        <table class="game-table">
-            <tbody class="game-list">
-                {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
-            </tbody>
-        </table>
-    </div>
+    {#<div class="row">#}
+        <div class="row game-list">
+            {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
+        </div>
+    {#</div>#}
 
     {% if moreBtn %}
         <div class="row load-more-container">

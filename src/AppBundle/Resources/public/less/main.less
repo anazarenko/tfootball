@@ -136,16 +136,27 @@ body{
     }
   }
 
-  .game-table {
-    border-collapse:separate;
-    border-spacing:20px;
-    margin: auto;
+  .game-list {
+    margin: 30px auto;
     .game {
       height: 50px;
+      margin: 10px auto;
       text-align: center;
-      td {
+      position: relative;
+      >div {
+        float: left;
         font-size: 1.2em;
         line-height: 50px;
+        &.game-player {
+          width: 545px;
+          padding: 0 40px;
+          &.first-team {
+            text-align: right;
+          }
+          &.second-team{
+            text-align: left;
+          }
+        }
         &.winner{
           font-weight: bold;
           i{
@@ -153,17 +164,18 @@ body{
             font-weight: normal;
           }
         }
+        &.game-separator{
+          padding: 0 10px;
+        }
         &.game-score {
           width: 50px;
           background-color: #337Ab7;
-          border: 1px solid #fff;
           color: #fff;
-        }
-        &.game-player {
-          padding: 0 20px;
         }
         &.game-date{
           font-size: 1em;
+          position: absolute;
+          right: 0;
         }
       }
     }

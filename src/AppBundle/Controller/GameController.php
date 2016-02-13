@@ -57,7 +57,7 @@ class GameController extends Controller
         $pagination = $paginator->paginate(
             $games, /* query NOT result */
             $page, /* page number */
-            1 /* limit per page */
+            $this->container->getParameter('game.limit_per_page') /* limit per page */
         );
 
         // More btn
