@@ -28,6 +28,15 @@ $(document).ready(function() {
     $('#game_create_firstTeam').select2();
     $('#game_create_secondTeam').select2();
 
+    // Player select in game filter
+    $('#game_filter_firstTeam').select2();
+    $('#game_filter_secondTeam').select2();
+
+    // Game filters
+    $('#game-filters h4').click(function(){
+        $(this).parent().toggleClass('open');
+    });
+
     // Create game form
     createGameForm.submit(function(event) {
 

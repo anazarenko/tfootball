@@ -244,15 +244,15 @@ body{
   min-width: 100px;
 }
 
-.date-filter-container{
-  .date-filter-row{
+.game-filter-container{
+  .game-filter-row{
     position: relative;
     width: 220px;
     display: inline-block;
     vertical-align: top;
     i{
       position: absolute;
-      right: 9px;
+      right: 30px;
       top: 9px;
     }
   }
@@ -276,6 +276,49 @@ div.pagination{
     li.active {
       a {
         background-color: #337ab7;
+      }
+    }
+  }
+}
+
+#game-filters{
+  position: relative;
+  border: 1px solid #e7e7e7;
+  .game-filter-container{
+    h4:after{
+      content: "\e114";
+      font-family: "Glyphicons Halflings";
+      position: relative;
+      left: 4px;
+      top: 2px;
+    }
+    >div{
+      display: none;
+    }
+    &.open{
+      h4:after{
+        content: "\e113";
+      }
+      >div{
+        display: block;
+      }
+    }
+  }
+  h4{
+    cursor: pointer;
+  }
+  .submit{
+    text-align: center;
+    padding: 40px 0;
+  }
+  .filter-error{
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    ul{
+      list-style-type: none;
+      li{
+        color: red;
       }
     }
   }

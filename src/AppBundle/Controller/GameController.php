@@ -7,20 +7,16 @@ use AppBundle\Entity\Game;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use AppBundle\Form\GameCreateType;
-use DashboardBundle\Form\UserCreateType;
-use DashboardBundle\Form\UserEditType;
+use AppBundle\Form\GameFilterType;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
-use Knp\Component\Pager\Pagination\AbstractPagination;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 
 /**
  * @Route("/game")
@@ -38,24 +34,81 @@ class GameController extends Controller
         $dateRange = '01.01.2016-'.date('d.m.Y', time());
         $dates = explode('-', $dateRange);
 
+        // Get team repo
+        $teamRepository = $this->getDoctrine()->getRepository('AppBundle:Team');
+
         // Page
         $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
+
+        $filterFirstTeam = $request->request->get('firstTeam') ? $this->findTeam($request->request->get('firstTeam')) : null;
+        $filterSecondTeam = $request->request->get('secondTeam') ? $this->findTeam($request->request->get('secondTeam')) : null;
 
         // Game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        if ($request->getMethod() == 'POST' && $request->request->get('dateRange')) {
-            $dateRange = $request->request->get('dateRange');
-            $dates = explode('-', $dateRange);
-            $games = $gameRepository->getGamesByDate(new \DateTime($dates[0]), new \DateTime($dates[1]));
-        } else {
-            $games = $gameRepository->getGamesByDate(new \DateTime($dates[0]), new \DateTime($dates[1]));
+        // Game filter for teams
+        $game = new Game();
+        $form = $this->createForm(
+            new GameFilterType(),
+            $game,
+            array(
+                'action' => $this->generateUrl('_games'),
+                'method' => 'POST'
+            )
+        );
+
+        $form->handleRequest($request);
+
+        // If sent filter form
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // Get date range
+            if ($request->request->get('dateRange')) {
+                $dateRange = $request->request->get('dateRange');
+                $dates = explode('-', $dateRange);
+            }
+
+            // Get array with players
+            $data = $request->request->get('game_filter');
+
+            $filterFirstTeam = isset($data['firstTeam']) ? $data['firstTeam'] : null;
+            $filterSecondTeam = isset($data['secondTeam']) ? $data['secondTeam'] : null;
         }
 
+        // Check for valid if sent two teams
+        if ($filterFirstTeam &&
+            $filterSecondTeam &&
+            !$this->isValidTeams($filterFirstTeam, $filterSecondTeam, $errorMsg))
+        {
+            $form->addError(new FormError($errorMsg));
+            return $this->render(
+                'AppBundle:Game:index.html.twig',
+                array(
+                    'active' => 'games',
+                    'pagination' => '',
+                    'form' => $form->createView(),
+                    'moreBtn' => false,
+                    'startDate' => $dates[0],
+                    'endDate' => $dates[1]
+                )
+            );
+
+        }
+
+        // Get games query
+        $gamesQuery = $gameRepository
+            ->getGamesByDate(
+                new \DateTime($dates[0]),
+                new \DateTime($dates[1]),
+                $teamRepository->findTeamByMemberIDs($filterFirstTeam),
+                $teamRepository->findTeamByMemberIDs($filterSecondTeam)
+            );
+
+        // Create pagination
         $paginator  = $this->get('knp_paginator');
         /** @var SlidingPagination $pagination */
         $pagination = $paginator->paginate(
-            $games, /* query NOT result */
+            $gamesQuery, /* query NOT result */
             $page, /* page number */
             $this->container->getParameter('game.limit_per_page') /* limit per page */
         );
@@ -63,6 +116,7 @@ class GameController extends Controller
         // More btn
         $moreBtn = ($page >= $pagination->getPageCount()) ? false : true;
 
+        // If async request
         if ($request->isXmlHttpRequest()) {
 
             $games = $this->renderView('AppBundle:Game:item.html.twig', array('games' => $pagination));
@@ -79,6 +133,7 @@ class GameController extends Controller
             array(
                 'active' => 'games',
                 'pagination' => $pagination,
+                'form' => $form->createView(),
                 'moreBtn' => $moreBtn,
                 'startDate' => $dates[0],
                 'endDate' => $dates[1]
@@ -324,14 +379,12 @@ class GameController extends Controller
     public function isValidTeams($firstTeam, $secondTeam, &$errorMsg)
     {
         if (count($firstTeam) != count($secondTeam)) {
-//            $this->addFlash('error', 'Count of member must be equal');
             $errorMsg = 'Count of member must be equal';
             return false;
         }
 
         foreach ($firstTeam as $member) {
             if (in_array($member, $secondTeam)) {
-//                $this->addFlash('error', 'Player do not repeated!');
                 $errorMsg = 'Player do not repeated!';
                 return false;
             }

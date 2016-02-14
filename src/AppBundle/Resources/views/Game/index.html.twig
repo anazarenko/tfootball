@@ -4,33 +4,50 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-md-12 date-filter-container">
-            <form action="{{ path('_games') }}" method="post">
+    <div id="game-filters" class="row">
+        {{ form_start(form, {'attr' : {'class' : 'form-inline'} }) }}
+            <div class="col-md-2 game-filter-container open date-filter-container">
                 <h4>Date Range</h4>
-                <div class="date-filter-row">
+                <div class="game-filter-row date-filter-row">
                     <input type="text" id="date-filter" name="dateRange" class="form-control" value="">
                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                 </div>
-                <div class="submit">
-                    <input class="btn btn-success" type="submit" value="Apply">
-                </div>
                 <input type="hidden" name="startDate" value="{{ startDate }}">
                 <input type="hidden" name="endDate" value="{{ endDate }}">
-            </form>
-        </div>
+            </div>
+            <div class="col-md-1 submit">
+                <button type="submit" id="filterGame" class="btn-submit btn btn-success">Apply</button>
+            </div>
+            <div class="col-md-9 game-filter-container first-team-filter-container">
+                <h4>Player filter</h4>
+                <div>
+                    <div class="form-group player first-player">
+                        {{ form_widget(form.firstTeam) }}
+                    </div>
+                    <span>:</span>
+                    <div class="form-group player second-player">
+                        {{ form_widget(form.secondTeam) }}
+                    </div>
+                </div>
+            </div>
+            <div class="filter-error">{{ form_errors(form) }}</div>
+
+        {{ form_end(form) }}
     </div>
 
     {# total items count #}
-    <div class="row">
-        <div class="count total-item-count col-md-12">
-            <span>
-                {% transchoice pagination.getTotalItemCount %}
-                    {0} No matches|{1} Found 1 match|]1,Inf[Found %count% matches
-                {% endtranschoice %}
-            </span>
+
+    {% if pagination.getTotalItemCount is defined %}
+        <div class="row">
+            <div class="count total-item-count col-md-12">
+                <span>
+                    {% transchoice pagination.getTotalItemCount %}
+                        {0} No matches|{1} Found 1 match|]1,Inf[Found %count% matches
+                    {% endtranschoice %}
+                </span>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {#<div class="row">#}
         <div class="row game-list">
