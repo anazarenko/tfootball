@@ -77,10 +77,9 @@ class GameRepository extends EntityRepository
             ))->setParameter('secondTeam', $secondTeam);
         }
 
-        $gamesQuery->orderBy('g.gameDate', 'DESC')
-            ->getQuery();
+        $gamesQuery->orderBy('g.gameDate', 'DESC');
 
-        return $gamesQuery;
+        return $gamesQuery->getQuery();
     }
 
     public function getSingleGames($user) {

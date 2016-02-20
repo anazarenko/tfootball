@@ -1,3 +1,62 @@
 {% extends 'AppBundle::base.html.twig' %}
 
-{% block content %}{% endblock %}
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    {% stylesheets
+        'bundles/app/less/default.less'
+    filter='cssrewrite' output='css/compiled/app.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+    <div id="main-page">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Last 5 games</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row game-list">
+                            {% include 'AppBundle:Game:item.html.twig' with {'games' : lastGames} %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Top players</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-hover">
+                        	<thead>
+                        		<tr>
+                        			<th>Player</th>
+                        			<th>Won</th>
+                        			<th>Drawn</th>
+                        			<th>Lost</th>
+                        			<th>%</th>
+                        		</tr>
+                        	</thead>
+                        	<tbody>
+                                {% for row in bestTeams %}
+                        		<tr>
+                        			<td>{{ row['team']|members }}</td>
+                        			<td>{{ row['won']|length }}</td>
+                        			<td>{{ row['drawn']|length }}</td>
+                        			<td>{{ row['lost']|length }}</td>
+                        			<td>{{ row['wonPercent'] }}%</td>
+                        		</tr>
+                                {% endfor %}
+                        	</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

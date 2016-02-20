@@ -47,6 +47,9 @@ class GameController extends Controller
         $filterFirstTeam = $request->request->get('firstTeam') ? $request->request->get('firstTeam') : null;
         $filterSecondTeam = $request->request->get('secondTeam') ? $request->request->get('secondTeam') : null;
 
+        // Check if enable team
+        $isEmptyTeam = ($filterFirstTeam == null && $filterSecondTeam == null) ? true : false;
+
         // Create Game filter for teams
         $game = new Game();
         $form = $this->createForm(
@@ -74,6 +77,9 @@ class GameController extends Controller
 
             $filterFirstTeam = isset($data['firstTeam']) ? $data['firstTeam'] : null;
             $filterSecondTeam = isset($data['secondTeam']) ? $data['secondTeam'] : null;
+
+            // Check if enable team
+            $isEmptyTeam = ($filterFirstTeam == null && $filterSecondTeam == null) ? true : false;
         }
 
         // Check for valid if sent two teams
@@ -100,7 +106,7 @@ class GameController extends Controller
         $firstTeam = $teamRepository->findTeamByMemberIDs($filterFirstTeam);
         $secondTeam = $teamRepository->findTeamByMemberIDs($filterSecondTeam);
 
-        if (!$firstTeam && !$secondTeam) {
+        if (!$firstTeam && !$secondTeam && !$isEmptyTeam) {
             return $this->render(
                 'AppBundle:Game:index.html.twig',
                 array(
