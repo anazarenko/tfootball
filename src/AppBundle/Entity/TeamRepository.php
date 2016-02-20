@@ -15,7 +15,7 @@ class TeamRepository extends EntityRepository
     /**
      * Find team by members entity
      *
-     * @param array $teamMembers array of team members
+     * @param User[] $teamMembers array of team members entity
      * @return array
      */
     public function findTeamByMembers($teamMembers) {
@@ -42,7 +42,7 @@ class TeamRepository extends EntityRepository
     /**
      * Find team by members entity
      *
-     * @param array $teamMemberIDs array of team IDs
+     * @param array $teamMemberIDs array of member IDs
      * @return array
      */
     public function findTeamByMemberIDs($teamMemberIDs) {

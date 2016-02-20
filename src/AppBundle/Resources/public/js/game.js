@@ -16,7 +16,6 @@ $(document).ready(function() {
                 data: {page: $(this).data('page'), dateRange: $('#date-filter').val()},
                 dataType: 'json'
             }).success(function (data) {
-                console.log(data);
                 if (data.status == 1) {
                     if (data.moreBtn == false) {
                         $('.load-more-container').remove();

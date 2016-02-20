@@ -37,16 +37,17 @@ class GameController extends Controller
         // Get team repo
         $teamRepository = $this->getDoctrine()->getRepository('AppBundle:Team');
 
-        // Page
-        $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
-
-        $filterFirstTeam = $request->request->get('firstTeam') ? $this->findTeam($request->request->get('firstTeam')) : null;
-        $filterSecondTeam = $request->request->get('secondTeam') ? $this->findTeam($request->request->get('secondTeam')) : null;
-
         // Game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        // Game filter for teams
+        // Page
+        $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
+
+        // If ajax POST then get teams param
+        $filterFirstTeam = $request->request->get('firstTeam') ? $request->request->get('firstTeam') : null;
+        $filterSecondTeam = $request->request->get('secondTeam') ? $request->request->get('secondTeam') : null;
+
+        // Create Game filter for teams
         $game = new Game();
         $form = $this->createForm(
             new GameFilterType(),
@@ -95,6 +96,24 @@ class GameController extends Controller
 
         }
 
+        // Get Teams
+        $firstTeam = $teamRepository->findTeamByMemberIDs($filterFirstTeam);
+        $secondTeam = $teamRepository->findTeamByMemberIDs($filterSecondTeam);
+
+        if (!$firstTeam && !$secondTeam) {
+            return $this->render(
+                'AppBundle:Game:index.html.twig',
+                array(
+                    'active' => 'games',
+                    'pagination' => '',
+                    'form' => $form->createView(),
+                    'moreBtn' => false,
+                    'startDate' => $dates[0],
+                    'endDate' => $dates[1]
+                )
+            );
+        }
+
         // Get games query
         $gamesQuery = $gameRepository
             ->getGamesByDate(
@@ -106,6 +125,7 @@ class GameController extends Controller
 
         // Create pagination
         $paginator  = $this->get('knp_paginator');
+
         /** @var SlidingPagination $pagination */
         $pagination = $paginator->paginate(
             $gamesQuery, /* query NOT result */
@@ -394,6 +414,7 @@ class GameController extends Controller
     }
 
     /**
+     * Find team. If this team is null, then create new team and return it
      * @param array $teamMembers array of team members
      * @return Team|array
      */
