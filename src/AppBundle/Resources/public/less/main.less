@@ -79,7 +79,7 @@ body{
     }
 
     .dropdown-alerts{
-      width: 600px;
+      width: 900px;
     }
 
   }
@@ -119,8 +119,8 @@ body{
 
   #notify-container {
     width: 0;
-    height: 100%;
-    position: absolute;
+    height: 200px;
+    position: fixed;
     right: 0;
     bottom: 0;
     overflow: hidden;
@@ -209,8 +209,23 @@ body{
           display: none;
         }
       }
+      >div{
+        text-align: left;
+        &.no-confirms{
+          text-align: center;
+        }
+      }
       .player{
+        width: 270px;
         padding: 0 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: top;
+        &:first-child{
+          text-align: right;
+        }
       }
       .time{
         padding: 0 15px 0 5px;
@@ -326,4 +341,14 @@ div.pagination{
       }
     }
   }
+}
+
+.match-confirm-list{
+  overflow-y: scroll;
+  max-height: 500px;
+}
+
+#days{
+  float: right;
+  font-size: 12px;
 }

@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     var createGameForm = $('.create-game-form');
 
-    var notifyContainer = $('#notifyContainer');
+    var notifyContainer = $('#notify-container');
     var notify = $('#notify');
     var notifyClose = $('#notify .close');
 
@@ -58,11 +58,16 @@ $(document).ready(function() {
                 errorField.html(data.error);
             } else {
                 $('.create-game-popup').modal('hide');
+                $('.select2-selection__choice').remove();
                 createGameForm.trigger("reset");
                 errorField.html('');
+                notifyContainer.addClass('active');
                 notify.addClass('show');
                 setTimeout(function(){
                     notify.removeClass('show');
+                    setTimeout(function(){
+                        notifyContainer.removeClass('active');
+                    }, 1000);
                 }, 4000);
             }
         }).always(function () {
@@ -94,7 +99,7 @@ $(document).ready(function() {
                 notifies--;
                 if (notifies == 0) {
                     $('.dropdown-menu').append('<li class="notify-item">' +
-                    '<div>No matches for confirmation</div>' +
+                    '<div class="no-confirms">No matches for confirmation</div>' +
                     '</li>');
                     $('.game-notify').removeClass('notify-active');
                 }
