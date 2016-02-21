@@ -10,7 +10,8 @@
         </tr>
         </thead>
         <tbody>
-        {% for row in bestTeams if row['team'].playerCount == 1 %}
+        {% set break = false %}
+        {% for row in bestTeams if row['team'].playerCount == 1 and not break %}
             <tr>
                 <td>{{ row['team']|members }}</td>
                 <td>{{ row['won']|length }}</td>
@@ -18,6 +19,9 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round }}%</td>
             </tr>
+            {% if loop.index == 8 %}
+                {% set break = true %}
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
@@ -33,7 +37,8 @@
         </tr>
         </thead>
         <tbody>
-        {% for row in bestTeams if row['team'].playerCount == 2 %}
+        {% set break = false %}
+        {% for row in bestTeams if row['team'].playerCount == 2 and not break %}
             <tr>
                 <td>{{ row['team']|members }}</td>
                 <td>{{ row['won']|length }}</td>
@@ -41,6 +46,9 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round }}%</td>
             </tr>
+            {% if loop.index == 8 %}
+                {% set break = true %}
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
