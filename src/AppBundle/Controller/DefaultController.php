@@ -13,11 +13,12 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        $day = 10;
         $gameRepository = $this->getDoctrine()->getRepository('AppBundle:Game');
         $lastGames = $gameRepository->findBy(array('status' => Game::STATUS_CONFIRMED), array('gameDate' => 'DESC'), 5);
 
         $gameQuery = $gameRepository
-            ->getGamesByDate((new \DateTime('now'))->modify('-60 day'), new \DateTime('now'));
+            ->getGamesByDate((new \DateTime('now'))->modify('-'.$day.' day'), new \DateTime('now'));
 
         /** @var Game[] $games */
         $games = $gameQuery->getResult();

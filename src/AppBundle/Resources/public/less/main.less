@@ -118,12 +118,15 @@ body{
   }
 
   #notify-container {
-    width: 350px;
+    width: 0;
     height: 100%;
     position: absolute;
     right: 0;
     bottom: 0;
     overflow: hidden;
+    &.active{
+      width: 350px;
+    }
     #notify {
       width: 300px;
       position: absolute;

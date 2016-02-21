@@ -1,0 +1,47 @@
+{% if type == 'single' %}
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Player</th>
+            <th>Won</th>
+            <th>Drawn</th>
+            <th>Lost</th>
+            <th>%</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in bestTeams if row['team'].playerCount == 1 %}
+            <tr>
+                <td>{{ row['team']|members }}</td>
+                <td>{{ row['won']|length }}</td>
+                <td>{{ row['drawn']|length }}</td>
+                <td>{{ row['lost']|length }}</td>
+                <td>{{ row['wonPercent'] }}%</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% elseif type == 'double' %}
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Player</th>
+            <th>Won</th>
+            <th>Drawn</th>
+            <th>Lost</th>
+            <th>%</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in bestTeams if row['team'].playerCount == 2 %}
+            <tr>
+                <td>{{ row['team']|members }}</td>
+                <td>{{ row['won']|length }}</td>
+                <td>{{ row['drawn']|length }}</td>
+                <td>{{ row['lost']|length }}</td>
+                <td>{{ row['wonPercent'] }}%</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
