@@ -5,20 +5,25 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Game;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
     /**
      * @Route("/", name="_main_page")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $day = 10;
+        $days = $request->request->get("days") ? $request->request->get("days") : 10;
         $gameRepository = $this->getDoctrine()->getRepository('AppBundle:Game');
         $lastGames = $gameRepository->findBy(array('status' => Game::STATUS_CONFIRMED), array('gameDate' => 'DESC'), 5);
 
         $gameQuery = $gameRepository
-            ->getGamesByDate((new \DateTime('now'))->modify('-'.$day.' day'), new \DateTime('now'));
+            ->getGamesByDate((new \DateTime('now'))->modify('-'.$days.' day'), new \DateTime('now'));
 
         /** @var Game[] $games */
         $games = $gameQuery->getResult();
@@ -77,6 +82,27 @@ class DefaultController extends Controller
 
         foreach ($sortingTeams as $key => $value) {
             $sortingTeams[$key] = $sortingGames[$key];
+        }
+
+        // If async request
+        if ($request->isXmlHttpRequest()) {
+
+            $single = $this->renderView(
+                'AppBundle:Default:bestTable.html.twig',
+                array('type' => 'single', 'bestTeams' => $sortingTeams)
+            );
+
+            $double = $this->renderView(
+                'AppBundle:Default:bestTable.html.twig',
+                array('type' => 'double', 'bestTeams' => $sortingTeams)
+            );
+
+            $data = array('status' => 1, 'single' => $single, 'double' => $double);
+
+            $json = json_encode($data);
+            $response = new Response($json, 200);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
 
         return $this->render(
