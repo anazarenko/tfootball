@@ -41,6 +41,11 @@ class Team
     private $users;
 
     /**
+     * @ORM\OneToOne(targetEntity="Statistics", mappedBy="team")
+     */
+    private $statistics;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -204,5 +209,28 @@ class Team
     public function getPlayerNames()
     {
         return $this->playerNames;
+    }
+
+    /**
+     * Set statistics
+     *
+     * @param \AppBundle\Entity\Statistics $statistics
+     * @return Team
+     */
+    public function setStatistics(\AppBundle\Entity\Statistics $statistics = null)
+    {
+        $this->statistics = $statistics;
+
+        return $this;
+    }
+
+    /**
+     * Get statistics
+     *
+     * @return \AppBundle\Entity\Statistics 
+     */
+    public function getStatistics()
+    {
+        return $this->statistics;
     }
 }

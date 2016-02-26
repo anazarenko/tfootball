@@ -1,0 +1,23 @@
+.game-table{
+  .confirm{
+    display: inline-block;
+    vertical-align: sub;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    &.rejected{
+      background: red;
+    }
+    &.confirm{
+      background: green;
+    }
+    &.new{
+      background: dodgerblue;
+    }
+    +span{
+      display: inline-block;
+      vertical-align: sub;
+      padding-right: 10px;
+    }
+  }
+}

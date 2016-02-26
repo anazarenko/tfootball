@@ -2,11 +2,11 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Team;
+use AppBundle\Entity\Game;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Templating\EngineInterface;
 
-class TeamManager
+class Team
 {
     protected $templating;
     protected $entityManager;
@@ -17,9 +17,92 @@ class TeamManager
         $this->templating = $templating;
     }
 
-    public function getTeamMembers(Team $team)
+    /**
+     * @param $firstTeam
+     * @param $secondTeam
+     * @param $errorMsg
+     * @return bool
+     */
+    public function isValidTeams($firstTeam, $secondTeam, &$errorMsg)
     {
-        return $team->getUsers();
+        if (count($firstTeam) != count($secondTeam)) {
+            $errorMsg = 'Count of member must be equal';
+            return false;
+        }
+
+        foreach ($firstTeam as $member) {
+            if (in_array($member, $secondTeam)) {
+                $errorMsg = 'Player do not repeated!';
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * Find team. If this team is null, then create new team and return it
+     * @param array $teamMembers array of team members
+     * @return Team|array
+     */
+    public function findTeam($teamMembers)
+    {
+        $team = $this->entityManager->getRepository('AppBundle:Team')->findTeamByMembers($teamMembers);
+
+        if (!$team) {
+            $team = new \AppBundle\Entity\Team();
+            $team->setPlayerCount(count($teamMembers));
+
+            $names = array();
+
+            /** @var \AppBundle\Entity\User $user */
+            foreach ($teamMembers as $user) {
+                $team->addUser($user);
+                $user->addTeam($team);
+
+                $names[] = $user->getUsername();
+            }
+
+            $team->setPlayerNames($names);
+
+            $this->entityManager->persist($team);
+            $this->entityManager->flush();
+        }
+
+        return $team;
+
+    }
+
+    /**
+     * Update team statistics if game is confirmed
+     * @param Game $game
+     */
+    public function updateStatistics(Game $game)
+    {
+        $winnerTeam = null;
+        $defeatTeam = null;
+        $isDraw = false;
+        $firstTeam = $game->getFirstTeam();
+        $secondTeam = $game->getSecondTeam();
+
+        if ($game->getResult() == Game::RESULT_DRAW) {
+            $isDraw = true;
+        } else {
+            if ($game->getResult() == Game::RESULT_FIRST_WINNER) {
+                $winnerTeam = $firstTeam;
+                $defeatTeam = $secondTeam;
+            } else {
+                $winnerTeam = $secondTeam;
+                $defeatTeam = $firstTeam;
+            }
+        }
+
+        if ($isDraw) {
+            $firstTeam->getStatistics()->addDrawn();
+            $secondTeam->getStatistics()->addDrawn();
+        } else {
+            $winnerTeam->getStatistics()->addWon();
+            $defeatTeam->getStatistics()->addLost();
+        }
+    }
 }

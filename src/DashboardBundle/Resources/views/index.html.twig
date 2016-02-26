@@ -17,7 +17,7 @@
             'bundles/dashboard/css/plugins/morris.css'
             'bundles/dashboard/font-awesome/css/font-awesome.min.css'
             'bundles/dashboard/less/dashboard.less'
-        filter='cssrewrite' output='css/compiled/dashboard.css' %}
+        filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
 
@@ -81,7 +81,7 @@
                                 <a href="{{ path('_dashboard') }}"><i class="fa fa-fw fa-dashboard"></i>Dashboard</a>
                             </li>
                             <li class="{% if active == 'matches' %}active{% endif %}">
-                                <a href="{{ path('_dashboard') }}"><i class="fa fa-fw fa-futbol-o"></i>Matches</a>
+                                <a href="{{ path('_dashboard_matches') }}"><i class="fa fa-fw fa-futbol-o"></i>Matches</a>
                             </li>
                             <li class="{% if active == 'tournaments' %}active{% endif %}">
                                 <a href="{{ path('_dashboard') }}"><i class="fa fa-fw fa-trophy"></i>Tournaments</a>
@@ -90,7 +90,7 @@
                                 <a href="{{ path('_dashboard_users') }}"><i class="fa fa-fw fa-users"></i>Players</a>
                             </li>
                             <li>
-                                <a href="{{ path('_main_page') }}"><i class="fa fa-fw fa-arrow-left"></i>Return to Main</a>
+                                <a href="{{ path('_main_page') }}"><i class="fa fa-fw fa-arrow-left"></i>Return to Site</a>
                             </li>
                             {% endblock %}
                         </ul>

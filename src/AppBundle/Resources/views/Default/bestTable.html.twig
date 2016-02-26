@@ -19,9 +19,9 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round }}%</td>
             </tr>
-            {% if loop.index == 8 %}
-                {% set break = true %}
-            {% endif %}
+            {#{% if loop.index == 8 %}#}
+                {#{% set break = true %}#}
+            {#{% endif %}#}
         {% endfor %}
         </tbody>
     </table>
@@ -46,9 +46,9 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round }}%</td>
             </tr>
-            {% if loop.index == 8 %}
-                {% set break = true %}
-            {% endif %}
+            {#{% if loop.index == 8 %}#}
+                {#{% set break = true %}#}
+            {#{% endif %}#}
         {% endfor %}
         </tbody>
     </table>

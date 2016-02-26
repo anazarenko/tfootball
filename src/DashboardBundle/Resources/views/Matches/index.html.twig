@@ -1,0 +1,103 @@
+{% extends 'DashboardBundle::index.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    {% stylesheets
+    'bundles/dashboard/less/matches.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block content %}
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Matches
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{{ path('_dashboard') }}">Dashboard</a></li>
+                <li class="active">Matches</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover game-table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>First</th>
+                    <th>Score</th>
+                    <th>Second</th>
+                    <th>Confirms</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for game in pagination %}
+                        <tr>
+                            <td>{{ game.id }}</td>
+                            <td>
+                                {% if game.status == constant('STATUS_NEW', game) %}
+                                    <span class="label label-info">New</span>
+                                {% elseif game.status == constant('STATUS_CONFIRMED', game) %}
+                                    <span class="label label-success">Confirmed</span>
+                                {% elseif game.status == constant('STATUS_REJECTED', game) %}
+                                    <span class="label label-danger">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if game.firstScore > game.secondScore %}
+                                    <i class="fa fa-soccer-ball-o"></i>
+                                {% endif %}
+                                {{ game.firstTeam|members }}
+                                <span></span>
+                            </td>
+                            <td>{{ game.firstScore }} : {{ game.secondScore }}</td>
+                            <td>
+                                {% if game.firstScore < game.secondScore %}
+                                    <i class="fa fa-soccer-ball-o"></i>
+                                {% endif %}
+                                {{ game.secondTeam|members }}
+                            </td>
+                            <td>
+                                {% for confirm in game.confirms %}
+                                    <span class="confirm
+                                        {% if confirm.status == constant('STATUS_NEW', confirm) %}
+                                            new
+                                        {% elseif confirm.status == constant('STATUS_CONFIRMED', confirm) %}
+                                            confirm
+                                        {% elseif confirm.status == constant('STATUS_REJECTED', confirm) %}
+                                            rejected
+                                        {% endif %}">
+                                    </span>
+                                    <span>{{ confirm.user.username }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>{{ game.createdAt|date('H:i:s d-m-Y') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {# display navigation #}
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+    {#{% javascripts#}
+    {#"@DashboardBundle/Resources/public/js/user.js" %}#}
+    {#<script src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+{#{% endblock %}#}

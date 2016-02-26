@@ -85,7 +85,7 @@ class GameController extends Controller
         // Check for valid if sent two teams
         if ($filterFirstTeam &&
             $filterSecondTeam &&
-            !$this->isValidTeams($filterFirstTeam, $filterSecondTeam, $errorMsg))
+            !$this->get('app.team_service')->isValidTeams($filterFirstTeam, $filterSecondTeam, $errorMsg))
         {
             $form->addError(new FormError($errorMsg));
             return $this->render(
@@ -195,7 +195,7 @@ class GameController extends Controller
             $entityManager = $this->getDoctrine()->getManager();
             $errorMsg = '';
 
-            if (!$this->isValidTeams($data['firstTeam'], $data['secondTeam'], $errorMsg)) {
+            if (!$this->get('app.team_service')->isValidTeams($data['firstTeam'], $data['secondTeam'], $errorMsg)) {
                 if ($request->isXmlHttpRequest()) {
 
                     $data = array('status' => 0, 'error' => $errorMsg);
@@ -238,8 +238,8 @@ class GameController extends Controller
                 $game->addPlayer($currentUser);
             }
 
-            $firstTeam = $this->findTeam($firstTeamEntitiesArray);
-            $secondTeam = $this->findTeam($secondTeamEntitiesArray);
+            $firstTeam = $this->get('app.team_service')->findTeam($firstTeamEntitiesArray);
+            $secondTeam = $this->get('app.team_service')->findTeam($secondTeamEntitiesArray);
 
             $game->setFirstTeam($firstTeam);
             $game->setSecondTeam($secondTeam);
@@ -340,6 +340,7 @@ class GameController extends Controller
 
                     if ($completeGame) {
                         $game->setStatus(Game::STATUS_CONFIRMED);
+                        $this->get('app.team_service')->updateStatistics($game);
                     }
                 }
 
@@ -395,62 +396,4 @@ class GameController extends Controller
 
         throw new NotFoundHttpException('Page not found');
     }
-
-    /**
-     * @param $firstTeam
-     * @param $secondTeam
-     * @param $errorMsg
-     * @return bool
-     */
-    public function isValidTeams($firstTeam, $secondTeam, &$errorMsg)
-    {
-        if (count($firstTeam) != count($secondTeam)) {
-            $errorMsg = 'Count of member must be equal';
-            return false;
-        }
-
-        foreach ($firstTeam as $member) {
-            if (in_array($member, $secondTeam)) {
-                $errorMsg = 'Player do not repeated!';
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Find team. If this team is null, then create new team and return it
-     * @param array $teamMembers array of team members
-     * @return Team|array
-     */
-    public function findTeam($teamMembers)
-    {
-        $team = $this->getDoctrine()->getRepository('AppBundle:Team')->findTeamByMembers($teamMembers);
-
-        if (!$team) {
-            $team = new Team();
-            $team->setPlayerCount(count($teamMembers));
-
-            $names = array();
-
-            /** @var \AppBundle\Entity\User $user */
-            foreach ($teamMembers as $user) {
-                $team->addUser($user);
-                $user->addTeam($team);
-
-                $names[] = $user->getUsername();
-            }
-
-            $team->setPlayerNames($names);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($team);
-            $entityManager->flush();
-        }
-
-        return $team;
-
-    }
-
 }

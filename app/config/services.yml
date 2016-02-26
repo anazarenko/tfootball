@@ -7,8 +7,12 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
-    team:
-        class: AppBundle\Service\TeamManager
+    app.game_service:
+        class: AppBundle\Service\Game
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+
+    app.team_service:
+        class: AppBundle\Service\Team
         arguments: ["@doctrine.orm.entity_manager", "@templating"]
 
     app.twig_extension:
