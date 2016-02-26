@@ -34,13 +34,13 @@ class GameController extends Controller
         $dateRange = '01.01.2016-'.date('d.m.Y', time());
         $dates = explode('-', $dateRange);
 
-        // Get team repo
+        // Get team repository
         $teamRepository = $this->getDoctrine()->getRepository('AppBundle:Team');
 
-        // Game repository
+        // Get game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        // Page
+        // Get page for pagination
         $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
 
         // If ajax POST then get teams param

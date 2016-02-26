@@ -35,7 +35,6 @@ $(document).ready(function() {
 
         var values = {};
         $.each( createGameForm.serializeArray(), function(i, field) {
-            console.log(field.name);
             if (field.name == 'game_create[firstTeam][]') {
                 values[field.name] = firstTeam;
             } else if (field.name == 'game_create[secondTeam][]') {

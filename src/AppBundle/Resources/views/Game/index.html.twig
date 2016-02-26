@@ -10,7 +10,6 @@
                 <h4>Date Range</h4>
                 <div class="game-filter-row date-filter-row">
                     <input type="text" id="date-filter" name="dateRange" class="form-control" value="">
-                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                 </div>
                 <input type="hidden" name="startDate" value="{{ startDate }}">
                 <input type="hidden" name="endDate" value="{{ endDate }}">
@@ -47,6 +46,8 @@
                 </span>
             </div>
         </div>
+    {% else %}
+        <p class="nothing-msg">No game</p>
     {% endif %}
 
     {#<div class="row">#}

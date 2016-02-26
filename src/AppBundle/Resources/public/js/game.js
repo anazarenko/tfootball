@@ -10,10 +10,24 @@ $(document).ready(function() {
             btn.button('loading');
             btn.addClass('loading');
 
+            var firstTeam = [];
+            $('#game_filter_firstTeam :selected').each(function(i, selected){
+                firstTeam[i] = $(selected).val();
+            });
+            var secondTeam = [];
+            $('#game_filter_secondTeam :selected').each(function(i, selected){
+                secondTeam[i] = $(selected).val();
+            });
+
             $.ajax({
                 type: 'POST',
                 url: $(this).data('href'),
-                data: {page: $(this).data('page'), dateRange: $('#date-filter').val()},
+                data: {
+                    page: $(this).data('page'),
+                    dateRange: $('#date-filter').val(),
+                    firstTeam: firstTeam,
+                    secondTeam: secondTeam
+                },
                 dataType: 'json'
             }).success(function (data) {
                 if (data.status == 1) {
