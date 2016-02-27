@@ -21,14 +21,25 @@ class TeamRepository extends EntityRepository
     public function findTeamByMembers($teamMembers) {
 
         $playerCount = count($teamMembers);
+
         $qb = $this->createQueryBuilder('t');
+
         $builder = $qb->select('t')
-            ->innerJoin('t.users', 'u')
             ->where('t.playerCount = :playerCount');
 
         foreach ($teamMembers as $member) {
-            $builder = $builder->andWhere('u.id = :memberID')
-                ->setParameter('memberID', $member->getId());
+
+            $teamIDs = array();
+
+            if (!$member->getTeams()->count()) {
+                return null;
+            }
+
+            foreach ($member->getTeams() as $team) {
+                $teamIDs[] = $team->getId();
+            }
+
+            $builder->andWhere($qb->expr()->in('t.id', $teamIDs));
         }
 
         $team = $builder->setMaxResults(1)
@@ -51,24 +62,14 @@ class TeamRepository extends EntityRepository
             return null;
         }
 
-        $playerCount = count($teamMemberIDs);
-        $qb = $this->createQueryBuilder('t');
-        $builder = $qb->select('t')
-            ->innerJoin('t.users', 'u')
-            ->where('t.playerCount = :playerCount');
+        $teamMember = array();
 
-        $i = 1;
-        foreach ($teamMemberIDs as $memberID) {
-            $builder = $builder->andWhere('u.id = :memberID_'.$i)
-                ->setParameter('memberID_'.$i, $memberID);
-            $i++;
+        foreach($teamMemberIDs as $memberId) {
+            $teamMember[] = $this->getEntityManager()
+                ->getRepository('AppBundle:User')
+                ->findOneBy(array('id' => $memberId));
         }
 
-        $team = $builder->setMaxResults(1)
-            ->setParameter('playerCount', $playerCount)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        return $team;
+        return $this->findTeamByMembers($teamMember);
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Game;
+use AppBundle\Entity\Statistics;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -67,6 +68,15 @@ class Team
 
             $this->entityManager->persist($team);
             $this->entityManager->flush();
+
+            $statistics = new Statistics();
+            $statistics->setTeam($team);
+
+            $this->entityManager->persist($statistics);
+            $this->entityManager->flush();
+
+            $team->setStatistics($statistics);
+            $this->entityManager->flush();
         }
 
         return $team;
@@ -84,6 +94,7 @@ class Team
         $isDraw = false;
         $firstTeam = $game->getFirstTeam();
         $secondTeam = $game->getSecondTeam();
+        $differenceScore = abs($game->getFirstScore() - $game->getSecondScore());
 
         if ($game->getResult() == Game::RESULT_DRAW) {
             $isDraw = true;
@@ -102,7 +113,10 @@ class Team
             $secondTeam->getStatistics()->addDrawn();
         } else {
             $winnerTeam->getStatistics()->addWon();
+            $winnerTeam->getStatistics()->updateBiggestVictory($differenceScore, $game->getId());
+
             $defeatTeam->getStatistics()->addLost();
+            $defeatTeam->getStatistics()->updateBiggestDefeats($differenceScore, $game->getId());
         }
     }
 }

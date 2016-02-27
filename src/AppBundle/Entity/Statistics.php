@@ -34,35 +34,35 @@ class Statistics
      *
      * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $won;
+    private $won = 0;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $drawn;
+    private $drawn = 0;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $lost;
+    private $lost = 0;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $gameCount;
+    private $gameCount = 0;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $wonPercentage;
+    private $wonPercentage = 0;
 
     /**
      * @var integer
@@ -77,6 +77,20 @@ class Statistics
      * @ORM\Column(type="array", nullable=true)
      */
     private $biggestDefeats;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", options={"default" = 0})
+     */
+    private $biggestVictoryDifference = 0;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", options={"default" = 0})
+     */
+    private $biggestDefeatsDifference = 0;
 
     /**
      * @ORM\Column(type="datetime")
@@ -108,7 +122,9 @@ class Statistics
     public function updatedGamesCount()
     {
         $this->setGameCount($this->getWon() + $this->getDrawn() + $this->getLost());
-        $this->setWonPercentage(round(($this->getWon()/$this->getGameCount())*100));
+        if ($this->getGameCount() > 0) {
+            $this->setWonPercentage(round(($this->getWon() / $this->getGameCount()) * 100));
+        }
     }
 
     /**
@@ -364,5 +380,73 @@ class Statistics
     public function addLost()
     {
         $this->setLost($this->getLost() + 1);
+    }
+
+    public function updateBiggestVictory($difference, $gameId) {
+        if ($this->getBiggestVictoryDifference() == $difference) {
+            $biggestVictories = $this->getBiggestVictories();
+            $biggestVictories[] = $gameId;
+            $this->setBiggestVictories($biggestVictories);
+        } elseif ($this->getBiggestVictoryDifference() < $difference) {
+            $this->setBiggestVictories(array($gameId));
+            $this->setBiggestVictoryDifference($difference);
+        }
+    }
+
+    public function updateBiggestDefeats($difference, $gameId) {
+        if ($this->getBiggestDefeatsDifference() == $difference) {
+            $biggestDefeats = $this->getBiggestDefeats();
+            $biggestDefeats[] = $gameId;
+            $this->setBiggestDefeats($biggestDefeats);
+        } elseif ($this->getBiggestDefeatsDifference() < $difference) {
+            $this->setBiggestDefeats(array($gameId));
+            $this->setBiggestDefeatsDifference($difference);
+        }
+    }
+
+    /**
+     * Set biggestVictoryDifference
+     *
+     * @param array $biggestVictoryDifference
+     * @return Statistics
+     */
+    public function setBiggestVictoryDifference($biggestVictoryDifference)
+    {
+        $this->biggestVictoryDifference = $biggestVictoryDifference;
+
+        return $this;
+    }
+
+    /**
+     * Get biggestVictoryDifference
+     *
+     * @return array 
+     */
+    public function getBiggestVictoryDifference()
+    {
+        return $this->biggestVictoryDifference;
+    }
+
+    /**
+     * Set biggestDefeatsDifference
+     *
+     * @param array $biggestDefeatsDifference
+     * @return Statistics
+     */
+    public function setBiggestDefeatsDifference($biggestDefeatsDifference)
+    {
+        $this->biggestDefeatsDifference = $biggestDefeatsDifference;
+
+        return $this;
+    }
+
+    /**
+     * Get biggestDefeatsDifference
+     *
+     * @return array 
+     */
+    public function getBiggestDefeatsDifference()
+    {
+        return $this->biggestDefeatsDifference;
     }
 }
