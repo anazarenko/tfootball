@@ -1,41 +1,40 @@
 {% extends 'AppBundle::base.html.twig' %}
 
-{% block title %} - Players{% endblock %}
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    {% stylesheets
+    'bundles/app/less/sortable-table.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block title %} - Games{% endblock %}
 
 {% block content %}
 
-    <div id="game-filters" class="row">
-        {{ form_start(form, {'attr' : {'class' : 'form-inline'} }) }}
-            <div class="col-md-2 game-filter-container open date-filter-container">
-                <h4>Date Range</h4>
-                <div class="game-filter-row date-filter-row">
-                    <input type="text" id="date-filter" name="dateRange" class="form-control" value="">
-                </div>
-                <input type="hidden" name="startDate" value="{{ startDate }}">
-                <input type="hidden" name="endDate" value="{{ endDate }}">
-            </div>
-            <div class="col-md-1 submit">
-                <button type="submit" id="filterGame" class="btn-submit btn btn-success">Apply</button>
-            </div>
-            <div class="col-md-9 game-filter-container first-team-filter-container">
-                <h4>Player filter</h4>
-                <div>
-                    <div class="form-group player first-player">
-                        {{ form_widget(form.firstTeam) }}
-                    </div>
-                    <span>:</span>
-                    <div class="form-group player second-player">
-                        {{ form_widget(form.secondTeam) }}
-                    </div>
-                </div>
-            </div>
-            <div class="filter-error">{{ form_errors(form) }}</div>
+    <div class="panel-body player-tables">
+        <!-- Nav tabs -->
+        <ul id="main-page-tabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#single" aria-controls="home" role="tab" data-toggle="tab">Single</a></li>
+            <li role="presentation"><a href="#double" aria-controls="profile" role="tab" data-toggle="tab">Double</a></li>
+        </ul>
 
-        {{ form_end(form) }}
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="single">
+                {% include 'AppBundle:Game:table.html.twig' with {'statistics' : singlePlayerStatistics} %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="double">
+                {% include 'AppBundle:Game:table.html.twig' with {'statistics' : multiPlayerStatistics} %}
+            </div>
+        </div>
     </div>
 
     {# total items count #}
-
     {% if pagination.getTotalItemCount is defined %}
         <div class="row">
             <div class="count total-item-count col-md-12">
@@ -50,11 +49,9 @@
         <p class="nothing-msg">No game</p>
     {% endif %}
 
-    {#<div class="row">#}
-        <div class="row game-list">
-            {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
-        </div>
-    {#</div>#}
+    <div class="row game-list">
+        {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
+    </div>
 
     {% if moreBtn %}
         <div class="row load-more-container">
@@ -62,11 +59,6 @@
         </div>
     {% endif %}
 
-    {#<div class="row">#}
-        {#<div class="pagination">#}
-            {#{{ knp_pagination_render(pagination) }}#}
-        {#</div>#}
-    {#</div>#}
 {% endblock %}
 
 {% block javascripts %}
@@ -74,7 +66,7 @@
 
     {% javascripts
     'bundles/app/js/game.js'
-    'bundles/app/js/gameFilter.js'
+    'bundles/app/js/jquery.tablesorter.min.js'
     output='js/compiled/game.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

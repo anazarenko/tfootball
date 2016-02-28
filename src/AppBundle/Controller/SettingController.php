@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use AppBundle\Form\SettingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,6 +25,8 @@ class SettingController extends Controller
         $user = $this->getUser();
 
         $oldPassword = $user->getPassword();
+        $oldUsername = $user->getUsername();
+
         $user->setPassword('');
 
         $form = $this->createSettingForm($user, 'setting-form');
@@ -38,6 +41,21 @@ class SettingController extends Controller
                 $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
             } else {
                 $user->setPassword($oldPassword);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            if ($user->getUsername() !== $oldUsername) {
+                /** @var Team $team */
+                foreach ($user->getTeams() as $team) {
+                    $playerNames = array();
+                    foreach($team->getPlayerNames() as $playerName) {
+                        $playerNames[] = $playerName === $oldUsername ? $user->getUsername() : $playerName;
+                    }
+                    $team->setPlayerNames($playerNames);
+                    $entityManager->flush();
+                }
             }
         }
 

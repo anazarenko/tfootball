@@ -1,0 +1,21 @@
+.sortable-table{
+  th{
+    cursor: pointer;
+    &:after{
+      content: "";
+      font-family: "Glyphicons Halflings";
+      position: relative;
+      left: 5px;
+      width: 15px;
+      font-size: 12px;
+      display: inline-block;
+    }
+    &.headerSortUp:after{
+      content: "\e252";
+      top: 1px;
+    }
+    &.headerSortDown:after{
+      content: "\e253";
+    }
+  }
+}

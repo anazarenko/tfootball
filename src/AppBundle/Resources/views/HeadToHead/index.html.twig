@@ -1,0 +1,81 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Head to Head{% endblock %}
+
+{% block content %}
+
+    <div id="game-filters" class="row">
+        {{ form_start(form, {'attr' : {'class' : 'form-inline'} }) }}
+            <div class="col-md-2 game-filter-container open date-filter-container">
+                <h4>Date Range</h4>
+                <div class="game-filter-row date-filter-row">
+                    <input type="text" id="date-filter" name="dateRange" class="form-control" value="">
+                </div>
+                <input type="hidden" name="startDate" value="{{ startDate }}">
+                <input type="hidden" name="endDate" value="{{ endDate }}">
+            </div>
+            <div class="col-md-1 submit">
+                <button type="submit" id="filterGame" class="btn-submit btn btn-success">Apply</button>
+            </div>
+            <div class="col-md-9 game-filter-container first-team-filter-container">
+                <h4>Player filter</h4>
+                <div>
+                    <div class="form-group player first-player">
+                        {{ form_widget(form.firstTeam) }}
+                    </div>
+                    <span>:</span>
+                    <div class="form-group player second-player">
+                        {{ form_widget(form.secondTeam) }}
+                    </div>
+                </div>
+            </div>
+            <div class="filter-error">{{ form_errors(form) }}</div>
+
+        {{ form_end(form) }}
+    </div>
+
+    {# total items count #}
+
+    {% if pagination.getTotalItemCount is defined %}
+        <div class="row">
+            <div class="count total-item-count col-md-12">
+                <span>
+                    {% transchoice pagination.getTotalItemCount %}
+                        {0} No matches|{1} Found 1 match|]1,Inf[Found %count% matches
+                    {% endtranschoice %}
+                </span>
+            </div>
+        </div>
+    {% else %}
+        <p class="nothing-msg">No game</p>
+    {% endif %}
+
+    {#<div class="row">#}
+        <div class="row game-list">
+            {% include 'AppBundle:HeadToHead:item.html.twig' with {'games' : pagination} %}
+        </div>
+    {#</div>#}
+
+    {% if moreBtn %}
+        <div class="row load-more-container">
+            <div data-href="{{ path('_head_to_head') }}" data-page="2" class="btn btn-primary more-game">More</div>
+        </div>
+    {% endif %}
+
+    {#<div class="row">#}
+        {#<div class="pagination">#}
+            {#{{ knp_pagination_render(pagination) }}#}
+        {#</div>#}
+    {#</div>#}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'bundles/app/js/game.js'
+    'bundles/app/js/gameFilter.js'
+    output='js/compiled/game.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

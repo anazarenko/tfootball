@@ -1,8 +1,5 @@
 $(document).ready(function() {
 
-    $("#single .sortable-table").tablesorter({sortList: [[5,1]]});
-    $("#double .sortable-table").tablesorter({sortList: [[5,1]]});
-
     // Notify btn in popup
     $('.more-game').click(function(){
 
