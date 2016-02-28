@@ -6,7 +6,7 @@
 
     {% stylesheets
         'bundles/app/less/default.less'
-    filter='cssrewrite' output='css/compiled/app.css' %}
+    filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -76,7 +76,7 @@
 
     {% javascripts
     'bundles/app/js/main.js'
-    output='js/compiled/game.js' %}
+     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

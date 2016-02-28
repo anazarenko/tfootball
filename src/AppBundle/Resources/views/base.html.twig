@@ -10,7 +10,7 @@
     'bundles/app/css/select2.min.css'
     'bundles/app/css/daterangepicker.css'
     'bundles/app/less/main.less'
-    filter='cssrewrite' output='css/compiled/app.css' %}
+    filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -51,7 +51,7 @@
     'bundles/app/js/moment.min.js'
     'bundles/app/js/daterangepicker.js'
     'bundles/app/js/jquery.tablesorter.min.js'
-     output='js/compiled/lib.js' %}
+    %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
