@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Statistics
 {
+
+    const ACTION_REMOVE = 0;
+    const ACTION_ADD = 1;
     /**
      * @var integer
      *
@@ -63,34 +66,6 @@ class Statistics
      * @ORM\Column(type="integer", options={"default" = 0})
      */
     private $wonPercentage = 0;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $biggestVictories;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $biggestDefeats;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="smallint", options={"default" = 0})
-     */
-    private $biggestVictoryDifference = 0;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="smallint", options={"default" = 0})
-     */
-    private $biggestDefeatsDifference = 0;
 
     /**
      * @ORM\Column(type="datetime")
@@ -230,52 +205,6 @@ class Statistics
     }
 
     /**
-     * Set biggestVictories
-     *
-     * @param array $biggestVictories
-     * @return Statistics
-     */
-    public function setBiggestVictories($biggestVictories)
-    {
-        $this->biggestVictories = $biggestVictories;
-
-        return $this;
-    }
-
-    /**
-     * Get biggestVictories
-     *
-     * @return array 
-     */
-    public function getBiggestVictories()
-    {
-        return $this->biggestVictories;
-    }
-
-    /**
-     * Set biggestDefeats
-     *
-     * @param array $biggestDefeats
-     * @return Statistics
-     */
-    public function setBiggestDefeats($biggestDefeats)
-    {
-        $this->biggestDefeats = $biggestDefeats;
-
-        return $this;
-    }
-
-    /**
-     * Get biggestDefeats
-     *
-     * @return array 
-     */
-    public function getBiggestDefeats()
-    {
-        return $this->biggestDefeats;
-    }
-
-    /**
      * Set team
      *
      * @param \AppBundle\Entity\Team $team
@@ -382,71 +311,18 @@ class Statistics
         $this->setLost($this->getLost() + 1);
     }
 
-    public function updateBiggestVictory($difference, $gameId) {
-        if ($this->getBiggestVictoryDifference() == $difference) {
-            $biggestVictories = $this->getBiggestVictories();
-            $biggestVictories[] = $gameId;
-            $this->setBiggestVictories($biggestVictories);
-        } elseif ($this->getBiggestVictoryDifference() < $difference) {
-            $this->setBiggestVictories(array($gameId));
-            $this->setBiggestVictoryDifference($difference);
-        }
-    }
-
-    public function updateBiggestDefeats($difference, $gameId) {
-        if ($this->getBiggestDefeatsDifference() == $difference) {
-            $biggestDefeats = $this->getBiggestDefeats();
-            $biggestDefeats[] = $gameId;
-            $this->setBiggestDefeats($biggestDefeats);
-        } elseif ($this->getBiggestDefeatsDifference() < $difference) {
-            $this->setBiggestDefeats(array($gameId));
-            $this->setBiggestDefeatsDifference($difference);
-        }
-    }
-
-    /**
-     * Set biggestVictoryDifference
-     *
-     * @param array $biggestVictoryDifference
-     * @return Statistics
-     */
-    public function setBiggestVictoryDifference($biggestVictoryDifference)
+    public function removeWon()
     {
-        $this->biggestVictoryDifference = $biggestVictoryDifference;
-
-        return $this;
+        $this->setWon($this->getWon() - 1);
     }
 
-    /**
-     * Get biggestVictoryDifference
-     *
-     * @return array 
-     */
-    public function getBiggestVictoryDifference()
+    public function removeDrawn()
     {
-        return $this->biggestVictoryDifference;
+        $this->setDrawn($this->getDrawn() - 1);
     }
 
-    /**
-     * Set biggestDefeatsDifference
-     *
-     * @param array $biggestDefeatsDifference
-     * @return Statistics
-     */
-    public function setBiggestDefeatsDifference($biggestDefeatsDifference)
+    public function removeLost()
     {
-        $this->biggestDefeatsDifference = $biggestDefeatsDifference;
-
-        return $this;
-    }
-
-    /**
-     * Get biggestDefeatsDifference
-     *
-     * @return array 
-     */
-    public function getBiggestDefeatsDifference()
-    {
-        return $this->biggestDefeatsDifference;
+        $this->setLost($this->getLost() - 1);
     }
 }

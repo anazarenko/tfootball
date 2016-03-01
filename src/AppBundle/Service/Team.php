@@ -85,16 +85,17 @@ class Team
 
     /**
      * Update team statistics if game is confirmed
+     *
      * @param Game $game
+     * @param int $action
      */
-    public function updateStatistics(Game $game)
+    public function updateStatistics(Game $game, $action = Statistics::ACTION_ADD)
     {
         $winnerTeam = null;
         $defeatTeam = null;
         $isDraw = false;
         $firstTeam = $game->getFirstTeam();
         $secondTeam = $game->getSecondTeam();
-        $differenceScore = abs($game->getFirstScore() - $game->getSecondScore());
 
         if ($game->getResult() == Game::RESULT_DRAW) {
             $isDraw = true;
@@ -108,15 +109,28 @@ class Team
             }
         }
 
-        if ($isDraw) {
-            $firstTeam->getStatistics()->addDrawn();
-            $secondTeam->getStatistics()->addDrawn();
-        } else {
-            $winnerTeam->getStatistics()->addWon();
-            $winnerTeam->getStatistics()->updateBiggestVictory($differenceScore, $game->getId());
+        if ($action == Statistics::ACTION_ADD) {
 
-            $defeatTeam->getStatistics()->addLost();
-            $defeatTeam->getStatistics()->updateBiggestDefeats($differenceScore, $game->getId());
+            if ($isDraw) {
+                $firstTeam->getStatistics()->addDrawn();
+                $secondTeam->getStatistics()->addDrawn();
+            } else {
+                $winnerTeam->getStatistics()->addWon();
+                $defeatTeam->getStatistics()->addLost();
+            }
+
+        } elseif ($action == Statistics::ACTION_REMOVE) {
+
+            if ($isDraw) {
+                $firstTeam->getStatistics()->removeDrawn();
+                $secondTeam->getStatistics()->removeDrawn();
+            } else {
+                $winnerTeam->getStatistics()->removeWon();
+                $defeatTeam->getStatistics()->removeLost();
+            }
+
         }
+
+        $this->entityManager->flush();
     }
 }

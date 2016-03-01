@@ -178,6 +178,7 @@ class GameController extends Controller
             $game->setSecondTeam($secondTeam);
             $game->setType(Game::TYPE_FRIENDLY);
             $game->setCreator($user);
+            $game->setDifference(abs($game->getFirstScore() - $game->getSecondScore()));
 
             if ($game->getFirstScore() > $game->getSecondScore()) {
                 $game->setResult(Game::RESULT_FIRST_WINNER);

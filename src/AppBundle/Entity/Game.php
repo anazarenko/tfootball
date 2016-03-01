@@ -104,6 +104,11 @@ class Game
     private $secondScore;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $difference;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      */
@@ -506,5 +511,28 @@ class Game
     public function getPlayers()
     {
         return $this->players;
+    }
+
+    /**
+     * Set difference
+     *
+     * @param integer $difference
+     * @return Game
+     */
+    public function setDifference($difference)
+    {
+        $this->difference = $difference;
+
+        return $this;
+    }
+
+    /**
+     * Get difference
+     *
+     * @return integer 
+     */
+    public function getDifference()
+    {
+        return $this->difference;
     }
 }

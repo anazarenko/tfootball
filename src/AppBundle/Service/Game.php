@@ -2,18 +2,22 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Statistics;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 class Game
 {
     protected $templating;
     protected $entityManager;
+    protected $container;
 
-    public function __construct(EntityManager $entityManager, EngineInterface $templating)
+    public function __construct(EntityManager $entityManager, EngineInterface $templating, ContainerInterface $container)
     {
         $this->entityManager = $entityManager;
         $this->templating = $templating;
+        $this->container = $container;
     }
 
     /**
@@ -113,6 +117,12 @@ class Game
         arsort($sortingByValue);
 
         return $sortingByValue;
+    }
+
+    protected function removeGame(\AppBundle\Entity\Game $game)
+    {
+        $this->entityManager->remove($game);
+        $this->container->get('app.team_service')->updateStatistics($game, Statistics::ACTION_REMOVE);
     }
 
 }
