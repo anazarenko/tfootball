@@ -34,16 +34,17 @@ class Game
             ->getGamesByDate((new \DateTime('now'))->modify('-'.$days.' day'), new \DateTime('now'));
 
         // Get array of sorting matches for team
-        $sortingTeams = $this->parseGamesByPlayers($gameQuery->getResult());
+        $sortingTeams = $this->parseGamesByPlayers($gameQuery->getResult(), true);
 
         return $sortingTeams;
     }
 
     /**
      * @param \AppBundle\Entity\Game[] $games
+     * @param bool|false $sortingByPercent
      * @return array
      */
-    protected function parseGamesByPlayers($games)
+    public function parseGamesByPlayers($games, $sortingByPercent = false)
     {
         // Array for saving matches by team (key - team id, value = array with matches)
         $sortingGames = array();
@@ -87,7 +88,11 @@ class Game
         }
 
         // Array for saving team percent of won games
-        $sortingByValue = $this->sortByWonPercent($sortingGames);
+        if ($sortingByPercent) {
+            $sortingByValue = $this->sortByWonPercent($sortingGames);
+        } else {
+            $sortingByValue = $sortingGames;
+        }
 
         // Save matches from games array to percent array
         foreach ($sortingByValue as $key => $value) {

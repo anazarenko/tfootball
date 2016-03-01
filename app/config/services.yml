@@ -9,11 +9,11 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     app.game_service:
         class: AppBundle\Service\Game
-        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+        arguments: ["@doctrine.orm.entity_manager", "@templating", "@service_container"]
 
     app.team_service:
         class: AppBundle\Service\Team
-        arguments: ["@doctrine.orm.entity_manager", "@templating", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]
 
     app.twig_extension:
             class: AppBundle\Twig\TeamExtension

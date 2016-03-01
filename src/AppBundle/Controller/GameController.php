@@ -31,7 +31,7 @@ class GameController extends Controller
     public function matchAction(Request $request)
     {
         // Default date range
-        $dateRange = '01.01.2016-'.date('d.m.Y', time());
+        $dateRange = $this->getParameter('app.start_date').'-'.date('d.m.Y', time());
         $dates = explode('-', $dateRange);
 
         // Get game repository

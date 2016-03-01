@@ -50,6 +50,47 @@
         <p class="nothing-msg">No game</p>
     {% endif %}
 
+    {% if firstTeamStats is defined and secondTeamStats is defined %}
+    <div class="row h2h-stats">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div>{{ firstTeamStats['team'].playerNames|join(' / ') }}</div>
+                            <div class="huge">{{ firstTeamStats['won']|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div>Drawn</div>
+                            <div class="huge">{{ secondTeamStats['drawn']|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div>{{ secondTeamStats['team'].playerNames|join(' / ') }}</div>
+                            <div class="huge">{{ secondTeamStats['won']|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {#<div class="row">#}
         <div class="row game-list">
             {% include 'AppBundle:HeadToHead:item.html.twig' with {'games' : pagination} %}

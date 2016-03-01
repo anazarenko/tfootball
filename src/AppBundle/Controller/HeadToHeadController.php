@@ -31,7 +31,7 @@ class HeadToHeadController extends Controller
     public function matchAction(Request $request)
     {
         // Default date range
-        $dateRange = '01.01.2016-'.date('d.m.Y', time());
+        $dateRange = $this->getParameter('app.start_date').'-'.date('d.m.Y', time());
         $dates = explode('-', $dateRange);
 
         // Get team repository
@@ -46,9 +46,6 @@ class HeadToHeadController extends Controller
         // If ajax POST then get teams param
         $filterFirstTeam = $request->request->get('firstTeam') ? $request->request->get('firstTeam') : null;
         $filterSecondTeam = $request->request->get('secondTeam') ? $request->request->get('secondTeam') : null;
-
-        // Check if enable team
-        $isEmptyTeam = ($filterFirstTeam == null && $filterSecondTeam == null) ? true : false;
 
         // Create Game filter for teams
         $game = new Game();
@@ -77,9 +74,6 @@ class HeadToHeadController extends Controller
 
             $filterFirstTeam = isset($data['firstTeam']) ? $data['firstTeam'] : null;
             $filterSecondTeam = isset($data['secondTeam']) ? $data['secondTeam'] : null;
-
-            // Check if enable team
-            $isEmptyTeam = ($filterFirstTeam == null && $filterSecondTeam == null) ? true : false;
         }
 
         // Check for valid if sent two teams
@@ -106,9 +100,9 @@ class HeadToHeadController extends Controller
         $firstTeam = $teamRepository->findTeamByMemberIDs($filterFirstTeam);
         $secondTeam = $teamRepository->findTeamByMemberIDs($filterSecondTeam);
 
-        if (!$firstTeam && !$secondTeam && !$isEmptyTeam) {
+        if (!$firstTeam || !$secondTeam) {
             return $this->render(
-                'AppBundle:Game:index.html.twig',
+                'AppBundle:HeadToHead:index.html.twig',
                 array(
                     'active' => 'games',
                     'pagination' => '',
@@ -128,6 +122,21 @@ class HeadToHeadController extends Controller
                 $teamRepository->findTeamByMemberIDs($filterFirstTeam),
                 $teamRepository->findTeamByMemberIDs($filterSecondTeam)
             );
+
+        // Get games query
+        $gamesStatsQuery = $gameRepository
+            ->getGamesByDate(
+                new \DateTime($dates[0]),
+                new \DateTime($dates[1]),
+                $teamRepository->findTeamByMemberIDs($filterFirstTeam),
+                $teamRepository->findTeamByMemberIDs($filterSecondTeam)
+            );
+
+        // Get array of sorting matches for team
+        $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
+
+        $firstTeamStats = array_pop($teamStats);
+        $secondTeamStats = array_pop($teamStats);
 
         // Create pagination
         $paginator  = $this->get('knp_paginator');
@@ -160,6 +169,9 @@ class HeadToHeadController extends Controller
                 'active' => 'h2h',
                 'pagination' => $pagination,
                 'form' => $form->createView(),
+                'teamStats' => $teamStats,
+                'firstTeamStats' => $firstTeamStats,
+                'secondTeamStats' => $secondTeamStats,
                 'moreBtn' => $moreBtn,
                 'startDate' => $dates[0],
                 'endDate' => $dates[1]
