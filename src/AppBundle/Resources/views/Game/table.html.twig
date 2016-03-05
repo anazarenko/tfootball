@@ -12,7 +12,11 @@
     <tbody>
     {% for stat in statistics %}
         <tr>
-            <td>{{ stat['team']['playerNames']|join(' / ') }}</td>
+            <td>
+                <a class="team-link" href="{{ path('_profile_id', {'id' : stat['team'].id}) }}">
+                    {{ stat['team']['playerNames']|join(' / ') }}
+                <a class="team-link" href="{{ path('_profile_id', {'id' : stat['team'].id}) }}">
+            </td>
             <td>{{ stat['gameCount'] }}</td>
             <td>{{ stat['won'] }}</td>
             <td>{{ stat['drawn'] }}</td>
