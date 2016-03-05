@@ -58,7 +58,15 @@ class Game
                     'drawn' => array(),
                     'won' => array(),
                     'lost' => array(),
-                    'team' => $game->getFirstTeam()
+                    'team' => $game->getFirstTeam(),
+                    'greatVictories' => array(
+                        'games' => array(),
+                        'difference' => 0
+                    ),
+                    'greatDefeats' => array(
+                        'games' => array(),
+                        'difference' => 0
+                    )
                 );
             }
 
@@ -67,7 +75,15 @@ class Game
                     'drawn' => array(),
                     'won' => array(),
                     'lost' => array(),
-                    'team' => $game->getSecondTeam()
+                    'team' => $game->getSecondTeam(),
+                    'greatVictories' => array(
+                        'games' => array(),
+                        'difference' => 0
+                    ),
+                    'greatDefeats' => array(
+                        'games' => array(),
+                        'difference' => 0
+                    )
                 );
             }
 
@@ -76,13 +92,41 @@ class Game
                     $sortingGames[$firstTeamID]['drawn'][] = $game;
                     $sortingGames[$secondTeamID]['drawn'][] = $game;
                     break;
+
                 case 1:
                     $sortingGames[$firstTeamID]['won'][] = $game;
                     $sortingGames[$secondTeamID]['lost'][] = $game;
+
+                    if ($game->getDifference() > $sortingGames[$firstTeamID]['greatVictories']['difference']) {
+                        $sortingGames[$firstTeamID]['greatVictories']['difference'] = $game->getDifference();
+                        $sortingGames[$firstTeamID]['greatVictories']['games'] = array($game);
+                    } elseif ($game->getDifference() == $sortingGames[$firstTeamID]['greatVictories']['difference']) {
+                        $sortingGames[$firstTeamID]['greatVictories']['games'][] = $game;
+                    }
+                    if ($game->getDifference() > $sortingGames[$secondTeamID]['greatDefeats']['difference']) {
+                        $sortingGames[$secondTeamID]['greatDefeats']['difference'] = $game->getDifference();
+                        $sortingGames[$secondTeamID]['greatDefeats']['games'] = array($game);
+                    } elseif ($game->getDifference() == $sortingGames[$secondTeamID]['greatDefeats']['difference']) {
+                        $sortingGames[$firstTeamID]['greatDefeats']['games'][] = $game;
+                    }
                     break;
+
                 case 2:
                     $sortingGames[$firstTeamID]['lost'][] = $game;
                     $sortingGames[$secondTeamID]['won'][] = $game;
+
+                    if ($game->getDifference() > $sortingGames[$secondTeamID]['greatVictories']['difference']) {
+                        $sortingGames[$secondTeamID]['greatVictories']['difference'] = $game->getDifference();
+                        $sortingGames[$secondTeamID]['greatVictories']['games'] = array($game);
+                    } elseif ($game->getDifference() == $sortingGames[$secondTeamID]['greatVictories']['difference']) {
+                        $sortingGames[$secondTeamID]['greatVictories']['games'][] = $game;
+                    }
+                    if ($game->getDifference() > $sortingGames[$firstTeamID]['greatDefeats']['difference']) {
+                        $sortingGames[$firstTeamID]['greatDefeats']['difference'] = $game->getDifference();
+                        $sortingGames[$firstTeamID]['greatDefeats']['games'] = array($game);
+                    } elseif ($game->getDifference() == $sortingGames[$firstTeamID]['greatDefeats']['difference']) {
+                        $sortingGames[$firstTeamID]['greatDefeats']['games'][] = $game;
+                    }
                     break;
             }
         }

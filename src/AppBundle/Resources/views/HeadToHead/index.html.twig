@@ -36,17 +36,7 @@
 
     {# total items count #}
 
-    {% if pagination.getTotalItemCount is defined %}
-        <div class="row">
-            <div class="count total-item-count col-md-12">
-                <span>
-                    {% transchoice pagination.getTotalItemCount %}
-                        {0} No matches|{1} Found 1 match|]1,Inf[Found %count% matches
-                    {% endtranschoice %}
-                </span>
-            </div>
-        </div>
-    {% else %}
+    {% if pagination.getTotalItemCount is not defined %}
         <p class="nothing-msg">No game</p>
     {% endif %}
 
@@ -57,7 +47,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <div>{{ firstTeamStats['team'].playerNames|join(' / ') }}</div>
+                            <div>{{ firstTeamStats['team'].playerNames|join(' / ') }} winners</div>
                             <div class="huge">{{ firstTeamStats['won']|length }}</div>
                         </div>
                     </div>
@@ -69,7 +59,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <div>Drawn</div>
+                            <div>Draws</div>
                             <div class="huge">{{ secondTeamStats['drawn']|length }}</div>
                         </div>
                     </div>
@@ -81,8 +71,66 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <div>{{ secondTeamStats['team'].playerNames|join(' / ') }}</div>
+                            <div>{{ secondTeamStats['team'].playerNames|join(' / ') }} winners</div>
                             <div class="huge">{{ secondTeamStats['won']|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div>Great win</div>
+                            <div class="huge">
+                                {% if firstTeamStats['greatVictories']['games'][0] is defined %}
+                                    {% set game = firstTeamStats['greatVictories']['games'][0] %}
+                                    <span>{{ game.firstScore }} : {{ game.secondScore }}</span>
+                                {% else %}
+                                    <span>None</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            {% if pagination.getTotalItemCount is defined %}
+                                <div>Matches</div>
+                                <div class="huge">
+                                    <span>
+                                        {% transchoice pagination.getTotalItemCount %}
+                                        {0} No matches|{1} Found 1 match|]1,Inf[ %count%
+                                        {% endtranschoice %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div>Great win</div>
+                            <div class="huge">
+                                {% if secondTeamStats['greatVictories']['games'][0] is defined %}
+                                    {% set game = secondTeamStats['greatVictories']['games'][0] %}
+                                    <span>{{ game.firstScore }} : {{ game.secondScore }}</span>
+                                {% else %}
+                                    <span>None</span>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>

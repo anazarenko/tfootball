@@ -64,6 +64,7 @@ class Team
                 $names[] = $user->getUsername();
             }
 
+            shuffle($names);
             $team->setPlayerNames($names);
 
             $this->entityManager->persist($team);
