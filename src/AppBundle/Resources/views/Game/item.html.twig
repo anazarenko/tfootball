@@ -5,7 +5,9 @@
             {% if game.firstScore > game.secondScore %}
                 <i class="fa fa-soccer-ball-o"></i>
             {% endif %}
-            {{ game.firstTeam|members }}
+            <a class="team-link" href="{{ path('_profile_id', {'id' : game.firstTeam.id}) }}">
+                {{ game.firstTeam|members }}
+            </a>
         </div>
         <div class="game-score">{{ game.firstScore }}</div>
         <div class="game-separator">:</div>
@@ -14,7 +16,9 @@
             {% if game.firstScore < game.secondScore %}
                 <i class="fa fa-soccer-ball-o"></i>
             {% endif %}
-            {{ game.secondTeam|members }}
+            <a class="team-link" href="{{ path('_profile_id', {'id' : game.secondTeam.id}) }}">
+                {{ game.secondTeam|members }}
+            </a>
         </div>
         {#<td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>#}
         {#<td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>#}

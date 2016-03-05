@@ -184,6 +184,32 @@ body{
         }
       }
     }
+
+    &.half-size {
+      margin: 30px auto;
+      .game {
+        height: 50px;
+        margin: 10px auto;
+        text-align: center;
+        position: relative;
+        padding: 0;
+        >div {
+          &.game-player {
+            width: 236px;
+            font-size: 1em;
+            padding: 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          &.game-score{
+            width: 40px;
+          }
+          &.game-date{
+            display: none;
+          }
+        }
+      }
+    }
   }
 
   .game-notify{
@@ -390,4 +416,8 @@ div.pagination{
   div{
     overflow: hidden;
   }
+}
+
+.team-link{
+  color: black;
 }

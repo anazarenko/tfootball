@@ -1,0 +1,102 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Profile{% endblock %}
+
+{% block content %}
+
+    <h1>{{ names|join(' / ') }}</h1>
+
+    {# total items count #}
+
+    {% if pagination.getTotalItemCount is not defined %}
+        <p class="nothing-msg">No game</p>
+    {% endif %}
+
+    {% if teamStats is defined %}
+        <div class="row h2h-stats">
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div>Won</div>
+                                <div class="huge">{{ teamStats['won']|length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div>Drawn</div>
+                                <div class="huge">{{ teamStats['drawn']|length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div>Lost</div>
+                                <div class="huge">{{ teamStats['lost']|length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row profile-difference">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Great victories</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row game-list half-size">
+                            {% include 'AppBundle:Game:item.html.twig' with {'games' : teamStats['greatVictories']['games']} %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Great defeats</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row game-list half-size">
+                            {% include 'AppBundle:Game:item.html.twig' with {'games' : teamStats['greatDefeats']['games']} %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row game-list main-game-list">
+        {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
+    </div>
+
+    {% if moreBtn %}
+        <div class="row load-more-container">
+            <div data-href="{{ path('_profile') }}" data-page="2" class="btn btn-primary more-game">More</div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'bundles/app/js/game.js'
+     %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

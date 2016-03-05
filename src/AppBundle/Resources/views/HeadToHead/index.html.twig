@@ -140,8 +140,8 @@
     {% endif %}
 
     {#<div class="row">#}
-        <div class="row game-list">
-            {% include 'AppBundle:HeadToHead:item.html.twig' with {'games' : pagination} %}
+        <div class="row game-list main-game-list">
+            {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
         </div>
     {#</div>#}
 

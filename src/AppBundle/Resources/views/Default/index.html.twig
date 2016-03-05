@@ -1,16 +1,5 @@
 {% extends 'AppBundle::base.html.twig' %}
 
-{% block stylesheets %}
-
-    {{ parent() }}
-
-    {% stylesheets
-        'bundles/app/less/default.less'
-    filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
-
 {% block title %} - Main {% endblock %}
 
 {% block content %}
@@ -22,7 +11,7 @@
                         <h3 class="panel-title">Last 5 games</h3>
                     </div>
                     <div class="panel-body">
-                        <div class="row game-list">
+                        <div class="row game-list half-size">
                             {% include 'AppBundle:Game:item.html.twig' with {'games' : lastGames} %}
                         </div>
                         <div class="text-right">
@@ -69,14 +58,4 @@
         </div>
 
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    {% javascripts
-    'bundles/app/js/main.js'
-     %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

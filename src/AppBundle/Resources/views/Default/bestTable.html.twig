@@ -13,7 +13,11 @@
         {% set break = false %}
         {% for row in bestTeams if row['team'].playerCount == 1 and not break %}
             <tr>
-                <td>{{ row['team']|members }}</td>
+                <td>
+                    <a class="team-link" href="{{ path('_profile_id', {'id' : row['team'].id}) }}">
+                        {{ row['team']|members }}
+                    </a>
+                </td>
                 <td>{{ row['won']|length }}</td>
                 <td>{{ row['drawn']|length }}</td>
                 <td>{{ row['lost']|length }}</td>

@@ -104,7 +104,7 @@ class HeadToHeadController extends Controller
             return $this->render(
                 'AppBundle:HeadToHead:index.html.twig',
                 array(
-                    'active' => 'games',
+                    'active' => 'h2h',
                     'pagination' => '',
                     'form' => $form->createView(),
                     'moreBtn' => false,
@@ -154,7 +154,7 @@ class HeadToHeadController extends Controller
         // If async request
         if ($request->isXmlHttpRequest()) {
 
-            $games = $this->renderView('AppBundle:HeadToHead:item.html.twig', array('games' => $pagination));
+            $games = $this->renderView('AppBundle:Game:item.html.twig', array('games' => $pagination));
             $data = array('status' => 1, 'moreBtn' => $moreBtn, 'games' => $games, 'page' => $page + 1);
 
             $json = json_encode($data);

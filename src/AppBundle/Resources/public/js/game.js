@@ -39,7 +39,7 @@ $(document).ready(function() {
                     } else {
                         btn.data('page', data.page);
                     }
-                    $('.game-list').append(data.games);
+                    $('.main-game-list').append(data.games);
                 } else {
                     console.log(data);
                 }
