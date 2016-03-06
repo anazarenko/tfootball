@@ -42,8 +42,8 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    read_from:      "%kernel.root_dir%/../www"
-    write_to:       "%kernel.root_dir%/../www"
+    read_from:      "%kernel.root_dir%/../web"
+    write_to:       "%kernel.root_dir%/../web"
     bundles:        [ AppBundle, DashboardBundle ]
     #java: /usr/bin/java
     filters:
