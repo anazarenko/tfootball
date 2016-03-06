@@ -17,7 +17,7 @@
                 <li class="{% if active == 'games' %}active{% endif %}"><a href="{{ path('_games') }}">Games</a></li>
                 <li class="{% if active == 'h2h' %}active{% endif %}"><a href="{{ path('_head_to_head') }}">H2H</a></li>
                 {#<li class="{% if active == 'tournaments' %}active{% endif %}"><a href="#">Tournaments</a></li>#}
-                {#<li class="{% if active == 'players' %}active{% endif %}"><a href="{{ path('_player') }}">Players</a></li>#}
+                <li class="{% if active == 'randomizer' %}active{% endif %}"><a href="{{ path('_randomizer') }}">Randomizer</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><button type="button" class="create-game-btn btn btn-primary" data-toggle="modal" data-target=".create-game-popup">Create Game</button></li>

@@ -18,6 +18,10 @@ $(document).ready(function() {
     $('#game_create_firstTeam').select2();
     $('#game_create_secondTeam').select2();
 
+    $('#createGameClear').click(function(){
+        clearCreateGameForm();
+    });
+
     // Create game form
     createGameForm.submit(function(event) {
 
@@ -57,8 +61,8 @@ $(document).ready(function() {
                 errorField.html(data.error);
             } else {
                 $('.create-game-popup').modal('hide');
-                $('.select2-selection__choice').remove();
-                createGameForm.trigger("reset");
+                $('#game_create_firstScore').val('');
+                $('#game_create_secondScore').val('');
                 errorField.html('');
                 notifyContainer.addClass('active');
                 notify.addClass('show');
