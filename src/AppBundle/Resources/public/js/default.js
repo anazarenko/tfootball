@@ -3,7 +3,7 @@ $(document).ready(function() {
     // Best player tabs
     $('#main-page-tabs a').click(function (e) {
         e.preventDefault();
-        $(this).tab('show')
+        $(this).tab('show');
     });
 
     // Best player period
