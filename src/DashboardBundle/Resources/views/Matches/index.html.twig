@@ -68,15 +68,22 @@
                             </td>
                             <td>
                                 {% for confirm in game.confirms %}
-                                    <span class="confirm
-                                        {% if confirm.status == constant('STATUS_NEW', confirm) %}
-                                            new
-                                        {% elseif confirm.status == constant('STATUS_CONFIRMED', confirm) %}
-                                            confirm
-                                        {% elseif confirm.status == constant('STATUS_REJECTED', confirm) %}
-                                            rejected
-                                        {% endif %}">
-                                    </span>
+                                    <div class="dropdown">
+                                        <span id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="confirm
+                                            {% if confirm.status == constant('STATUS_NEW', confirm) %}
+                                                new-status
+                                            {% elseif confirm.status == constant('STATUS_CONFIRMED', confirm) %}
+                                                confirmed-status
+                                            {% elseif confirm.status == constant('STATUS_REJECTED', confirm) %}
+                                                rejected-status
+                                            {% endif %}">
+                                        </span>
+                                        <ul class="dropdown-menu status-change" data-href="{{ path('_dashboard_matches_status_change', {'id' : confirm.id}) }}" aria-labelledby="dLabel">
+                                            {% for key, status in confirm.availableStatus %}
+                                                <li data-status="{{ key }}">{{ status }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                     <span>{{ confirm.user.username }}</span>
                                 {% endfor %}
                             </td>
@@ -94,10 +101,10 @@
     </div>
 {% endblock %}
 
-{#{% block javascripts %}#}
-    {#{{ parent() }}#}
-    {#{% javascripts#}
-    {#"@DashboardBundle/Resources/public/js/user.js" %}#}
-    {#<script src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-{#{% endblock %}#}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    "@DashboardBundle/Resources/public/js/matches.js" %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

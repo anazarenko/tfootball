@@ -1,18 +1,24 @@
 .game-table{
-  .confirm{
+
+  .dropdown{
     display: inline-block;
-    vertical-align: sub;
+  }
+
+  .confirm{
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    &.rejected{
+    &.rejected-status{
       background: red;
     }
-    &.confirm{
+    &.confirmed-status{
       background: green;
     }
-    &.new{
-      background: dodgerblue;
+    &.new-status{
+      background: #999;
     }
     +span{
       display: inline-block;
@@ -20,4 +26,15 @@
       padding-right: 10px;
     }
   }
+
+  .status-change{
+    li{
+      cursor: pointer;
+      padding: 2px 12px;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
+
 }
