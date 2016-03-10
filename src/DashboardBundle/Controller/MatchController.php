@@ -80,20 +80,13 @@ class MatchController extends Controller
         }
 
         if ($gameStatus != $oldGameStatus) {
-
+            $game->setStatus($gameStatus);
             if ($gameStatus == Game::STATUS_CONFIRMED) {
-                $game->setStatus(Game::STATUS_CONFIRMED);
                 $this->get('app.team_service')->updateStatistics($game);
             } elseif ($oldGameStatus == Game::STATUS_CONFIRMED) {
-                $game->setStatus($gameStatus);
                 $this->get('app.team_service')->updateStatistics($game, Statistics::ACTION_REMOVE);
             }
         }
-
-        // Неверно записывается новый статус игры
-        dump($oldGameStatus);
-        dump($game->getStatus());
-        die;
 
         $entityManager->flush();
         $responseStatus = 1;
