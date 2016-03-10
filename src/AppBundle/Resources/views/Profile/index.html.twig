@@ -12,7 +12,7 @@
         <p class="nothing-msg">No game</p>
     {% endif %}
 
-    {% if teamStats is defined %}
+    {% if teamStats|length > 0 %}
         <div class="row h2h-stats">
             <div class="col-md-4">
                 <div class="panel panel-primary">

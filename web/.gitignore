@@ -23,8 +23,10 @@
 /vendor/
 
 # Assets and user uploads
-/www/bundles/
-/www/uploads/
+/bundles/
+/uploads/
+/css/
+/js/
 
 # PHPUnit
 /app/phpunit.xml

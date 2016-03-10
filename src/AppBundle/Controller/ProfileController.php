@@ -116,7 +116,7 @@ class ProfileController extends Controller
 
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
-        $teamStats = $teamStats[$team->getId()];
+        $teamStats = isset($teamStats[$team->getId()]) ? $teamStats[$team->getId()] : null;
 
         return $this->render(
             'AppBundle:Profile:index.html.twig',
