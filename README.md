@@ -1,4 +1,4 @@
-TFootball web app for SamsonOS workers
+TFootball web app
 ========================
 
 All libraries and bundles included in the Symfony Standard Edition are
