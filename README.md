@@ -8,5 +8,5 @@ Enjoy!
 
 __TODO:__ 
 
-1. Remove api
+1. Remote api
 2. Matches forecast
