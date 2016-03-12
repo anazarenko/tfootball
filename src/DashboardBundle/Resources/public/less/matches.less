@@ -1,40 +1,45 @@
-.game-table{
+.game-table-container {
+  padding-bottom: 70px;
 
-  .dropdown{
-    display: inline-block;
-  }
+  .game-table {
 
-  .confirm{
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: middle;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    &.rejected-status{
-      background: red;
-    }
-    &.confirmed-status{
-      background: green;
-    }
-    &.new-status{
-      background: #999;
-    }
-    +span{
+    .dropdown {
       display: inline-block;
-      vertical-align: sub;
-      padding-right: 10px;
     }
-  }
 
-  .status-change{
-    li{
+    .confirm {
       cursor: pointer;
-      padding: 2px 12px;
-      &:hover{
-        text-decoration: underline;
+      display: inline-block;
+      vertical-align: middle;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      &.rejected-status {
+        background: red;
+      }
+      &.confirmed-status {
+        background: green;
+      }
+      &.new-status {
+        background: #999;
+      }
+      + span {
+        display: inline-block;
+        vertical-align: sub;
+        padding-right: 10px;
       }
     }
+
+    .status-change {
+      li {
+        cursor: pointer;
+        padding: 2px 12px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
   }
 
 }
