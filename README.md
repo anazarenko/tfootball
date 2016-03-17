@@ -6,7 +6,15 @@ released under the MIT or BSD license.
 
 Enjoy!
 
-__TODO:__ 
+### Changelog
 
-1. Remote api
-2. Matches forecast
+v.1.0.1
+
+ - Fixed dashboard dropdown with confrim`s statuses
+
+### Todo List
+
+- Remote api
+- Matches forecast
+
+
