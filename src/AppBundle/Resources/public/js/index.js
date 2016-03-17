@@ -6,6 +6,9 @@ $(document).ready(function() {
     var notify = $('#notify');
     var notifyClose = $('#notify .close');
 
+    var gameCreateFirstTeam = $('#game_create_firstTeam');
+    var gameCreateSecondTeam = $('#game_create_secondTeam');
+
     // Hide notify window
     notifyClose.click(function(){
         notify.removeClass('show');
@@ -15,11 +18,19 @@ $(document).ready(function() {
     });
 
     // Player select in creating game
-    $('#game_create_firstTeam').select2();
-    $('#game_create_secondTeam').select2();
+    gameCreateFirstTeam.select2();
+    gameCreateSecondTeam.select2();
 
     $('#createGameClear').click(function(){
         clearCreateGameForm();
+    });
+
+    $('.transfer-btn').click(function(){
+        var a = gameCreateFirstTeam.val();
+        var b = gameCreateSecondTeam.val();
+
+        gameCreateFirstTeam.val(b).trigger("change");
+        gameCreateSecondTeam.val(a).trigger("change");
     });
 
     // Create game form

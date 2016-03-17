@@ -2,35 +2,43 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content content">
 
-            {{ form_start(form, {'attr' : {'class' : 'form-inline create-game-form'} }) }}
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_start(form, {'attr' : {'class' : 'form-inline create-game-form'} }) }}
 
-                <div class="form-group player first-player">
-                    {{ form_widget(form.firstTeam) }}
+                    <div class="form-group player first-player">
+                        {{ form_widget(form.firstTeam) }}
+                    </div>
+
+                    <div class="form-group goal first-goal">
+                        {{ form_widget(form.firstScore) }}
+                    </div>
+                    <span>:</span>
+                    <div class="form-group goal second-goal">
+                        {{ form_widget(form.secondScore) }}
+                    </div>
+
+                    <div class="form-group player second-player">
+                        {{ form_widget(form.secondTeam) }}
+                    </div>
+
+                    <div class="form-group form-choice">
+                        {{ form_widget(form.form) }}
+                    </div>
+
+                    <button type="submit" id="createGame" data-loading-text="Creating..." autocomplete="off" class="btn-submit btn btn-primary">Create</button>
+                    <div id="createGameClear" class="btn btn-warning">Clear</div>
+
+                    <div class="transfer">
+                        <div class="transfer-btn"><i class="glyphicon glyphicon-transfer"></i></div>
+                    </div>
+
+                    {#{{ form_end(form, {'render_rest': false}) }}#}
+                    {{ form_end(form) }}
+
+                    <p class="form-error"></p>
                 </div>
-
-                <div class="form-group goal first-goal">
-                    {{ form_widget(form.firstScore) }}
-                </div>
-                <span>:</span>
-                <div class="form-group goal second-goal">
-                    {{ form_widget(form.secondScore) }}
-                </div>
-
-                <div class="form-group player second-player">
-                    {{ form_widget(form.secondTeam) }}
-                </div>
-
-                <div class="form-group form-choice">
-                    {{ form_widget(form.form) }}
-                </div>
-
-                <button type="submit" id="createGame" data-loading-text="Creating..." autocomplete="off" class="btn-submit btn btn-primary">Create</button>
-                <div id="createGameClear" class="btn btn-warning">Clear</div>
-
-            {#{{ form_end(form, {'render_rest': false}) }}#}
-            {{ form_end(form) }}
-
-            <p class="form-error"></p>
+            </div>
 
         </div>
     </div>
