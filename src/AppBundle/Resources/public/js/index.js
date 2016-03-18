@@ -21,10 +21,12 @@ $(document).ready(function() {
     gameCreateFirstTeam.select2();
     gameCreateSecondTeam.select2();
 
+    // Clear players select in creating game popup
     $('#createGameClear').click(function(){
         clearCreateGameForm();
     });
 
+    // Transfer team button in creating game popup
     $('.transfer-btn').click(function(){
         var a = gameCreateFirstTeam.val();
         var b = gameCreateSecondTeam.val();
