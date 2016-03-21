@@ -115,6 +115,19 @@ class HeaderController extends Controller
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
 
+        if (!count($teamStats)) {
+            if ($request->isXmlHttpRequest()) {
+
+                $data = array('status' => 0, 'error' => 'No matches');
+
+                $json = json_encode($data);
+                $response = new Response($json, 200);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+            return false;
+        }
+
         $firstTeamStats = $teamStats[$firstTeam->getId()];
         $secondTeamStats = $teamStats[$secondTeam->getId()];
 

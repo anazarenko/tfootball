@@ -5,5 +5,5 @@ var clearCreateGameForm = function() {
     $('#game_create_firstScore').val('');
     $('#game_create_secondScore').val('');
 
-    $('.stats-container').html('');
+    clearPopupStats();
 };

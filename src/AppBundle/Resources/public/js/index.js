@@ -18,16 +18,23 @@ $(document).ready(function() {
     });
 
     // Player select in creating game
-    gameCreateFirstTeam.select2();
-    gameCreateSecondTeam.select2();
+    gameCreateFirstTeam.select2().on("change", function() {
+        clearPopupStats();
+    });
+    gameCreateSecondTeam.select2().on("change", function() {
+        clearPopupStats();
+    });
 
     // Clear players select in creating game popup
     $('#createGameClear').click(function(){
         clearCreateGameForm();
+        $('.form-error').html('');
     });
 
     // Transfer team button in creating game popup
     $('.transfer-btn').click(function(){
+        clearPopupStats();
+
         var a = gameCreateFirstTeam.val();
         var b = gameCreateSecondTeam.val();
 
@@ -127,11 +134,12 @@ $(document).ready(function() {
         });
     });
 
+    // Loading stats to game creation popup
     $('.load-stats-btn').click(function(){
         var btn = $(this);
         btn.button('loading');
 
-        $('.stats-container').html('');
+        clearPopupStats();
 
         var firstTeam = [];
         var secondTeam = [];
@@ -165,3 +173,7 @@ $(document).ready(function() {
     });
 
 });
+
+function clearPopupStats() {
+    $('.stats-container').html('');
+}
