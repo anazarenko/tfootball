@@ -1,0 +1,51 @@
+<div class="stat-box-container-container">
+    <table>
+        <tbody>
+        <tr>
+            <td class="no-bottom-border">
+                <div class="stat">
+                    {{ firstTeamStats['won']|length + firstTeamStats['drawn']|length + firstTeamStats['lost']|length }}
+                </div>
+                <div class="label">Games Played</div>
+            </td>
+            <td class="left-border no-bottom-border">
+                <div class="stat">
+                    {% if firstTeamStats['greatVictories']['games']|length %}
+                        {{ firstTeamStats['greatVictories']['games'][0].firstScore }} : {{ firstTeamStats['greatVictories']['games'][0].secondScore }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+                <div class="label">Greatest win</div>
+            </td>
+            <td class="left-border no-bottom-border">
+                <div class="stat">{{ firstTeamStats['won']|length }}</div>
+                <div class="label">Won</div>
+            </td>
+            <td class="left-border no-bottom-border">
+                <div class="stat">{{ firstTeamStats['drawn']|length }}</div>
+                <div class="label">Drawn</div>
+            </td>
+            <td class="left-border no-bottom-border">
+                <div class="stat">{{ secondTeamStats['won']|length }}</div>
+                <div class="label">Won</div>
+            </td>
+            <td class="left-border no-bottom-border">
+                <div class="stat">
+                    {% if secondTeamStats['greatVictories']['games']|length %}
+                        {{ secondTeamStats['greatVictories']['games'][0].firstScore }} : {{ secondTeamStats['greatVictories']['games'][0].secondScore }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </div>
+                <div class="label">Greatest win</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row game-list half-size">
+    <h3>Last Games</h3>
+    {% include 'AppBundle:Game:item.html.twig' with {'games' : games} %}
+</div>

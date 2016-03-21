@@ -127,4 +127,41 @@ $(document).ready(function() {
         });
     });
 
+    $('.load-stats-btn').click(function(){
+        var btn = $(this);
+        btn.button('loading');
+
+        $('.stats-container').html('');
+
+        var firstTeam = [];
+        var secondTeam = [];
+
+        $('#game_create_firstTeam :selected').each(function(){
+            firstTeam.push($(this).val());
+        });
+        $('#game_create_secondTeam :selected').each(function(){
+            secondTeam.push($(this).val());
+        });
+
+        var errorField = $('.form-error');
+
+        errorField.html('');
+
+        $.ajax({
+            type        : 'POST',
+            url         : btn.data('href'),
+            data        : {'firstTeam' : firstTeam, 'secondTeam' : secondTeam},
+            dataType    : 'json'
+        }).success(function(data){
+            if (data.status == 0) {
+                errorField.html(data.error);
+            } else {
+                $('.stats-container').html(data.html);
+            }
+        }).always(function () {
+            btn.button('reset');
+        });
+
+    });
+
 });

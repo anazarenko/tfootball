@@ -96,6 +96,7 @@ body{
         text-align: center;
         .player{
           margin: 0 20px;
+          width: 220px;
         }
         .goal input {
           width: 36px;
@@ -126,6 +127,7 @@ body{
 
     .select2-container{
       max-width: 240px;
+      width: 220px;
     }
 
     .transfer{
@@ -143,6 +145,20 @@ body{
       text-align: center;
       .load-stats-btn {
         margin: auto;
+      }
+    }
+
+    .stat-box-container-container{
+      margin: 20px 0;
+    }
+
+    .game-list{
+      h3{
+        text-align: center;
+        margin: 10px 0;
+      }
+      .game-player{
+        width: 380px !important;
       }
     }
 
@@ -450,4 +466,41 @@ div.pagination{
 
 .team-link{
   color: black;
+}
+
+.stats-container{
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    background: #fff;
+    color: #000;
+    border: 1px solid #cdcdcd;
+
+    td {
+      width: 16.6%;
+      height: 25px;
+      line-height: 25px;
+      border-bottom: none;
+      font-size: 11px;
+      color: #404040;
+      text-align: center;
+      padding: 0;
+      border-left: 1px #ccc solid;
+      border-bottom: none;
+      border-right: none;
+      .stat {
+        font-size: 30px;
+        margin: 15px 0 8px;
+        text-align: center;
+      }
+      .label {
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 18px;
+        color: #9a9a9a;
+        font-weight: lighter;
+      }
+    }
+  }
 }
