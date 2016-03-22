@@ -107,7 +107,7 @@ class Game
                         $sortingGames[$secondTeamID]['greatDefeats']['difference'] = $game->getDifference();
                         $sortingGames[$secondTeamID]['greatDefeats']['games'] = array($game);
                     } elseif ($game->getDifference() == $sortingGames[$secondTeamID]['greatDefeats']['difference']) {
-                        $sortingGames[$firstTeamID]['greatDefeats']['games'][] = $game;
+                        $sortingGames[$secondTeamID]['greatDefeats']['games'][] = $game;
                     }
                     break;
 
