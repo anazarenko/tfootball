@@ -63,7 +63,7 @@ class Statistics
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer", options={"default" = 0})
+     * @ORM\Column(type="float", options={"default" = 0})
      */
     private $wonPercentage = 0;
 
@@ -98,7 +98,7 @@ class Statistics
     {
         $this->setGameCount($this->getWon() + $this->getDrawn() + $this->getLost());
         if ($this->getGameCount() > 0) {
-            $this->setWonPercentage(round(($this->getWon() / $this->getGameCount()) * 100));
+            $this->setWonPercentage(round((($this->getWon() / $this->getGameCount()) * 100), 1));
         }
     }
 
