@@ -128,6 +128,20 @@ class GameController extends Controller
             $entityManager = $this->getDoctrine()->getManager();
             $errorMsg = '';
 
+            if (!is_int($game->getFirstScore()) || !is_int($game->getSecondScore())) {
+                if ($request->isXmlHttpRequest()) {
+
+                    $data = array('status' => 0, 'error' => 'Incorrect data');
+
+                    $json = json_encode($data);
+                    $response = new Response($json, 200);
+                    $response->headers->set('Content-Type', 'application/json');
+                    return $response;
+                }
+
+                return new RedirectResponse($referer);
+            }
+
             if (!$this->get('app.team_service')->isValidTeams($data['firstTeam'], $data['secondTeam'], $errorMsg)) {
                 if ($request->isXmlHttpRequest()) {
 
