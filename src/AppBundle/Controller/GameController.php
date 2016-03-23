@@ -128,7 +128,7 @@ class GameController extends Controller
             $entityManager = $this->getDoctrine()->getManager();
             $errorMsg = '';
 
-            if (!is_int($game->getFirstScore()) || !is_int($game->getSecondScore())) {
+            if (empty($game->getFirstScore()) || empty($game->getSecondScore())) {
                 if ($request->isXmlHttpRequest()) {
 
                     $data = array('status' => 0, 'error' => 'Incorrect data');
