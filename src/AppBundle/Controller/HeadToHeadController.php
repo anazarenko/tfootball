@@ -97,7 +97,9 @@ class HeadToHeadController extends Controller
         }
 
         // Get Teams
+        /** @var Team $firstTeam */
         $firstTeam = $teamRepository->findTeamByMemberIDs($filterFirstTeam);
+        /** @var Team $secondTeam */
         $secondTeam = $teamRepository->findTeamByMemberIDs($filterSecondTeam);
 
         if (!$firstTeam || !$secondTeam) {
@@ -119,8 +121,8 @@ class HeadToHeadController extends Controller
             ->getGamesByDate(
                 new \DateTime($dates[0]),
                 new \DateTime($dates[1]),
-                $teamRepository->findTeamByMemberIDs($filterFirstTeam),
-                $teamRepository->findTeamByMemberIDs($filterSecondTeam)
+                $firstTeam,
+                $secondTeam
             );
 
         // Get games query
@@ -128,15 +130,29 @@ class HeadToHeadController extends Controller
             ->getGamesByDate(
                 new \DateTime($dates[0]),
                 new \DateTime($dates[1]),
-                $teamRepository->findTeamByMemberIDs($filterFirstTeam),
-                $teamRepository->findTeamByMemberIDs($filterSecondTeam)
+                $firstTeam,
+                $secondTeam
             );
 
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
 
-        $firstTeamStats = array_pop($teamStats);
-        $secondTeamStats = array_pop($teamStats);
+        if (!count($teamStats)) {
+            return $this->render(
+                'AppBundle:HeadToHead:index.html.twig',
+                array(
+                    'active' => 'h2h',
+                    'pagination' => '',
+                    'form' => $form->createView(),
+                    'moreBtn' => false,
+                    'startDate' => $dates[0],
+                    'endDate' => $dates[1]
+                )
+            );
+        }
+
+        $firstTeamStats = $teamStats[$firstTeam->getId()];
+        $secondTeamStats = $teamStats[$secondTeam->getId()];
 
         // Create pagination
         $paginator  = $this->get('knp_paginator');
