@@ -17,15 +17,21 @@
                 <li class="{% if active == 'games' %}active{% endif %}"><a href="{{ path('_games') }}">Games</a></li>
                 <li class="{% if active == 'h2h' %}active{% endif %}"><a href="{{ path('_head_to_head') }}">H2H</a></li>
                 {#<li class="{% if active == 'tournaments' %}active{% endif %}"><a href="#">Tournaments</a></li>#}
-                <li class="{% if active == 'randomizer' %}active{% endif %}"><a href="{{ path('_randomizer') }}">Randomizer</a></li>
+                {% if not app.user.isGranted('ROLE_SPECTATOR') %}
+                    <li class="{% if active == 'randomizer' %}active{% endif %}"><a href="{{ path('_randomizer') }}">Randomizer</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><button type="button" class="create-game-btn btn btn-primary" data-toggle="modal" data-target=".create-game-popup">Create Game</button></li>
-                {{ render(controller('AppBundle:Header:headerGameNotify')) }}
+                {% if not app.user.isGranted('ROLE_SPECTATOR') %}
+                    <li><button type="button" class="create-game-btn btn btn-primary" data-toggle="modal" data-target=".create-game-popup">Create Game</button></li>
+                    {{ render(controller('AppBundle:Header:headerGameNotify')) }}
+                {% endif %}
                 <li><a aria-expanded="false" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ app.user.username }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ path('_profile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            {% if not app.user.isGranted('ROLE_SPECTATOR') %}
+                                <a href="{{ path('_profile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            {% endif %}
                         </li>
                         <li>
                             <a href="{{ path('_setting_page') }}"><i class="fa fa-fw fa-gear"></i> Setting</a>
@@ -41,4 +47,6 @@
     </div>
 </div>
 
-{{ render(controller('AppBundle:Header:headerGamePopup')) }}
+{% if not app.user.isGranted('ROLE_SPECTATOR') %}
+    {{ render(controller('AppBundle:Header:headerGamePopup')) }}
+{% endif %}

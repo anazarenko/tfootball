@@ -9,6 +9,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\GameCreateType;
 use AppBundle\Form\GameFilterType;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -103,6 +104,7 @@ class GameController extends Controller
     /**
      * @Route("/create", name="_game_create")
      * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_USER')")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

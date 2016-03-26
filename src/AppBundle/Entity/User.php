@@ -18,7 +18,8 @@ class User implements UserInterface, \Serializable
 
     public $availableRoles = array(
         0 => 'ROLE_ADMIN',
-        1 => 'ROLE_USER'
+        1 => 'ROLE_USER',
+        2 => 'ROLE_SPECTATOR'
     );
     /**
      * @var integer
@@ -87,6 +88,15 @@ class User implements UserInterface, \Serializable
         // $this->salt = md5(uniqid(null, true));
 
         $this->games = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @param $role
+     * @return bool
+     */
+    public function isGranted($role)
+    {
+        return in_array($role, $this->getRoles());
     }
 
     /**

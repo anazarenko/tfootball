@@ -26,7 +26,8 @@ class UserCreateType extends AbstractType
                 array(
                     'choices' => array(
                         0 => 'ROLE_ADMIN',
-                        1 => 'ROLE_USER'
+                        1 => 'ROLE_USER',
+                        2 => 'ROLE_SPECTATOR'
                     ),
                     'data' => '1',
                     'label' => 'Role',
