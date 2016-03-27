@@ -59,7 +59,7 @@
                 <td>{{ row['won']|length }}</td>
                 <td>{{ row['drawn']|length }}</td>
                 <td>{{ row['lost']|length }}</td>
-                <td>{{ row['wonPercent']|round }}%</td>
+                <td>{{ row['wonPercent']|round(1) }}%</td>
                 <td class="streak-container">
                     {% for result in twig_team.getStreak(row['team'].id) %}
                         <span class="streak streak-{{ result }}"></span>
