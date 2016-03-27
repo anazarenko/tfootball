@@ -7,6 +7,7 @@
             <th>Drawn</th>
             <th>Lost</th>
             <th>%</th>
+            <th>Streak</th>
         </tr>
     </thead>
     <tbody>
@@ -15,13 +16,18 @@
             <td>
                 <a class="team-link" href="{{ path('_profile_id', {'id' : stat['team'].id}) }}">
                     {{ stat['team']['playerNames']|join(' / ') }}
-                <a class="team-link" href="{{ path('_profile_id', {'id' : stat['team'].id}) }}">
+                </a>
             </td>
             <td>{{ stat['gameCount'] }}</td>
             <td>{{ stat['won'] }}</td>
             <td>{{ stat['drawn'] }}</td>
             <td>{{ stat['lost'] }}</td>
             <td>{{ stat['wonPercentage'] }}</td>
+            <td class="streak-container">
+                {% for result in twig_team.getStreak(stat['team']['id']) %}
+                    <span class="streak streak-{{ result }}"></span>
+                {% endfor %}
+            </td>
         </tr>
     {% endfor %}
     </tbody>

@@ -505,3 +505,21 @@ div.pagination{
     }
   }
 }
+
+.streak-container{
+  padding: 5px 10px;
+  .streak{
+    display: inline-block;
+    width: 10px;
+    height: 4px;
+    &.streak-won{
+      background-color: green;
+    }
+    &.streak-lost{
+      background-color: red;
+    }
+    &.streak-drawn{
+      background-color: #999;
+    }
+  }
+}

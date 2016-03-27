@@ -7,6 +7,7 @@
             <th>Drawn</th>
             <th>Lost</th>
             <th>%</th>
+            <th>Streak</th>
         </tr>
         </thead>
         <tbody>
@@ -22,6 +23,11 @@
                 <td>{{ row['drawn']|length }}</td>
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round(1) }}%</td>
+                <td class="streak-container">
+                    {% for result in twig_team.getStreak(row['team'].id) %}
+                        <span class="streak streak-{{ result }}"></span>
+                    {% endfor %}
+                </td>
             </tr>
             {#{% if loop.index == 8 %}#}
                 {#{% set break = true %}#}
@@ -38,6 +44,7 @@
             <th>Drawn</th>
             <th>Lost</th>
             <th>%</th>
+            <th>Streak</th>
         </tr>
         </thead>
         <tbody>
@@ -53,6 +60,11 @@
                 <td>{{ row['drawn']|length }}</td>
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round }}%</td>
+                <td class="streak-container">
+                    {% for result in twig_team.getStreak(row['team'].id) %}
+                        <span class="streak streak-{{ result }}"></span>
+                    {% endfor %}
+                </td>
             </tr>
             {#{% if loop.index == 8 %}#}
                 {#{% set break = true %}#}

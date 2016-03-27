@@ -2,20 +2,17 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Game;
+use AppBundle\Entity\Game as GameEntity;
 use AppBundle\Entity\Statistics;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Templating\EngineInterface;
 
 class Team
 {
-    protected $templating;
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager, EngineInterface $templating)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->templating = $templating;
     }
 
     /**
@@ -87,10 +84,10 @@ class Team
     /**
      * Update team statistics if game is confirmed
      *
-     * @param Game $game
+     * @param GameEntity $game
      * @param int $action
      */
-    public function updateStatistics(Game $game, $action = Statistics::ACTION_ADD)
+    public function updateStatistics(GameEntity $game, $action = Statistics::ACTION_ADD)
     {
         $winnerTeam = null;
         $defeatTeam = null;
@@ -98,10 +95,10 @@ class Team
         $firstTeam = $game->getFirstTeam();
         $secondTeam = $game->getSecondTeam();
 
-        if ($game->getResult() == Game::RESULT_DRAW) {
+        if ($game->getResult() == GameEntity::RESULT_DRAW) {
             $isDraw = true;
         } else {
-            if ($game->getResult() == Game::RESULT_FIRST_WINNER) {
+            if ($game->getResult() == GameEntity::RESULT_FIRST_WINNER) {
                 $winnerTeam = $firstTeam;
                 $defeatTeam = $secondTeam;
             } else {
@@ -133,5 +130,47 @@ class Team
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * Get team last streak
+     * @param int $teamId
+     * @param int $limit
+     * @return array
+     */
+    public function getStreak($teamId, $limit = 5)
+    {
+        $team = $this->entityManager
+            ->getRepository('AppBundle:Team')
+            ->findBy(array('id' => $teamId));
+
+        $games = $this->entityManager
+            ->getRepository('AppBundle:Game')
+            ->getGamesByDate(
+                new \DateTime('2016-01-01'),
+                new \DateTime('now'),
+                $team,
+                null,
+                $limit
+            )
+            ->getResult();
+
+        $streak = null;
+
+        if ($games) {
+            $streak = array();
+            /** @var GameEntity $game */
+            foreach ($games as $game) {
+                if ($game->getResult() == 0) {
+                    $streak[] = 'drawn';
+                } else if ($game->getResult() == 1) {
+                    $streak[] = $game->getFirstTeam()->getId() === $teamId ? 'won' : 'lost';
+                } elseif ($game->getResult() == 2) {
+                    $streak[] = $game->getSecondTeam()->getId() === $teamId ? 'won' : 'lost';
+                }
+            }
+        }
+
+        return $streak;
     }
 }

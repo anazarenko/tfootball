@@ -42,9 +42,10 @@ class GameRepository extends EntityRepository
      * @param \DateTime $endDate
      * @param null $firstTeam
      * @param null $secondTeam
+     * @param null|int $limit
      * @return \Doctrine\ORM\Query
      */
-    public function getGamesByDate(\DateTime $startDate, \DateTime $endDate, $firstTeam = null, $secondTeam = null) {
+    public function getGamesByDate(\DateTime $startDate, \DateTime $endDate, $firstTeam = null, $secondTeam = null, $limit = null) {
 
         $qb = $this->createQueryBuilder('g');
         $gamesQuery = $qb->select('g')
@@ -78,6 +79,10 @@ class GameRepository extends EntityRepository
         }
 
         $gamesQuery->orderBy('g.gameDate', 'DESC');
+
+        if ($limit) {
+            $gamesQuery->setMaxResults($limit);
+        }
 
         return $gamesQuery->getQuery();
     }
