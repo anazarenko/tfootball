@@ -1,6 +1,6 @@
 {% for game in games %}
     <div class="col-md-12 game game-row">
-        <div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>
+        {#<div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>#}
         <div class="game-player first-team {% if game.firstScore > game.secondScore %}winner{% endif %}">
             {% if game.firstScore > game.secondScore %}
                 <i class="fa fa-soccer-ball-o"></i>
@@ -20,7 +20,5 @@
                 {{ game.secondTeam|members }}
             </a>
         </div>
-        {#<td class="game-date">{{ game.createdAt|date('H:i:s') }}</td>#}
-        {#<td class="game-date">{{ game.createdAt|date('d-m-y') }}</td>#}
     </div>
 {% endfor %}
