@@ -1,13 +1,11 @@
+<div class="all-time-stats">
+    {% include 'AppBundle:Game:table.html.twig' with {'statistics' : statistics} %}
+</div>
+
 <div class="stat-box-container-container">
     <table>
         <tbody>
         <tr>
-            <td class="no-bottom-border">
-                <div class="stat">
-                    {{ firstTeamStats['won']|length + firstTeamStats['drawn']|length + firstTeamStats['lost']|length }}
-                </div>
-                <div class="label">Games Played</div>
-            </td>
             <td class="left-border no-bottom-border">
                 <div class="stat">
                     {% if firstTeamStats['greatVictories']['games']|length %}

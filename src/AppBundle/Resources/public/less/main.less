@@ -379,6 +379,8 @@ div.pagination{
 }
 
 #game-filters{
+  margin-left: 0;
+  margin-right: 0;
   position: relative;
   border: 1px solid #e7e7e7;
   .game-filter-container{
@@ -456,20 +458,11 @@ div.pagination{
   width: 180px;
 }
 
-.h2h-stats{
-  line-height: 40px;
-  font-size: 20px;
-  margin-top: 30px;
-  div{
-    overflow: hidden;
-  }
-}
-
 .team-link{
   color: black;
 }
 
-.stats-container{
+.stats-container, .profile-stats{
   table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -506,8 +499,19 @@ div.pagination{
   }
 }
 
+.profile-stats{
+  margin: 20px 0 40px;
+  td{
+    height: 110px;
+    .stat{
+      margin: 10px 0 15px;
+    }
+  }
+}
+
 .streak-container{
   padding: 5px 10px;
+  min-width: 84px;
   .streak{
     display: inline-block;
     width: 10px;
@@ -521,5 +525,13 @@ div.pagination{
     &.streak-drawn{
       background-color: #999;
     }
+  }
+}
+
+.all-time-stats{
+  margin-top: 20px;
+  td{
+    width: auto !important;
+    font-size: 16px !important;
   }
 }

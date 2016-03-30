@@ -13,49 +13,43 @@
     {% endif %}
 
     {% if teamStats|length > 0 %}
-        <div class="row h2h-stats">
-            <div class="col-md-4">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div>Won</div>
-                                <div class="huge">{{ teamStats['won']|length }}</div>
+        {% set gameCount = teamStats['won']|length + teamStats['drawn']|length + teamStats['lost']|length %}
+        <div class="profile-stats">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="no-bottom-border">
+                            <div class="stat">
+                                {{ gameCount }}
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div>Drawn</div>
-                                <div class="huge">{{ teamStats['drawn']|length }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div>Lost</div>
-                                <div class="huge">{{ teamStats['lost']|length }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div class="label">Games Played</div>
+                        </td>
+                        <td class="left-border no-bottom-border">
+                            <div class="stat">{{ teamStats['won']|length }}</div>
+                            <div class="label">Won</div>
+                        </td>
+                        <td class="left-border no-bottom-border">
+                            <div class="stat">{{ teamStats['drawn']|length }}</div>
+                            <div class="label">Drawn</div>
+                        </td>
+                        <td class="left-border no-bottom-border">
+                            <div class="stat">{{ teamStats['lost']|length }}</div>
+                            <div class="label">Lost</div>
+                        </td>
+                        <td class="left-border no-bottom-border">
+                            <div class="stat">{{ (teamStats['won']|length * 100 / gameCount)|round(1) }}%</div>
+                            <div class="label">% Won</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
         <div class="row profile-difference">
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Great victories</h3>
+                        <h3 class="panel-title">Greatest victories</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row game-list half-size">
@@ -67,7 +61,7 @@
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Great defeats</h3>
+                        <h3 class="panel-title">Greatest defeats</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row game-list half-size">

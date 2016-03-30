@@ -115,6 +115,23 @@ class HeaderController extends Controller
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
 
+        // Get User repository
+        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
+
+        $statQB = $statRepository->createQueryBuilder('stat');
+        $statistics = $statQB
+            ->select(array('stat', 'team'))
+            ->join('stat.team', 'team')
+            ->where(
+                $statQB->expr()->orX(
+                    $statQB->expr()->eq('stat.team', $firstTeam->getId()),
+                    $statQB->expr()->eq('stat.team', $secondTeam->getId())
+                )
+            )
+            ->orderBy('stat.wonPercentage', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+
         if (!count($teamStats)) {
             if ($request->isXmlHttpRequest()) {
 
@@ -150,6 +167,7 @@ class HeaderController extends Controller
                 array(
                     'firstTeamStats' => $firstTeamStats,
                     'secondTeamStats' => $secondTeamStats,
+                    'statistics' => $statistics,
 //                    'games' => $this->renderView('AppBundle:Game:item.html.twig', array('games' => $games))
                     'games' => $games
                 )

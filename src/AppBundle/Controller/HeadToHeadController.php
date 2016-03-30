@@ -151,6 +151,23 @@ class HeadToHeadController extends Controller
             );
         }
 
+        // Get User repository
+        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
+
+        $statQB = $statRepository->createQueryBuilder('stat');
+        $statistics = $statQB
+            ->select(array('stat', 'team'))
+            ->join('stat.team', 'team')
+            ->where(
+                $statQB->expr()->orX(
+                    $statQB->expr()->eq('stat.team', $firstTeam->getId()),
+                    $statQB->expr()->eq('stat.team', $secondTeam->getId())
+                )
+            )
+            ->orderBy('stat.wonPercentage', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+
         $firstTeamStats = $teamStats[$firstTeam->getId()];
         $secondTeamStats = $teamStats[$secondTeam->getId()];
 
@@ -188,6 +205,7 @@ class HeadToHeadController extends Controller
                 'teamStats' => $teamStats,
                 'firstTeamStats' => $firstTeamStats,
                 'secondTeamStats' => $secondTeamStats,
+                'statistics' => $statistics,
                 'moreBtn' => $moreBtn,
                 'startDate' => $dates[0],
                 'endDate' => $dates[1]

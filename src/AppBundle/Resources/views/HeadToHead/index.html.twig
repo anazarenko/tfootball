@@ -34,109 +34,56 @@
         {{ form_end(form) }}
     </div>
 
-    {# total items count #}
-
     {% if pagination.getTotalItemCount is not defined %}
         <p class="nothing-msg">No game</p>
     {% endif %}
 
     {% if firstTeamStats is defined and secondTeamStats is defined %}
-    <div class="row h2h-stats">
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div>{{ firstTeamStats['team'].playerNames|join(' / ') }} winners</div>
-                            <div class="huge">{{ firstTeamStats['won']|length }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+        <div class="all-time-stats">
+            {% include 'AppBundle:Game:table.html.twig' with {'statistics' : statistics} %}
         </div>
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div>Draws</div>
-                            <div class="huge">{{ secondTeamStats['drawn']|length }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div>{{ secondTeamStats['team'].playerNames|join(' / ') }} winners</div>
-                            <div class="huge">{{ secondTeamStats['won']|length }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div>Great win</div>
-                            <div class="huge">
-                                {% if firstTeamStats['greatVictories']['games'][0] is defined %}
-                                    {% set game = firstTeamStats['greatVictories']['games'][0] %}
-                                    <span>{{ game.firstScore }} : {{ game.secondScore }}</span>
-                                {% else %}
-                                    <span>None</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            {% if pagination.getTotalItemCount is defined %}
-                                <div>Matches</div>
-                                <div class="huge">
-                                    <span>
-                                        {% transchoice pagination.getTotalItemCount %}
-                                        {0} No matches|{1} Found 1 match|]1,Inf[ %count%
-                                        {% endtranschoice %}
-                                    </span>
-                                </div>
+
+        <div class="profile-stats">
+            <table>
+                <tbody>
+                <tr>
+                    <td class="left-border no-bottom-border">
+                        <div class="stat">
+                            {% if firstTeamStats['greatVictories']['games']|length %}
+                                {{ firstTeamStats['greatVictories']['games'][0].firstScore }} : {{ firstTeamStats['greatVictories']['games'][0].secondScore }}
+                            {% else %}
+                                None
                             {% endif %}
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <div>Great win</div>
-                            <div class="huge">
-                                {% if secondTeamStats['greatVictories']['games'][0] is defined %}
-                                    {% set game = secondTeamStats['greatVictories']['games'][0] %}
-                                    <span>{{ game.firstScore }} : {{ game.secondScore }}</span>
-                                {% else %}
-                                    <span>None</span>
-                                {% endif %}
-                            </div>
+                        <div class="label">Greatest win</div>
+                    </td>
+                    <td class="left-border no-bottom-border">
+                        <div class="stat">{{ firstTeamStats['won']|length }}</div>
+                        <div class="label">Won</div>
+                    </td>
+                    <td class="left-border no-bottom-border">
+                        <div class="stat">{{ firstTeamStats['drawn']|length }}</div>
+                        <div class="label">Drawn</div>
+                    </td>
+                    <td class="left-border no-bottom-border">
+                        <div class="stat">{{ secondTeamStats['won']|length }}</div>
+                        <div class="label">Won</div>
+                    </td>
+                    <td class="left-border no-bottom-border">
+                        <div class="stat">
+                            {% if secondTeamStats['greatVictories']['games']|length %}
+                                {{ secondTeamStats['greatVictories']['games'][0].firstScore }} : {{ secondTeamStats['greatVictories']['games'][0].secondScore }}
+                            {% else %}
+                                None
+                            {% endif %}
                         </div>
-                    </div>
-                </div>
-            </div>
+                        <div class="label">Greatest win</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
     {% endif %}
 
     {#<div class="row">#}
