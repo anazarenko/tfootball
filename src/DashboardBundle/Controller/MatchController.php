@@ -23,7 +23,8 @@ class MatchController extends Controller
 {
     /**
      * @Route("/", name="_dashboard_matches")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @return Response
      */
     public function matchesAction(Request $request)
     {
@@ -51,7 +52,9 @@ class MatchController extends Controller
 
     /**
      * @Route("/status/change/{id}", name="_dashboard_matches_status_change")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param Confirm $confirm
+     * @return Response
      */
     public function statusAction(Request $request, Confirm $confirm)
     {
@@ -68,9 +71,6 @@ class MatchController extends Controller
         $gameStatus = Game::STATUS_CONFIRMED;
         /** @var \AppBundle\Entity\Confirm $currentConfirm */
         foreach ($game->getConfirms() as $currentConfirm) {
-//            if ($currentConfirm->getId() == $confirm->getId()) {
-//                $currentConfirm->setStatus($newConfirmStatus);
-//            }
             if ($currentConfirm->getStatus() == Confirm::STATUS_REJECTED) {
                 $gameStatus = Game::STATUS_REJECTED;
                 break;
