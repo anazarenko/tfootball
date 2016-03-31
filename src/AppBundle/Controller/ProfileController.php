@@ -125,7 +125,8 @@ class ProfileController extends Controller
                 'pagination' => $pagination,
                 'teamStats' => $teamStats,
                 'moreBtn' => $moreBtn,
-                'names' => $team->getPlayerNames()
+                'names' => $team->getPlayerNames(),
+                'teamId' => $team->getId()
             )
         );
     }

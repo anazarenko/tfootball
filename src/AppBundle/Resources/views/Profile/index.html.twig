@@ -79,7 +79,7 @@
 
     {% if moreBtn %}
         <div class="row load-more-container">
-            <div data-href="{{ path('_profile') }}" data-page="2" class="btn btn-primary more-game">More</div>
+            <div data-href="{{ path('_profile_id', {'id' : teamId}) }}" data-page="2" class="btn btn-primary more-game">More</div>
         </div>
     {% endif %}
 
