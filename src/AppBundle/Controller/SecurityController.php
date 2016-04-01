@@ -70,7 +70,7 @@ class SecurityController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $user->setRoles(array('ROLE_USER'));
+            $user->setRoles(array('ROLE_SPECTATOR'));
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
 
             $eManager = $this->getDoctrine()->getManager();
