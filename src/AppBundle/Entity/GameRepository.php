@@ -86,4 +86,81 @@ class GameRepository extends EntityRepository
 
         return $gamesQuery->getQuery();
     }
+
+    /**
+     * Get query for getting team winner matches
+     * @param Team $team
+     * @return \Doctrine\ORM\Query
+     */
+    public function getWonGames(Team $team)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $gameQuery = $qb->select('g')
+            ->where('g.status = :status')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.result', Game::RESULT_FIRST_WINNER),
+                        $qb->expr()->eq('g.firstTeam', $team->getId())
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.result', Game::RESULT_SECOND_WINNER),
+                        $qb->expr()->eq('g.secondTeam', $team->getId())
+                    )
+                )
+            )
+            ->setParameter('status', Game::STATUS_CONFIRMED);
+
+        return $gameQuery->getQuery();
+    }
+
+    /**
+     * Get query for getting team winner matches
+     * @param Team $team
+     * @return \Doctrine\ORM\Query
+     */
+    public function getLostGames(Team $team)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $gameQuery = $qb->select('g')
+            ->where('g.status = :status')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.result', Game::RESULT_FIRST_WINNER),
+                        $qb->expr()->eq('g.secondTeam', $team->getId())
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('g.result', Game::RESULT_SECOND_WINNER),
+                        $qb->expr()->eq('g.firstTeam', $team->getId())
+                    )
+                )
+            )
+            ->setParameter('status', Game::STATUS_CONFIRMED);
+
+        return $gameQuery->getQuery();
+    }
+
+    /**
+     * Get query for getting team winner matches
+     * @param Team $team
+     * @return \Doctrine\ORM\Query
+     */
+    public function getDrawnGames(Team $team)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $gameQuery = $qb->select('g')
+            ->where('g.status = :status')
+            ->andWhere('g.result = :result')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('g.firstTeam', $team->getId()),
+                    $qb->expr()->eq('g.secondTeam', $team->getId())
+                )
+            )
+            ->setParameter('status', Game::STATUS_CONFIRMED)
+            ->setParameter('result', Game::RESULT_DRAW);
+
+        return $gameQuery->getQuery();
+    }
 }
