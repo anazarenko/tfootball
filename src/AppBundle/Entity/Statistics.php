@@ -17,6 +17,7 @@ class Statistics
 
     const ACTION_REMOVE = 0;
     const ACTION_ADD = 1;
+
     /**
      * @var integer
      *
@@ -27,7 +28,17 @@ class Statistics
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Team", inversedBy="statistics")
+     * @ORM\Column(type="smallint", options={"default" = 0})
+     */
+    private $month;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default" = 0})
+     */
+    private $year;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team", inversedBy="statistics")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
     private $team;
@@ -110,6 +121,52 @@ class Statistics
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set month
+     *
+     * @param integer $month
+     * @return Statistics
+     */
+    public function setMonth($month)
+    {
+        $this->month = $month;
+
+        return $this;
+    }
+
+    /**
+     * Get month
+     *
+     * @return integer
+     */
+    public function getMonth()
+    {
+        return $this->month;
+    }
+
+    /**
+     * Set year
+     *
+     * @param integer $year
+     * @return Statistics
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer
+     */
+    public function getYear()
+    {
+        return $this->year;
     }
 
     /**
@@ -202,29 +259,6 @@ class Statistics
     public function getGameCount()
     {
         return $this->gameCount;
-    }
-
-    /**
-     * Set team
-     *
-     * @param \AppBundle\Entity\Team $team
-     * @return Statistics
-     */
-    public function setTeam(\AppBundle\Entity\Team $team = null)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * Get team
-     *
-     * @return \AppBundle\Entity\Team 
-     */
-    public function getTeam()
-    {
-        return $this->team;
     }
 
     /**
@@ -324,5 +358,28 @@ class Statistics
     public function removeLost()
     {
         $this->setLost($this->getLost() - 1);
+    }
+
+    /**
+     * Set team
+     *
+     * @param \AppBundle\Entity\Team $team
+     * @return Statistics
+     */
+    public function setTeam(\AppBundle\Entity\Team $team = null)
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * Get team
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getTeam()
+    {
+        return $this->team;
     }
 }

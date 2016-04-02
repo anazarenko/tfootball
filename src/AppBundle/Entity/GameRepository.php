@@ -90,9 +90,10 @@ class GameRepository extends EntityRepository
     /**
      * Get query for getting team winner matches
      * @param Team $team
+     * @param \DateTime|null $startDate
      * @return \Doctrine\ORM\Query
      */
-    public function getWonGames(Team $team)
+    public function getWonGames(Team $team, \DateTime $startDate = null)
     {
         $qb = $this->createQueryBuilder('g');
         $gameQuery = $qb->select('g')
@@ -108,18 +109,27 @@ class GameRepository extends EntityRepository
                         $qb->expr()->eq('g.secondTeam', $team->getId())
                     )
                 )
-            )
-            ->setParameter('status', Game::STATUS_CONFIRMED);
+            );
+
+        if ($startDate) {
+            $endDate = clone $startDate;
+            $gameQuery->andWhere($qb->expr()->between('g.gameDate', ':start', ':end'))
+                ->setParameter('start', $startDate)
+                ->setParameter('end', $endDate->modify('+ 1 month'));
+        }
+
+        $gameQuery->setParameter('status', Game::STATUS_CONFIRMED);
 
         return $gameQuery->getQuery();
     }
 
     /**
-     * Get query for getting team winner matches
+     * Get query for getting team lost matches
      * @param Team $team
+     * @param \DateTime|null $startDate
      * @return \Doctrine\ORM\Query
      */
-    public function getLostGames(Team $team)
+    public function getLostGames(Team $team, \DateTime $startDate = null)
     {
         $qb = $this->createQueryBuilder('g');
         $gameQuery = $qb->select('g')
@@ -135,18 +145,27 @@ class GameRepository extends EntityRepository
                         $qb->expr()->eq('g.firstTeam', $team->getId())
                     )
                 )
-            )
-            ->setParameter('status', Game::STATUS_CONFIRMED);
+            );
+
+        if ($startDate) {
+            $endDate = clone $startDate;
+            $gameQuery->andWhere($qb->expr()->between('g.gameDate', ':start', ':end'))
+                ->setParameter('start', $startDate)
+                ->setParameter('end', $endDate->modify('+ 1 month'));
+        }
+
+        $gameQuery->setParameter('status', Game::STATUS_CONFIRMED);
 
         return $gameQuery->getQuery();
     }
 
     /**
-     * Get query for getting team winner matches
+     * Get query for getting team drawn matches
      * @param Team $team
+     * @param \DateTime|null $startDate
      * @return \Doctrine\ORM\Query
      */
-    public function getDrawnGames(Team $team)
+    public function getDrawnGames(Team $team, \DateTime $startDate = null)
     {
         $qb = $this->createQueryBuilder('g');
         $gameQuery = $qb->select('g')
@@ -157,8 +176,16 @@ class GameRepository extends EntityRepository
                     $qb->expr()->eq('g.firstTeam', $team->getId()),
                     $qb->expr()->eq('g.secondTeam', $team->getId())
                 )
-            )
-            ->setParameter('status', Game::STATUS_CONFIRMED)
+            );
+
+        if ($startDate) {
+            $endDate = clone $startDate;
+            $gameQuery->andWhere($qb->expr()->between('g.gameDate', ':start', ':end'))
+                ->setParameter('start', $startDate)
+                ->setParameter('end', $endDate->modify('+ 1 month'));
+        }
+
+        $gameQuery->setParameter('status', Game::STATUS_CONFIRMED)
             ->setParameter('result', Game::RESULT_DRAW);
 
         return $gameQuery->getQuery();

@@ -41,7 +41,7 @@ class Team
     private $users;
 
     /**
-     * @ORM\OneToOne(targetEntity="Statistics", mappedBy="team")
+     * @ORM\OneToMany(targetEntity="Statistics", mappedBy="team")
      */
     private $statistics;
 
@@ -212,22 +212,32 @@ class Team
     }
 
     /**
-     * Set statistics
+     * Add statistics
      *
      * @param \AppBundle\Entity\Statistics $statistics
      * @return Team
      */
-    public function setStatistics(\AppBundle\Entity\Statistics $statistics = null)
+    public function addStatistic(\AppBundle\Entity\Statistics $statistics)
     {
-        $this->statistics = $statistics;
+        $this->statistics[] = $statistics;
 
         return $this;
     }
 
     /**
+     * Remove statistics
+     *
+     * @param \AppBundle\Entity\Statistics $statistics
+     */
+    public function removeStatistic(\AppBundle\Entity\Statistics $statistics)
+    {
+        $this->statistics->removeElement($statistics);
+    }
+
+    /**
      * Get statistics
      *
-     * @return \AppBundle\Entity\Statistics 
+     * @return \Doctrine\Common\Collections\Collection 
      */
     public function getStatistics()
     {

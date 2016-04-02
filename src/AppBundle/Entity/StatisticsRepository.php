@@ -12,4 +12,34 @@ use Doctrine\ORM\EntityRepository;
  */
 class StatisticsRepository extends EntityRepository
 {
+    /**
+     * @param Team $team
+     * @param int $month
+     * @param int $year
+     * @return Statistics|mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getStatistic(Team $team, $month = 0, $year = 0)
+    {
+        $qb = $this->createQueryBuilder('stat')
+            ->where('stat.team = :team')
+            ->andWhere('stat.month = :month')
+            ->andWhere('stat.year = :year')
+            ->setParameter('team', $team->getId())
+            ->setParameter('month', $month)
+            ->setParameter('year', $year);
+
+        $statistics = $qb->getQuery()->getOneOrNullResult();
+
+        if (!$statistics) {
+            $statistics = new Statistics();
+            $statistics->setTeam($team);
+            $statistics->setMonth($month);
+            $statistics->setYear($year);
+            $this->getEntityManager()->persist($statistics);
+            $this->getEntityManager()->flush();
+        }
+
+        return $statistics;
+    }
 }
