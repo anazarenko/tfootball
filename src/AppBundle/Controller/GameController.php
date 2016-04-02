@@ -52,6 +52,8 @@ class GameController extends Controller
             ->select(array('stat', 'team'))
             ->join('stat.team', 'team')
             ->where('team.playerCount = 1')
+            ->andWhere('stat.month = 0')
+            ->andWhere('stat.year = 0')
             ->orderBy('stat.wonPercentage', 'DESC')
             ->getQuery()
             ->getArrayResult();
@@ -60,6 +62,8 @@ class GameController extends Controller
             ->select(array('stat', 'team'))
             ->join('stat.team', 'team')
             ->where('team.playerCount > 1')
+            ->andWhere('stat.month = 0')
+            ->andWhere('stat.year = 0')
             ->orderBy('stat.wonPercentage', 'DESC')
             ->getQuery()
             ->getArrayResult();

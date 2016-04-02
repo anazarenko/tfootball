@@ -89,42 +89,70 @@ class Team
      */
     public function updateStatistics(GameEntity $game, $action = Statistics::ACTION_ADD)
     {
-        $winnerTeam = null;
-        $defeatTeam = null;
+        $statsRepository = $this->entityManager->getRepository('AppBundle:Statistics');
         $isDraw = false;
-        $firstTeam = $game->getFirstTeam();
-        $secondTeam = $game->getSecondTeam();
+        $winnerTeamStats = null;
+        $defeatTeamStats = null;
+        $winnerTeamStatsAll = null;
+        $defeatTeamStatsAll = null;
+        $date = $game->getGameDate();
+        $firstTeamStats = $statsRepository
+            ->getStatistic(
+                $game->getFirstTeam(),
+                (int)$date->format('m'),
+                (int)$date->format('Y')
+            );
+        $firstTeamStatsAll = $statsRepository->getStatistic($game->getFirstTeam());
+        $secondTeamStats = $statsRepository
+            ->getStatistic(
+                $game->getSecondTeam(),
+                (int)$date->format('m'),
+                (int)$date->format('Y')
+            );
+        $secondTeamStatsAll = $statsRepository->getStatistic($game->getSecondTeam());
 
         if ($game->getResult() == GameEntity::RESULT_DRAW) {
             $isDraw = true;
         } else {
             if ($game->getResult() == GameEntity::RESULT_FIRST_WINNER) {
-                $winnerTeam = $firstTeam;
-                $defeatTeam = $secondTeam;
+                $winnerTeamStats = $firstTeamStats;
+                $defeatTeamStats = $secondTeamStats;
+                $winnerTeamStatsAll = $firstTeamStatsAll;
+                $defeatTeamStatsAll = $secondTeamStatsAll;
             } else {
-                $winnerTeam = $secondTeam;
-                $defeatTeam = $firstTeam;
+                $winnerTeamStats = $secondTeamStats;
+                $defeatTeamStats = $firstTeamStats;
+                $winnerTeamStatsAll = $secondTeamStatsAll;
+                $defeatTeamStatsAll = $firstTeamStatsAll;
             }
         }
 
         if ($action == Statistics::ACTION_ADD) {
 
             if ($isDraw) {
-                $firstTeam->getStatistics()->addDrawn();
-                $secondTeam->getStatistics()->addDrawn();
+                $firstTeamStats->addDrawn();
+                $secondTeamStats->addDrawn();
+                $firstTeamStatsAll->addDrawn();
+                $secondTeamStatsAll->addDrawn();
             } else {
-                $winnerTeam->getStatistics()->addWon();
-                $defeatTeam->getStatistics()->addLost();
+                $winnerTeamStats->addWon();
+                $winnerTeamStatsAll->addWon();
+                $defeatTeamStats->addLost();
+                $defeatTeamStatsAll->addLost();
             }
 
         } elseif ($action == Statistics::ACTION_REMOVE) {
 
             if ($isDraw) {
-                $firstTeam->getStatistics()->removeDrawn();
-                $secondTeam->getStatistics()->removeDrawn();
+                $firstTeamStats->removeDrawn();
+                $secondTeamStats->removeDrawn();
+                $firstTeamStatsAll->removeDrawn();
+                $secondTeamStatsAll->removeDrawn();
             } else {
-                $winnerTeam->getStatistics()->removeWon();
-                $defeatTeam->getStatistics()->removeLost();
+                $winnerTeamStats->removeWon();
+                $winnerTeamStatsAll->removeWon();
+                $defeatTeamStats->removeLost();
+                $defeatTeamStatsAll->removeLost();
             }
 
         }

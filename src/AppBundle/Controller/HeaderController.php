@@ -128,6 +128,8 @@ class HeaderController extends Controller
                     $statQB->expr()->eq('stat.team', $secondTeam->getId())
                 )
             )
+            ->andWhere('stat.month = 0')
+            ->andWhere('stat.year = 0')
             ->orderBy('stat.wonPercentage', 'DESC')
             ->getQuery()
             ->getArrayResult();

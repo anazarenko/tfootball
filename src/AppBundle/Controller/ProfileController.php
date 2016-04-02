@@ -43,6 +43,9 @@ class ProfileController extends Controller
         // Get game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
+        // Get stats repository
+        $statsRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Statistics');
+
         // Get page for pagination
         $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
 
@@ -117,6 +120,8 @@ class ProfileController extends Controller
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
         $teamStats = isset($teamStats[$team->getId()]) ? $teamStats[$team->getId()] : null;
+
+//        $teamStats = $statsRepository->getStatistic($team);
 
         return $this->render(
             'AppBundle:Profile:index.html.twig',
