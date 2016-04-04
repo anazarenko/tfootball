@@ -535,3 +535,48 @@ div.pagination{
     font-size: 16px !important;
   }
 }
+
+#stats-page{
+
+  .panel-group{
+    margin-bottom: 0;
+    .panel{
+      border-radius: 0;
+      .panel-title{
+        a{
+          text-decoration: none;
+          &:hover{
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+
+  .stat-date{
+    float: right;
+  }
+
+  .stat-team{
+    width: 240px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .stat-game,
+  .stat-won,
+  .stat-drawn,
+  .stat-lost,
+  .stat-percentage{
+    width: 100px;
+    display: inline-block;
+    padding: 0 10px;
+  }
+
+  .stat-percentage{
+    width: 170px;
+  }
+
+}

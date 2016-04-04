@@ -14,6 +14,7 @@
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li class="{% if active == 'main' %}active{% endif %}"><a href="{{ path('_main_page') }}">Main</a></li>
+                <li class="{% if active == 'stats' %}active{% endif %}"><a href="{{ path('_statistics_page') }}">Stats</a></li>
                 <li class="{% if active == 'games' %}active{% endif %}"><a href="{{ path('_games') }}">Games</a></li>
                 <li class="{% if active == 'h2h' %}active{% endif %}"><a href="{{ path('_head_to_head') }}">H2H</a></li>
                 {#<li class="{% if active == 'tournaments' %}active{% endif %}"><a href="#">Tournaments</a></li>#}

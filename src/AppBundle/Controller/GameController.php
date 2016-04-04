@@ -38,7 +38,7 @@ class GameController extends Controller
         // Get game repository
         $gameRepository = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        // Get User repository
+        // Get Statistic repository
         $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
 
         // Get page for pagination

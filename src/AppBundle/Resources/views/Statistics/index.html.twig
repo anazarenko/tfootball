@@ -1,0 +1,29 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Statistics{% endblock %}
+
+{% block content %}
+    <div id="stats-page">
+
+        <div class="panel-body stats-tables">
+            <!-- Nav tabs -->
+            <ul id="main-page-tabs" class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#single" aria-controls="home" role="tab" data-toggle="tab">Single</a></li>
+                <li role="presentation"><a href="#double" aria-controls="profile" role="tab" data-toggle="tab">Double</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="single">
+                    {% include 'AppBundle:Statistics:table.html.twig' with {'statList' : statList, 'count' : 'single'} %}
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="double">
+                    {% include 'AppBundle:Statistics:table.html.twig' with {'statList' : statList, 'count' : 'double'} %}
+                </div>
+            </div>
+        </div>
+
+        <p><a href="{{ path('_games') }}">view stats for all time</a></p>
+
+    </div>
+{% endblock %}

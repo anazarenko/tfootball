@@ -1,0 +1,52 @@
+{% for stat in statList %}
+    {% if count == 'double' %}
+        {% set teamStat = stat.doubleStat %}
+    {% else %}
+        {% set teamStat = stat.singleStat %}
+    {% endif %}
+    <div class="panel-group" id="accordion-{{ count }}-{{ loop.index }}" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne-{{ count }}-{{ loop.index }}">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion-{{ count }}-{{ loop.index }}" href="#collapseOne-{{ count }}-{{ loop.index }}" aria-expanded="true" aria-controls="collapseOne-{{ count }}-{{ loop.index }}">
+                        <span class="stat-date">{{ stat['month'] }} {{ stat['year'] }}</span>
+                        <span class="stat-team">{{ teamStat[0]['team']['playerNames']|join('/') }}</span>
+                        <span class="stat-game">Games: {{ teamStat[0]['gameCount'] }}</span>
+                        <span class="stat-won">Won: {{ teamStat[0]['won'] }}</span>
+                        <span class="stat-drawn">Drawn: {{ teamStat[0]['drawn'] }}</span>
+                        <span class="stat-lost">Lost: {{ teamStat[0]['lost'] }}</span>
+                        <span class="stat-percentage">Percentage: {{ teamStat[0]['wonPercentage'] }} %</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne-{{ count }}-{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne-{{ count }}-{{ loop.index }}">
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Games</th>
+                            <th>Won</th>
+                            <th>Drawn</th>
+                            <th>Lost</th>
+                            <th>Percentage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for team in teamStat if team['gameCount'] > 0 %}
+                            <tr>
+                                <td><a href="{{ path('_profile_id', {'id':team['team']['id']}) }}">{{ team['team']['playerNames']|join('/') }}</a></td>
+                                <td>{{ team['gameCount'] }}</td>
+                                <td>{{ team['won'] }}</td>
+                                <td>{{ team['drawn'] }}</td>
+                                <td>{{ team['lost'] }}</td>
+                                <td>{{ team['wonPercentage'] }} %</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
