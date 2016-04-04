@@ -29,10 +29,9 @@ class UpdateMonthStatsCommand extends ContainerAwareCommand
         $io->title('Updating statistics');
 
         foreach ($teamRepository->findAll() as $team) {
-            $currentDate = new \DateTime('2016-01');
+            $currentDate = new \DateTime('2016-03');
             $endDate = new \DateTime('now');
             while ($currentDate <= $endDate) {
-                $io->note("Team {$team->getId()}, {$currentDate->format('m-Y')}, {$endDate->format('m-Y')}");
                 $wonGames = count($gameRepository->getWonGames($team, $currentDate)->getResult());
                 $drawnGames = count($gameRepository->getDrawnGames($team, $currentDate)->getResult());
                 $lostGames = count($gameRepository->getLostGames($team, $currentDate)->getResult());

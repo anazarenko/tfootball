@@ -23,6 +23,7 @@ class UpdateStatsCommand extends ContainerAwareCommand
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $gameRepository = $entityManager->getRepository('AppBundle:Game');
         $teamRepository = $entityManager->getRepository('AppBundle:Team');
+        $statRepository = $entityManager->getRepository('AppBundle:Statistics');
 
         $io = new SymfonyStyle($input, $output);
         $io->title('Updating statistics');
@@ -31,9 +32,12 @@ class UpdateStatsCommand extends ContainerAwareCommand
             $wonGames = count($gameRepository->getWonGames($team)->getResult());
             $drawnGames = count($gameRepository->getDrawnGames($team)->getResult());
             $lostGames = count($gameRepository->getLostGames($team)->getResult());
-            $team->getStatistics()->setWon($wonGames);
-            $team->getStatistics()->setDrawn($drawnGames);
-            $team->getStatistics()->setLost($lostGames);
+
+            $statistic = $statRepository->getStatistic($team);
+
+            $statistic->setWon($wonGames);
+            $statistic->setDrawn($drawnGames);
+            $statistic->setLost($lostGames);
             $entityManager->flush();
 
             $io->note("Team {$team->getId()}: won {$wonGames}, drawn {$drawnGames}, lost {$lostGames}.");
