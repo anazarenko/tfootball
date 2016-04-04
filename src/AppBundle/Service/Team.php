@@ -69,11 +69,13 @@ class Team
 
             $statistics = new Statistics();
             $statistics->setTeam($team);
+            $statistics->setMonth(0);
+            $statistics->setYear(0);
 
             $this->entityManager->persist($statistics);
             $this->entityManager->flush();
 
-            $team->setStatistics($statistics);
+            $team->addStatistic($statistics);
             $this->entityManager->flush();
         }
 
