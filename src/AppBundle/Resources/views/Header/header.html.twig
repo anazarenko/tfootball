@@ -14,10 +14,10 @@
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li class="{% if active == 'main' %}active{% endif %}"><a href="{{ path('_main_page') }}">Main</a></li>
-                <li class="{% if active == 'stats' %}active{% endif %}"><a href="{{ path('_statistics_page') }}">Best</a></li>
                 <li class="{% if active == 'games' %}active{% endif %}"><a href="{{ path('_games') }}">Games</a></li>
+                <li class="{% if active == 'stats' %}active{% endif %}"><a href="{{ path('_statistics_page') }}">Best Players</a></li>
                 <li class="{% if active == 'h2h' %}active{% endif %}"><a href="{{ path('_head_to_head') }}">H2H</a></li>
-                {#<li class="{% if active == 'tournaments' %}active{% endif %}"><a href="#">Tournaments</a></li>#}
+                <li class="{% if active == 'tournaments' %}active{% endif %}"><a href="{{ path('_tournaments_list') }}">Tournaments</a></li>
                 {% if not app.user.isGranted('ROLE_SPECTATOR') %}
                     <li class="{% if active == 'randomizer' %}active{% endif %}"><a href="{{ path('_randomizer') }}">Randomizer</a></li>
                 {% endif %}

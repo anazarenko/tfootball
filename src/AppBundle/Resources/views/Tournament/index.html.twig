@@ -1,0 +1,13 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Tournament{% endblock %}
+
+{% block content %}
+    <div id="stats-page">
+        <div class="top">
+            <!-- Button trigger modal -->
+            <a href="{{ path('_tournaments_create') }}" class="btn btn-primary btn-sm">Create new tournament</a>
+            <h2>Tournaments</h2>
+        </div>
+    </div>
+{% endblock %}

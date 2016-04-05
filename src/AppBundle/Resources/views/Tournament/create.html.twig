@@ -1,0 +1,53 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Tournament{% endblock %}
+
+{% block content %}
+    <div id="stats-page">
+        <div class="top">
+            <h2>Create Tournament</h2>
+        </div>
+
+        <div class="create-tournament">
+            {{ form_start(form, {'method' : 'POST'}) }}
+            {{ form_errors(form) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_row(form.form, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_row(form.playoffGameCount, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_row(form.playoffTeamCount, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_row(form.regularGameCount, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_row(form.finalGameCount, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_row(form.users, {'attr' : {'class':'form-control'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    'bundles/app/js/tournament_create.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
