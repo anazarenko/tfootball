@@ -17,7 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Game
 {
-
     const TYPE_FRIENDLY = 0;
     const TYPE_TOURNAMENT = 1;
 
@@ -32,10 +31,30 @@ class Game
     const RESULT_SECOND_WINNER = 2;
     const RESULT_DRAW = 0;
 
+    const STAGE_GROUP = 0;
+    const STAGE_FINAL = 1;
+    const STAGE_SEMIFINAL = 2;
+    const STAGE_QUARTERFINAL = 4;
+    const STAGE_8thFINAL = 8;
+    const STAGE_16thFINAL = 16;
+    const STAGE_32thFINAL = 32;
+    const STAGE_64thFINAL = 64;
+
     public $availableStatus = array(
         self::STATUS_NEW => 'New',
         self::STATUS_CONFIRMED => 'Confirmed',
         self::STATUS_REJECTED => 'Rejected'
+    );
+
+    public $availableStage = array(
+        self::STAGE_GROUP => 'Group',
+        self::STAGE_FINAL => 'Final',
+        self::STAGE_SEMIFINAL => 'Semi-final',
+        self::STAGE_QUARTERFINAL => 'Quarter-final',
+        self::STAGE_8thFINAL => '1/8',
+        self::STAGE_16thFINAL => '1/16',
+        self::STAGE_32thFINAL => '1/32',
+        self::STAGE_64thFINAL => '1/64',
     );
 
     public $availableForm = array(
@@ -71,6 +90,17 @@ class Game
      * @ORM\Column(type="smallint")
      */
     private $type = 0;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $stage;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tournament", inversedBy="games")
+     * @ORM\JoinColumn(name="tournament", referencedColumnName="id")
+     */
+    private $tournament;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
@@ -534,5 +564,51 @@ class Game
     public function getDifference()
     {
         return $this->difference;
+    }
+
+    /**
+     * Set stage
+     *
+     * @param integer $stage
+     * @return Game
+     */
+    public function setStage($stage)
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    /**
+     * Get stage
+     *
+     * @return integer 
+     */
+    public function getStage()
+    {
+        return $this->stage;
+    }
+
+    /**
+     * Set tournament
+     *
+     * @param \AppBundle\Entity\Tournament $tournament
+     * @return Game
+     */
+    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
+    {
+        $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * Get tournament
+     *
+     * @return \AppBundle\Entity\Tournament 
+     */
+    public function getTournament()
+    {
+        return $this->tournament;
     }
 }
