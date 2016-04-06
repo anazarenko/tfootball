@@ -24,8 +24,8 @@ class Game
     const STATUS_CONFIRMED = 1;
     const STATUS_REJECTED = 2;
 
-    const FORM_SINGLE = 0;
-    const FORM_DOUBLE = 1;
+    const FORM_SINGLE = 1;
+    const FORM_DOUBLE = 2;
 
     const RESULT_FIRST_WINNER = 1;
     const RESULT_SECOND_WINNER = 2;

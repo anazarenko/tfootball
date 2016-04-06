@@ -23,6 +23,7 @@ class Version20160404221900 extends AbstractMigration
         $this->addSql('ALTER TABLE games ADD tournament INT DEFAULT NULL, ADD stage SMALLINT DEFAULT NULL');
         $this->addSql('ALTER TABLE games ADD CONSTRAINT FK_FF232B31BD5FB8D9 FOREIGN KEY (tournament) REFERENCES tournaments (id)');
         $this->addSql('CREATE INDEX IDX_FF232B31BD5FB8D9 ON games (tournament)');
+        $this->addSql('UPDATE games SET form = 1 WHERE 1');
     }
 
     /**
@@ -37,5 +38,6 @@ class Version20160404221900 extends AbstractMigration
         $this->addSql('DROP TABLE tournaments');
         $this->addSql('DROP INDEX IDX_FF232B31BD5FB8D9 ON games');
         $this->addSql('ALTER TABLE games DROP tournament, DROP stage');
+        $this->addSql('UPDATE games SET form = 0 WHERE 1');
     }
 }
