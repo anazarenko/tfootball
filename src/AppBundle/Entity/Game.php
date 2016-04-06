@@ -84,7 +84,7 @@ class Game
     /**
      * @ORM\Column(type="smallint")
      */
-    private $form = 0;
+    private $form = 1;
 
     /**
      * @ORM\Column(type="smallint")
