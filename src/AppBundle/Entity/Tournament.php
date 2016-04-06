@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tournament
 {
-    const FORM_SINGLE = 0;
-    const FORM_DOUBLE = 1;
+    const FORM_SINGLE = 1;
+    const FORM_DOUBLE = 2;
 
     const STATUS_PROGRESS = 0;
     const STATUS_REJECTED = 1;
@@ -46,6 +46,13 @@ class Tournament
      * @ORM\Column(type="integer")
      */
     private $form;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $status = 0;
 
     /**
      * @var integer
@@ -87,6 +94,11 @@ class Tournament
     private $games;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\TournamentStatistics", mappedBy="tournament")
+     */
+    private $statistics;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -95,6 +107,12 @@ class Tournament
      * @ORM\Column(type="datetime")
      */
     private $modifiedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="tournaments", cascade={"persist"})
+     * @ORM\JoinTable(name="tournament_teams")
+     */
+    private $teams;
 
     /**
      * @ORM\PrePersist
@@ -341,5 +359,94 @@ class Tournament
     public function getGames()
     {
         return $this->games;
+    }
+
+    /**
+     * Add statistics
+     *
+     * @param \AppBundle\Entity\TournamentStatistics $statistics
+     * @return Tournament
+     */
+    public function addStatistic(\AppBundle\Entity\TournamentStatistics $statistics)
+    {
+        $this->statistics[] = $statistics;
+
+        return $this;
+    }
+
+    /**
+     * Remove statistics
+     *
+     * @param \AppBundle\Entity\TournamentStatistics $statistics
+     */
+    public function removeStatistic(\AppBundle\Entity\TournamentStatistics $statistics)
+    {
+        $this->statistics->removeElement($statistics);
+    }
+
+    /**
+     * Get statistics
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStatistics()
+    {
+        return $this->statistics;
+    }
+
+    /**
+     * Add teams
+     *
+     * @param \AppBundle\Entity\Team $teams
+     * @return Tournament
+     */
+    public function addTeam(\AppBundle\Entity\Team $teams)
+    {
+        $this->teams[] = $teams;
+
+        return $this;
+    }
+
+    /**
+     * Remove teams
+     *
+     * @param \AppBundle\Entity\Team $teams
+     */
+    public function removeTeam(\AppBundle\Entity\Team $teams)
+    {
+        $this->teams->removeElement($teams);
+    }
+
+    /**
+     * Get teams
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTeams()
+    {
+        return $this->teams;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return Tournament
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

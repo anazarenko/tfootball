@@ -56,6 +56,11 @@ class Team
     private $modifiedAt;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="teams", cascade={"persist"})
+     */
+    private $tournaments;
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
@@ -67,7 +72,6 @@ class Team
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
-
 
     /**
      * Get id
@@ -242,5 +246,38 @@ class Team
     public function getStatistics()
     {
         return $this->statistics;
+    }
+
+    /**
+     * Add tournaments
+     *
+     * @param \AppBundle\Entity\Tournament $tournaments
+     * @return Team
+     */
+    public function addTournament(\AppBundle\Entity\Tournament $tournaments)
+    {
+        $this->tournaments[] = $tournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove tournaments
+     *
+     * @param \AppBundle\Entity\Tournament $tournaments
+     */
+    public function removeTournament(\AppBundle\Entity\Tournament $tournaments)
+    {
+        $this->tournaments->removeElement($tournaments);
+    }
+
+    /**
+     * Get tournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTournaments()
+    {
+        return $this->tournaments;
     }
 }

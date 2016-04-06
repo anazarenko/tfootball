@@ -10,7 +10,9 @@
 
         <div class="create-tournament">
             {{ form_start(form, {'method' : 'POST'}) }}
-            {{ form_errors(form) }}
+                <div class="row">
+                    <div class="col-md-12 errors">{{ form_errors(form) }}</div>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">

@@ -17,8 +17,8 @@ class TournamentType extends AbstractType
         $builder
             ->add('form', ChoiceType::class, array(
                 'choices' => array(
-                    1 => 'Single',
-                    2 => 'Double'
+                    Tournament::FORM_SINGLE => 'Single',
+                    Tournament::FORM_DOUBLE => 'Double'
                 ),
                 'label' => 'Type'
             ))
@@ -31,6 +31,7 @@ class TournamentType extends AbstractType
             ))
             ->add('playoffTeamCount', ChoiceType::class, array(
                 'choices' => array(
+                    0 => 2,
                     1 => 4,
                     2 => 8,
                     3 => 16,
@@ -64,7 +65,8 @@ class TournamentType extends AbstractType
                 'multiple' => true,
                 'label' => 'Players',
                 'attr' => array('class' => 'form-control'),
-                'mapped' => false
+                'mapped' => false,
+                'required' => false
             ));
     }
 

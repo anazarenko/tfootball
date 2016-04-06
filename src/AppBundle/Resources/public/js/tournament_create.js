@@ -15,33 +15,35 @@ var addTeam = function () {
     var selectPlayers = $('#tournament_form_users');
 
     return function() {
-        teamNo++;
-        var container = $('<div class="col-md-4"></div>');
-        var panel = $('<div class="panel panel-default"></div>');
-        var panelBody = $('<div class="panel-body"></div>');
-        var close = $('<p class="remove-icon remove-icon-'+teamNo+' glyphicon glyphicon-remove"></p>');
+        if (selectPlayers.find(':selected').length) {
+            teamNo++;
+            var container = $('<div class="col-md-4"></div>');
+            var panel = $('<div class="panel panel-default"></div>');
+            var panelBody = $('<div class="panel-body"></div>');
+            var close = $('<p class="remove-icon remove-icon-' + teamNo + ' glyphicon glyphicon-remove"></p>');
 
-        selectPlayers.find(':selected').each(function(){
-            var name = $(this).html();
-            var value = $(this).val();
-            var span = $('<p>'+name+'</p>');
-            $(this).remove();
+            selectPlayers.find(':selected').each(function () {
+                var name = $(this).html();
+                var value = $(this).val();
+                var span = $('<p>' + name + '</p>');
+                $(this).remove();
 
-            var input = $('<input class="tournament-team" data-name="'+name+'" type="hidden" name="team'+teamNo+'[]" value="'+value+'">');
+                var input = $('<input class="tournament-team" data-name="' + name + '" type="hidden" name="team['+teamNo+'][]" value="' + value + '">');
 
-            container.append(input);
-            panelBody.append(span);
-        });
+                container.append(input);
+                panelBody.append(span);
+            });
 
-        // Clear select element
-        selectPlayers.val(null).trigger("change");
-        // Update html elements
-        panel.append(close);
-        panel.append(panelBody);
-        container.append(panel);
-        $('.participant-list').append(container);
-        // Init js remove team for click
-        initRemoveIcon(teamNo);
+            // Clear select element
+            selectPlayers.val(null).trigger("change");
+            // Update html elements
+            panel.append(close);
+            panel.append(panelBody);
+            container.append(panel);
+            $('.participant-list').append(container);
+            // Init js remove team for click
+            initRemoveIcon(teamNo);
+        }
     }
 };
 
