@@ -1,0 +1,45 @@
+{% for game in games %}
+    {% if game.status != constant('STATUS_CONFIRMED', game) and (app.user.username in game.firstTeam.playerNames or app.user.username in game.secondTeam.playerNames) %}
+        <form action="">
+            <div class="col-md-12 game game-row">
+                {#<div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>#}
+                <div class="game-player first-team">
+                    <a class="team-link" href="{{ path('_profile_id', {'id' : game.firstTeam.id}) }}">
+                        {{ game.firstTeam|members }}
+                    </a>
+                </div>
+                <div class="game-score-input"><input type="text" name="firstScore" value="123" required></div>
+                <div class="game-separator">:</div>
+                <div class="game-score-input"><input type="text" name="secondScore" required></div>
+                <div class="game-player second-team">
+                    <a class="team-link" href="{{ path('_profile_id', {'id' : game.secondTeam.id}) }}">
+                        {{ game.secondTeam|members }}
+                    </a>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="col-md-12 game game-row">
+            {#<div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>#}
+            <div class="game-player first-team {% if game.firstScore > game.secondScore %}winner{% endif %}">
+                {% if game.firstScore > game.secondScore %}
+                    <i class="fa fa-soccer-ball-o"></i>
+                {% endif %}
+                <a class="team-link" href="{{ path('_profile_id', {'id' : game.firstTeam.id}) }}">
+                    {{ game.firstTeam|members }}
+                </a>
+            </div>
+            <div class="game-score">{{ game.firstScore }}</div>
+            <div class="game-separator">:</div>
+            <div class="game-score">{{ game.secondScore }}</div>
+            <div class="game-player second-team {% if game.firstScore < game.secondScore %}winner{% endif %}">
+                {% if game.firstScore < game.secondScore %}
+                    <i class="fa fa-soccer-ball-o"></i>
+                {% endif %}
+                <a class="team-link" href="{{ path('_profile_id', {'id' : game.secondTeam.id}) }}">
+                    {{ game.secondTeam|members }}
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

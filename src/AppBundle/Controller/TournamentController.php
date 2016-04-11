@@ -37,6 +37,34 @@ class TournamentController extends Controller
     }
 
     /**
+     * @Route("/{id}", name="_tournaments_page")
+     *
+     * @param Request $request
+     * @param Tournament $tournament
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tournamentAction(Request $request, Tournament $tournament)
+    {
+        $statistics = $this->getDoctrine()
+            ->getRepository('AppBundle:TournamentStatistics')
+            ->findBy(array('tournament' => $tournament->getId()), array('points' => 'desc'));
+
+        $games = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->findBy(array('tournament' => $tournament->getId(), 'stage' => Game::STAGE_GROUP));
+
+        return $this->render(
+            'AppBundle:Tournament:tournament.html.twig',
+            array(
+                'active' => 'tournaments',
+                'statistics' => $statistics,
+                'games' => $games,
+                'tournament' => $tournament
+            )
+        );
+    }
+
+    /**
      * @Route("/create", name="_tournaments_create")
      *
      * @param Request $request

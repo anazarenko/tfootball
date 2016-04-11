@@ -31,10 +31,10 @@ class TournamentType extends AbstractType
             ))
             ->add('playoffTeamCount', ChoiceType::class, array(
                 'choices' => array(
-                    0 => 2,
-                    1 => 4,
-                    2 => 8,
-                    3 => 16,
+                    2 => 2,
+                    4 => 4,
+                    8 => 8,
+                    16 => 16,
                 ),
                 'label' => 'Playoff team count'
             ))

@@ -50,6 +50,8 @@
                                     <span class="label label-success">Confirmed</span>
                                 {% elseif game.status == constant('STATUS_REJECTED', game) %}
                                     <span class="label label-danger">Rejected</span>
+                                {% elseif game.status == constant('STATUS_TOURNAMENT_WAITING', game) %}
+                                    <span class="label label-danger">Tournament Waiting</span>
                                 {% endif %}
                             </td>
                             <td>

@@ -23,6 +23,7 @@ class Game
     const STATUS_NEW = 0;
     const STATUS_CONFIRMED = 1;
     const STATUS_REJECTED = 2;
+    const STATUS_TOURNAMENT_WAITING = 3;
 
     const FORM_SINGLE = 1;
     const FORM_DOUBLE = 2;
@@ -43,7 +44,8 @@ class Game
     public $availableStatus = array(
         self::STATUS_NEW => 'New',
         self::STATUS_CONFIRMED => 'Confirmed',
-        self::STATUS_REJECTED => 'Rejected'
+        self::STATUS_REJECTED => 'Rejected',
+        self::STATUS_TOURNAMENT_WAITING => 'Tournament waiting'
     );
 
     public $availableStage = array(

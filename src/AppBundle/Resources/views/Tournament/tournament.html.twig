@@ -1,0 +1,46 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %} - Tournament{% endblock %}
+
+{% block content %}
+    <div id="tournament" class="tournament-page">
+        <div class="top">
+            <h2>Tournaments #{{ tournament.id }}</h2>
+        </div>
+
+        <table class="table sortable-table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Games</th>
+                <th>Won</th>
+                <th>Drawn</th>
+                <th>Lost</th>
+                <th>Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for stat in statistics %}
+                <tr {% if loop.index <= tournament.playoffTeamCount %}class="playoff-zone"{% endif %}>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a class="team-link" href="{{ path('_profile_id', {'id' : stat.team.id}) }}">
+                            {{ stat.team.playerNames|join(' / ') }}
+                        </a>
+                    </td>
+                    <td>{{ stat.gameCount }}</td>
+                    <td>{{ stat.won }}</td>
+                    <td>{{ stat.drawn }}</td>
+                    <td>{{ stat.lost }}</td>
+                    <td>{{ stat.points }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row game-list main-game-list">
+            {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
+        </div>
+    </div>
+{% endblock %}

@@ -9,5 +9,44 @@
             <a href="{{ path('_tournaments_create') }}" class="btn btn-primary btn-sm">Create new tournament</a>
             <h2>Tournaments</h2>
         </div>
+
+        <div class="col-lg-12">
+            <div class="table-responsive tournaments-table-container">
+                <table class="table table-bordered table-hover game-table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Status</th>
+                            <th>Format</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for tournament in tournaments %}
+                        <tr>
+                            <td>{{ tournament.id }}</td>
+                            <td>
+                                {% if tournament.status == constant('STATUS_PROGRESS', tournament) %}
+                                    <span class="label label-info">In Progress</span>
+                                {% elseif game.status == constant('STATUS_FINISHED', tournament) %}
+                                    <span class="label label-success">Finished</span>
+                                {% elseif game.status == constant('STATUS_REJECTED', tournament) %}
+                                    <span class="label label-danger">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if tournament.form == constant('FORM_SINGLE', tournament) %}
+                                    <span>Single</span>
+                                {% elseif tournament.form == constant('FORM_Double', tournament) %}
+                                    <span>Double</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ path('_tournaments_page', {'id' : tournament.id}) }}">View</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
