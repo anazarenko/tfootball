@@ -42,4 +42,22 @@ class StatisticsRepository extends EntityRepository
 
         return $statistics;
     }
+
+    /**
+     * @param int $count
+     * @return \Doctrine\ORM\Query
+     */
+    public function getStatisticsByTeamCount($count = 1)
+    {
+        $qb = $this->createQueryBuilder('stat')
+            ->select(array('stat', 'team'))
+            ->join('stat.team', 'team')
+            ->where('team.playerCount = :count')
+            ->andWhere('stat.month = 0')
+            ->andWhere('stat.year = 0')
+            ->orderBy('stat.wonPercentage', 'DESC')
+            ->setParameter('count', $count);
+
+        return $qb->getQuery();
+    }
 }
