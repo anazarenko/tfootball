@@ -271,6 +271,11 @@ class Game
         return array('status' => 1, 'error' => 'New Game was added!');
     }
 
+    /**
+     * @param GameEntity $game
+     * @param User $user
+     * @return array
+     */
     public function acceptGame(GameEntity $game, User $user)
     {
         $confirmRepo = $this->entityManager->getRepository('AppBundle:Confirm');
@@ -297,6 +302,26 @@ class Game
 
             $this->entityManager->flush();
 
+            return array('status' => 1);
+        } else {
+            return array('status' => 0);
+        }
+    }
+
+    /**
+     * @param GameEntity $game
+     * @param User $user
+     * @return array
+     */
+    public function declineGame(GameEntity $game, User $user)
+    {
+        $confirmRepo = $this->entityManager->getRepository('AppBundle:Confirm');
+        $confirm = $confirmRepo->findOneBy(array('user' => $user, 'game' => $game));
+
+        if ($confirm) {
+            $confirm->setStatus(Confirm::STATUS_REJECTED);
+            $game->setStatus(GameEntity::STATUS_REJECTED);
+            $this->entityManager->flush();
             return array('status' => 1);
         } else {
             return array('status' => 0);
