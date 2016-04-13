@@ -148,7 +148,7 @@ class TournamentController extends Controller
                 }
             }
 
-            $teamEntities[] = $this->get('app.team_service')->findTeam($playerEntities);
+            $teamEntities[] = $this->get('app.team_service')->getTeam($playerEntities);
         }
 
         $response['data'] = $teamEntities;

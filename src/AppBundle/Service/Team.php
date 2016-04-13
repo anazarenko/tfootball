@@ -40,13 +40,15 @@ class Team
 
     /**
      * Find team. If this team is null, then create new team and return it
-     * @param array $teamMembers array of team members
+     * @param array $teamMembers array of team member entities
      * @return Team|array
      */
-    public function findTeam($teamMembers)
+    public function getTeam($teamMembers)
     {
+        // Find team in database
         $team = $this->entityManager->getRepository('AppBundle:Team')->findTeamByMembers($teamMembers);
 
+        // If team does not exist, create them
         if (!$team) {
             $team = new \AppBundle\Entity\Team();
             $team->setPlayerCount(count($teamMembers));
