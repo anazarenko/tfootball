@@ -271,4 +271,36 @@ class Game
         return array('status' => 1, 'error' => 'New Game was added!');
     }
 
+    public function acceptGame(GameEntity $game, User $user)
+    {
+        $confirmRepo = $this->entityManager->getRepository('AppBundle:Confirm');
+        $confirm = $confirmRepo->findOneBy(array('user' => $user, 'game' => $game));
+
+        if ($confirm) {
+            $confirm->setStatus(Confirm::STATUS_CONFIRMED);
+
+            if ($game->getStatus() != GameEntity::STATUS_REJECTED) {
+                $completeGame = true;
+                /** @var \AppBundle\Entity\Confirm $currentConfirm */
+                foreach ($game->getConfirms() as $currentConfirm) {
+                    if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
+                        $completeGame = false;
+                        break;
+                    }
+                }
+
+                if ($completeGame) {
+                    $game->setStatus(GameEntity::STATUS_CONFIRMED);
+                    $this->container->get('app.team_service')->updateStatistics($game);
+                }
+            }
+
+            $this->entityManager->flush();
+
+            return array('status' => 1);
+        } else {
+            return array('status' => 0);
+        }
+    }
+
 }
