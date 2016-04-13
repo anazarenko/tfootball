@@ -2,7 +2,10 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Statistics;
+use AppBundle\Entity\User;
+use AppBundle\Entity\Game as GameEntity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -168,10 +171,104 @@ class Game
         return $sortingByValue;
     }
 
-    protected function removeGame(\AppBundle\Entity\Game $game)
+    /**
+     * Method for removing game
+     * @param GameEntity $game
+     */
+    protected function removeGame(GameEntity $game)
     {
         $this->entityManager->remove($game);
         $this->container->get('app.team_service')->updateStatistics($game, Statistics::ACTION_REMOVE);
+    }
+
+    /**
+     * @param GameEntity $game
+     * @param User $user
+     * @param array $data game_create post variable
+     * @return array
+     */
+    public function createGame(GameEntity $game, User $user, $data)
+    {
+        // Get user repository
+        $userRepo = $this->entityManager->getRepository('AppBundle:User');
+        // Variable for error text
+        $errorMsg = '';
+
+        // Game score validation
+        if (empty($game->getFirstScore()) || empty($game->getSecondScore())) {
+            return array('status' => 0, 'error' => 'Incorrect data');
+        }
+
+        // Game team validation
+        if (!$this->container->get('app.team_service')->isValidTeams($data['firstTeam'], $data['secondTeam'], $errorMsg)) {
+            return array('status' => 0, 'error' => $errorMsg);
+        }
+
+        $firstTeamEntitiesArray = array();
+        $secondTeamEntitiesArray = array();
+        $userEntitiesArray = array();
+
+        foreach($data['firstTeam'] as $userID) {
+            // Get user in team
+            $currentUser = $userRepo->findOneBy(array('id' => $userID));
+            // Add user entity to team array
+            $firstTeamEntitiesArray[] = $currentUser;
+            // Add user entity to users array
+            $userEntitiesArray[] = $currentUser;
+            // Add current user to game
+            $game->addPlayer($currentUser);
+        }
+
+        foreach($data['secondTeam'] as $userID) {
+            // Get user in team
+            $currentUser = $userRepo->findOneBy(array('id' => $userID));
+            // Add user entity to team array
+            $secondTeamEntitiesArray[] = $currentUser;
+            // Add user entity to users array
+            $userEntitiesArray[] = $currentUser;
+            // Add current user to game
+            $game->addPlayer($currentUser);
+        }
+
+        $firstTeam = $this->container->get('app.team_service')->getTeam($firstTeamEntitiesArray);
+        $secondTeam = $this->container->get('app.team_service')->getTeam($secondTeamEntitiesArray);
+
+        $game->setFirstTeam($firstTeam);
+        $game->setSecondTeam($secondTeam);
+        $game->setType(GameEntity::TYPE_FRIENDLY);
+        $game->setCreator($user);
+        $game->setDifference(abs($game->getFirstScore() - $game->getSecondScore()));
+
+        if ($game->getFirstScore() > $game->getSecondScore()) {
+            $game->setResult(GameEntity::RESULT_FIRST_WINNER);
+        } elseif ($game->getFirstScore() < $game->getSecondScore()) {
+            $game->setResult(GameEntity::RESULT_SECOND_WINNER);
+        } elseif ($game->getFirstScore() == $game->getSecondScore()) {
+            $game->setResult(GameEntity::RESULT_DRAW);
+        }
+
+        $game->setStatus($game::STATUS_NEW);
+
+        $this->entityManager->persist($game);
+        $this->entityManager->flush();
+
+        /** @var \AppBundle\Entity\User $currentUser */
+        foreach ($userEntitiesArray as $currentUser) {
+            $currentUser->addGame($game);
+            // Create new confirm entity
+            $confirm = new Confirm();
+            $confirm->setGame($game);
+            $confirm->setUser($currentUser);
+            $confirm->setStatus($currentUser == $user ? Confirm::STATUS_CONFIRMED : Confirm::STATUS_NEW);
+
+            $this->entityManager->persist($confirm);
+            $this->entityManager->persist($currentUser);
+        }
+
+        $this->entityManager->persist($game);
+        $this->entityManager->flush();
+
+        return array('status' => 1, 'error' => 'New Game was added!');
     }
 
 }
