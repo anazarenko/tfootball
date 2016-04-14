@@ -15,6 +15,10 @@ services:
         class: AppBundle\Service\Team
         arguments: ["@doctrine.orm.entity_manager"]
 
+    app.statistic_service:
+        class: AppBundle\Service\Team
+        arguments: ["@doctrine.orm.entity_manager", "@templating", "@service_container"]
+
     app.twig_extension:
             class: AppBundle\Twig\TeamExtension
             public: false

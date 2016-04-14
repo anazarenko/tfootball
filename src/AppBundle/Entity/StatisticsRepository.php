@@ -60,4 +60,28 @@ class StatisticsRepository extends EntityRepository
 
         return $qb->getQuery();
     }
+
+    /**
+     * @param Team $firstTeam
+     * @param Team $secondTeam
+     * @return \Doctrine\ORM\Query
+     */
+    public function getStatH2H(Team $firstTeam, Team $secondTeam)
+    {
+        $qb = $this->createQueryBuilder('stat');
+
+        $statQuery = $qb->select(array('stat', 'team'))
+            ->join('stat.team', 'team')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('stat.team', $firstTeam->getId()),
+                    $qb->expr()->eq('stat.team', $secondTeam->getId())
+                )
+            )
+            ->andWhere('stat.month = 0')
+            ->andWhere('stat.year = 0')
+            ->orderBy('stat.wonPercentage', 'DESC');
+
+        return $statQuery->getQuery();
+    }
 }
