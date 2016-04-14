@@ -69,7 +69,8 @@ class Game
                     'greatDefeats' => array(
                         'games' => array(),
                         'difference' => 0
-                    )
+                    ),
+                    'streak' => array()
                 );
             }
 
@@ -93,12 +94,16 @@ class Game
             switch ($game->getResult()) {
                 case 0:
                     $sortingGames[$firstTeamID]['drawn'][] = $game;
+                    $sortingGames[$firstTeamID]['streak'][] = 'drawn';
                     $sortingGames[$secondTeamID]['drawn'][] = $game;
+                    $sortingGames[$secondTeamID]['streak'][] = 'drawn';
                     break;
 
                 case 1:
                     $sortingGames[$firstTeamID]['won'][] = $game;
+                    $sortingGames[$firstTeamID]['streak'][] = 'won';
                     $sortingGames[$secondTeamID]['lost'][] = $game;
+                    $sortingGames[$secondTeamID]['streak'][] = 'lost';
 
                     if ($game->getDifference() > $sortingGames[$firstTeamID]['greatVictories']['difference']) {
                         $sortingGames[$firstTeamID]['greatVictories']['difference'] = $game->getDifference();
@@ -116,7 +121,9 @@ class Game
 
                 case 2:
                     $sortingGames[$firstTeamID]['lost'][] = $game;
+                    $sortingGames[$firstTeamID]['streak'][] = 'lost';
                     $sortingGames[$secondTeamID]['won'][] = $game;
+                    $sortingGames[$secondTeamID]['streak'][] = 'won';
 
                     if ($game->getDifference() > $sortingGames[$secondTeamID]['greatVictories']['difference']) {
                         $sortingGames[$secondTeamID]['greatVictories']['difference'] = $game->getDifference();
@@ -159,6 +166,9 @@ class Game
 
         foreach ($sortingGames as $key => &$item) {
             $countGame = count($item['won']) + count($item['drawn']) + count($item['lost']);
+            if (!$countGame){
+                $countGame = 1;
+            }
             $percentWon = (count($item['won'])/$countGame)*100;
             $item['gameCount'] = $countGame;
             $item['wonPercent'] = $percentWon;
