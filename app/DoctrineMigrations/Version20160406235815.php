@@ -28,6 +28,7 @@ class Version20160406235815 extends AbstractMigration
         $this->addSql('ALTER TABLE tournament_statistics ADD CONSTRAINT FK_88B32B78296CD8AE FOREIGN KEY (team_id) REFERENCES teams (id)');
         $this->addSql('ALTER TABLE games ADD tournament INT DEFAULT NULL, ADD stage SMALLINT DEFAULT NULL');
         $this->addSql('ALTER TABLE games ADD CONSTRAINT FK_FF232B31BD5FB8D9 FOREIGN KEY (tournament) REFERENCES tournaments (id)');
+        $this->addSql('ALTER TABLE statistics ADD streak LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:simple_array)\'');
         $this->addSql('CREATE INDEX IDX_FF232B31BD5FB8D9 ON games (tournament)');
         $this->addSql('UPDATE games SET form = 1 WHERE 1');
     }
@@ -40,6 +41,7 @@ class Version20160406235815 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
+        $this->addSql('ALTER TABLE statistics DROP streak');
         $this->addSql('UPDATE games SET form = 0 WHERE 1');
         $this->addSql('ALTER TABLE games DROP FOREIGN KEY FK_FF232B31BD5FB8D9');
         $this->addSql('ALTER TABLE tournament_teams DROP FOREIGN KEY FK_5794B24133D1A3E7');

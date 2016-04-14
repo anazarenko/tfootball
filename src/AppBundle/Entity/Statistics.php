@@ -79,6 +79,13 @@ class Statistics
     private $wonPercentage = 0;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $streak;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -282,6 +289,30 @@ class Statistics
     public function getWonPercentage()
     {
         return $this->wonPercentage;
+    }
+
+
+    /**
+     * Set streak
+     *
+     * @param array $streak
+     * @return Statistics
+     */
+    public function setStreak($streak)
+    {
+        $this->streak = $streak;
+
+        return $this;
+    }
+
+    /**
+     * Get streak
+     *
+     * @return array
+     */
+    public function getStreak()
+    {
+        return $this->streak;
     }
 
     /**
