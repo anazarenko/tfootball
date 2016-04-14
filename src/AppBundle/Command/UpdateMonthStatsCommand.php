@@ -24,6 +24,7 @@ class UpdateMonthStatsCommand extends ContainerAwareCommand
         $gameRepository = $entityManager->getRepository('AppBundle:Game');
         $teamRepository = $entityManager->getRepository('AppBundle:Team');
         $statRepository = $entityManager->getRepository('AppBundle:Statistics');
+        $teamService = $this->getContainer()->get('app.team_service');
 
         $io = new SymfonyStyle($input, $output);
         $io->title('Updating statistics');
@@ -35,18 +36,35 @@ class UpdateMonthStatsCommand extends ContainerAwareCommand
                 $wonGames = count($gameRepository->getWonGames($team, $currentDate)->getResult());
                 $drawnGames = count($gameRepository->getDrawnGames($team, $currentDate)->getResult());
                 $lostGames = count($gameRepository->getLostGames($team, $currentDate)->getResult());
+                $streak = $teamService->getStreak($team->getId());
 
                 $statistic = $statRepository->getStatistic($team, (int)$currentDate->format('m'), (int)$currentDate->format('Y'));
 
                 $statistic->setWon($wonGames);
                 $statistic->setDrawn($drawnGames);
                 $statistic->setLost($lostGames);
+                $statistic->setStreak($streak);
                 $entityManager->flush();
 
                 $io->note("Team {$team->getId()}, {$currentDate->format('m-Y')}: won {$wonGames}, drawn {$drawnGames}, lost {$lostGames}.");
 
                 $currentDate->modify('+ 1 month');
             }
+
+            $wonGames = count($gameRepository->getWonGames($team)->getResult());
+            $drawnGames = count($gameRepository->getDrawnGames($team)->getResult());
+            $lostGames = count($gameRepository->getLostGames($team)->getResult());
+            $streak = $teamService->getStreak($team->getId());
+
+            $statistic = $statRepository->getStatistic($team);
+
+            $statistic->setWon($wonGames);
+            $statistic->setDrawn($drawnGames);
+            $statistic->setLost($lostGames);
+            $statistic->setStreak($streak);
+            $entityManager->flush();
+
+            $io->note("Team {$team->getId()}, All Time: won {$wonGames}, drawn {$drawnGames}, lost {$lostGames}.");
         }
     }
 }
