@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Statistics;
+use AppBundle\Entity\Team as TeamEntity;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Game as GameEntity;
 use Doctrine\ORM\EntityManager;
@@ -335,6 +336,34 @@ class Game
             return array('status' => 1);
         } else {
             return array('status' => 0);
+        }
+    }
+
+    /**
+     * Get team game result (1 - win, 0 - draw, -1 - lose)
+     * @param GameEntity $game
+     * @param TeamEntity $team
+     * @return int
+     */
+    public function getTeamGameResult(GameEntity $game, TeamEntity $team)
+    {
+        switch ($game->getResult()) {
+            case 1 :
+                if ($game->getFirstTeam() === $team) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+                break;
+            case 2 :
+                if ($game->getSecondTeam() === $team) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+                break;
+            default :
+                return 0;
         }
     }
 

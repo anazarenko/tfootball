@@ -39,6 +39,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
       twig_team: "@app.team_service"
+      twig_statistic: "@app.statistic_service"
 
 # Assetic Configuration
 assetic:
