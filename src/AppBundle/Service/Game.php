@@ -205,7 +205,7 @@ class Game
         $errorMsg = '';
 
         // Game score validation
-        if (empty($game->getFirstScore()) || empty($game->getSecondScore())) {
+        if ($game->getFirstScore() === null || $game->getSecondScore() === null) {
             return array('status' => 0, 'error' => 'Incorrect data');
         }
 
