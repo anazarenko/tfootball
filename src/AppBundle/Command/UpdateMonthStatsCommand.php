@@ -36,7 +36,7 @@ class UpdateMonthStatsCommand extends ContainerAwareCommand
                 $wonGames = count($gameRepository->getWonGames($team, $currentDate)->getResult());
                 $drawnGames = count($gameRepository->getDrawnGames($team, $currentDate)->getResult());
                 $lostGames = count($gameRepository->getLostGames($team, $currentDate)->getResult());
-                $streak = $teamService->getStreak($team->getId());
+                $streak = $teamService->getStreak($team->getId(), (int)$currentDate->format('m'), (int)$currentDate->format('Y'));
 
                 $statistic = $statRepository->getStatistic($team, (int)$currentDate->format('m'), (int)$currentDate->format('Y'));
 
