@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Statistics
 {
+    const STREAK_COUNT = 5;
 
     const ACTION_REMOVE = 0;
     const ACTION_ADD = 1;
@@ -364,16 +365,40 @@ class Statistics
     public function addWon()
     {
         $this->setWon($this->getWon() + 1);
+
+        // Update streak
+        $streak = $this->getStreak();
+        if (count($streak) === self::STREAK_COUNT) {
+            array_pop($streak);
+        }
+        array_unshift($streak, 'won');
+        $this->setStreak($streak);
     }
 
     public function addDrawn()
     {
         $this->setDrawn($this->getDrawn() + 1);
+
+        // Update streak
+        $streak = $this->getStreak();
+        if (count($streak) === self::STREAK_COUNT) {
+            array_pop($streak);
+        }
+        array_unshift($streak, 'drawn');
+        $this->setStreak($streak);
     }
 
     public function addLost()
     {
         $this->setLost($this->getLost() + 1);
+
+        // Update streak
+        $streak = $this->getStreak();
+        if (count($streak) === self::STREAK_COUNT) {
+            array_pop($streak);
+        }
+        array_unshift($streak, 'lost');
+        $this->setStreak($streak);
     }
 
     public function removeWon()
