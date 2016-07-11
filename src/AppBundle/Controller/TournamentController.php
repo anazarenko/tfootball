@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Game;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\Tournament;
@@ -37,7 +38,7 @@ class TournamentController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="_tournaments_page")
+     * @Route("/{id}", requirements={"id" = "\d+"}, requirements={"id" = "\d+"}, name="_tournaments_page")
      *
      * @param Request $request
      * @param Tournament $tournament
@@ -99,7 +100,7 @@ class TournamentController extends Controller
                 $this->createGames($teams, $tournament);
                 $this->createStatistics($teams, $tournament);
 
-                $this->redirectToRoute('_tournaments_list');
+                return $this->redirectToRoute('_tournaments_list');
             }
         }
 
@@ -167,7 +168,6 @@ class TournamentController extends Controller
             $currentTeam = array_pop($teams);
 
             foreach ($teams as $team) {
-
                 for ($i = 1; $i <= $tournament->getRegularGameCount(); $i++) {
                     $game = new Game();
                     $game->setCreator($this->getUser());
@@ -183,6 +183,8 @@ class TournamentController extends Controller
                     $game->setStage(Game::STAGE_GROUP);
                     $game->setType(Game::TYPE_TOURNAMENT);
                     $game->setTournament($tournament);
+
+                    $this->createConfirms($game);
 
                     $games[] = $game;
                 }
@@ -213,6 +215,31 @@ class TournamentController extends Controller
 
             $this->getDoctrine()->getManager()->persist($statistic);
             $this->getDoctrine()->getManager()->flush();
+        }
+    }
+
+    /**
+     * Create confirms for game
+     * @param Game $game
+     */
+    protected function createConfirms(Game $game)
+    {
+        // First team confirms
+        foreach ($game->getFirstTeam()->getUsers() as $user) {
+            $confirm = new Confirm();
+            $confirm->setGame($game);
+            $confirm->setUser($user);
+            $confirm->setStatus(Confirm::STATUS_TOURNAMENT_NEW);
+            $this->getDoctrine()->getManager()->persist($confirm);
+        }
+
+        // Second team confirms
+        foreach ($game->getSecondTeam()->getUsers() as $user) {
+            $confirm = new Confirm();
+            $confirm->setGame($game);
+            $confirm->setUser($user);
+            $confirm->setStatus(Confirm::STATUS_TOURNAMENT_NEW);
+            $this->getDoctrine()->getManager()->persist($confirm);
         }
     }
 }
