@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Game as GameEntity;
+use AppBundle\Entity\Statistics;
 use AppBundle\Entity\Team as TeamEntity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,13 +19,23 @@ class Statistic
         $this->container = $container;
     }
 
+    public function updateStreak(Statistics & $statistics)
+    {
+        $teamService = $this->container->get('app.team_service');
+
+        $streak = $teamService
+            ->getStreak($statistics->getId(), $statistics->getMonth(), $statistics->getYear());
+
+        $statistics->setStreak($streak);
+    }
+
     /**
      * Get team streak
      * @param TeamEntity | int $team
      * @param int $count
      * @return array
      */
-    public function getStreak($team, $count = 5)
+    public function getStreak($team, $count = Statistics::STREAK_COUNT)
     {
         if (is_int($team)) {
             $team = $this->entityManager->getRepository('AppBundle:Team')->findOneBy(array('id' => $team));

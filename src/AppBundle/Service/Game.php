@@ -296,16 +296,8 @@ class Game
             $confirm->setStatus(Confirm::STATUS_CONFIRMED);
 
             if ($game->getStatus() != GameEntity::STATUS_REJECTED) {
-                $completeGame = true;
-                /** @var \AppBundle\Entity\Confirm $currentConfirm */
-                foreach ($game->getConfirms() as $currentConfirm) {
-                    if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
-                        $completeGame = false;
-                        break;
-                    }
-                }
 
-                if ($completeGame) {
+                if ($this->isCompleteGame($game)) {
                     $game->setStatus(GameEntity::STATUS_CONFIRMED);
                     $this->container->get('app.team_service')->updateStatistics($game);
                 }
@@ -365,6 +357,24 @@ class Game
             default :
                 return 0;
         }
+    }
+
+    /**
+     * @param GameEntity $game
+     * @return bool
+     */
+    public function isCompleteGame(GameEntity $game)
+    {
+        $isCompleteGame = true;
+        /** @var \AppBundle\Entity\Confirm $currentConfirm */
+        foreach ($game->getConfirms() as $currentConfirm) {
+            if ($currentConfirm->getStatus() != Confirm::STATUS_CONFIRMED) {
+                $isCompleteGame = false;
+                break;
+            }
+        }
+
+        return $isCompleteGame;
     }
 
 }

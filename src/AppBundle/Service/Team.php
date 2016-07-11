@@ -5,14 +5,17 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Game as GameEntity;
 use AppBundle\Entity\Statistics;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Team
 {
     protected $entityManager;
+    protected $container;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, ContainerInterface $container)
     {
         $this->entityManager = $entityManager;
+        $this->container = $container;
     }
 
     /**
@@ -94,25 +97,34 @@ class Team
     public function updateStatistics(GameEntity $game, $action = Statistics::ACTION_ADD)
     {
         $statsRepository = $this->entityManager->getRepository('AppBundle:Statistics');
+        $statisticsService = $this->container->get('app.statistic_service');
         $isDraw = false;
+        // Stats by current month
         $winnerTeamStats = null;
+        // Stats by current month
         $defeatTeamStats = null;
+        // Stats by all period
         $winnerTeamStatsAll = null;
+        // Stats by all period
         $defeatTeamStatsAll = null;
         $date = $game->getGameDate();
+        // Stats by current month
         $firstTeamStats = $statsRepository
             ->getStatistic(
                 $game->getFirstTeam(),
                 (int)$date->format('m'),
                 (int)$date->format('Y')
             );
+        // Stats by all period
         $firstTeamStatsAll = $statsRepository->getStatistic($game->getFirstTeam());
+        // Stats by current month
         $secondTeamStats = $statsRepository
             ->getStatistic(
                 $game->getSecondTeam(),
                 (int)$date->format('m'),
                 (int)$date->format('Y')
             );
+        // Stats by all period
         $secondTeamStatsAll = $statsRepository->getStatistic($game->getSecondTeam());
 
         if ($game->getResult() == GameEntity::RESULT_DRAW) {
@@ -152,11 +164,21 @@ class Team
                 $secondTeamStats->removeDrawn();
                 $firstTeamStatsAll->removeDrawn();
                 $secondTeamStatsAll->removeDrawn();
+                // Update statistic streak
+                $statisticsService->updateStreak($firstTeamStats);
+                $statisticsService->updateStreak($firstTeamStatsAll);
+                $statisticsService->updateStreak($secondTeamStats);
+                $statisticsService->updateStreak($secondTeamStatsAll);
             } else {
                 $winnerTeamStats->removeWon();
                 $winnerTeamStatsAll->removeWon();
                 $defeatTeamStats->removeLost();
                 $defeatTeamStatsAll->removeLost();
+                // Update statistic streak
+                $statisticsService->updateStreak($winnerTeamStats);
+                $statisticsService->updateStreak($winnerTeamStatsAll);
+                $statisticsService->updateStreak($defeatTeamStats);
+                $statisticsService->updateStreak($defeatTeamStatsAll);
             }
 
         }
@@ -167,20 +189,30 @@ class Team
     /**
      * Get team last streak
      * @param int $teamId
+     * @param null $month
+     * @param null $year
      * @param int $limit
      * @return array
      */
-    public function getStreak($teamId, $limit = 5)
+    public function getStreak($teamId, $month = null, $year = null, $limit = Statistics::STREAK_COUNT)
     {
         $team = $this->entityManager
             ->getRepository('AppBundle:Team')
             ->findBy(array('id' => $teamId));
 
+        $startDate = '2016-01-01';
+        $endDate = 'now';
+
+        if ($month && $year) {
+            $startDate = $year.'-'.$month;
+            $endDate = date("Y-m-t", strtotime($startDate));
+        }
+
         $games = $this->entityManager
             ->getRepository('AppBundle:Game')
             ->getGamesByDate(
-                new \DateTime('2016-01-01'),
-                new \DateTime('now'),
+                new \DateTime($startDate),
+                new \DateTime($endDate),
                 $team,
                 null,
                 $limit
