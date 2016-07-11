@@ -19,6 +19,10 @@ class Statistic
         $this->container = $container;
     }
 
+    /**
+     * Update streak in statistics item
+     * @param Statistics $statistics
+     */
     public function updateStreak(Statistics & $statistics)
     {
         $teamService = $this->container->get('app.team_service');
@@ -30,7 +34,7 @@ class Statistic
     }
 
     /**
-     * Get team streak
+     * Get team streak for twig extension
      * @param TeamEntity | int $team
      * @param int $count
      * @return array
