@@ -367,7 +367,7 @@ class Statistics
         $this->setWon($this->getWon() + 1);
 
         // Update streak
-        $streak = $this->getStreak();
+        $streak = $this->getStreak() ?: array();
         if (count($streak) === self::STREAK_COUNT) {
             array_pop($streak);
         }
@@ -380,7 +380,7 @@ class Statistics
         $this->setDrawn($this->getDrawn() + 1);
 
         // Update streak
-        $streak = $this->getStreak();
+        $streak = $this->getStreak() ?: array();
         if (count($streak) === self::STREAK_COUNT) {
             array_pop($streak);
         }
@@ -393,7 +393,7 @@ class Statistics
         $this->setLost($this->getLost() + 1);
 
         // Update streak
-        $streak = $this->getStreak();
+        $streak = $this->getStreak() ?: array();
         if (count($streak) === self::STREAK_COUNT) {
             array_pop($streak);
         }

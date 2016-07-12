@@ -20,12 +20,12 @@
                 <th>Points</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tournament-stat-table">
                 {% include 'AppBundle:Tournament:tbody.html.twig' with {'statistics' : statistics} %}
             </tbody>
         </table>
 
-        <div class="row game-list main-game-list">
+        <div id="tournament-game-list" class="row game-list main-game-list">
             {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
         </div>
     </div>

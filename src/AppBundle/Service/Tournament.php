@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Game as GameEntity;
 use AppBundle\Entity\Tournament as TournamentEntity;
-use AppBundle\Entity\Team;
+use AppBundle\Entity\Team as TeamEntity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,14 +27,16 @@ class Tournament
     {
         foreach ($game->getConfirms() as $confirm) {
             $confirm->setStatus(Confirm::STATUS_CONFIRMED);
-            $game->setStatus(GameEntity::STATUS_CONFIRMED);
-            $this->container->get('app.team_service')->updateStatistics($game);
-            if ($game->getStage() === GameEntity::STAGE_GROUP) {
-                $this->updateTournamentStatistics($game);
-            }
         }
 
+        $this->container->get('app.team_service')->updateStatistics($game);
+
+        $game->setStatus(GameEntity::STATUS_CONFIRMED);
         $this->entityManager->flush();
+
+        if ($game->getStage() === GameEntity::STAGE_GROUP) {
+            $this->updateTournamentStatistics($game);
+        }
     }
 
     /**
@@ -49,7 +51,7 @@ class Tournament
         $firstTeamStat->setLost($stat['lost']);
 
         $stat = $this->parseGameToStat($game->getTournament(), $game->getSecondTeam());
-        $secondTeamStat = $this->getTournamentTeamStat($game->getTournament(), $game->getFirstTeam());
+        $secondTeamStat = $this->getTournamentTeamStat($game->getTournament(), $game->getSecondTeam());
         $secondTeamStat->setWon($stat['won']);
         $secondTeamStat->setDrawn($stat['drawn']);
         $secondTeamStat->setLost($stat['lost']);
@@ -59,10 +61,10 @@ class Tournament
 
     /**
      * @param TournamentEntity $tournament
-     * @param Team $team
+     * @param TeamEntity $team
      * @return \AppBundle\Entity\TournamentStatistics|null|object
      */
-    public function getTournamentTeamStat(TournamentEntity $tournament, Team $team)
+    public function getTournamentTeamStat(TournamentEntity $tournament, TeamEntity $team)
     {
         return $this->entityManager
             ->getRepository('AppBundle:TournamentStatistics')
@@ -76,10 +78,10 @@ class Tournament
 
     /**
      * @param TournamentEntity $tournament
-     * @param Team $team
+     * @param TeamEntity $team
      * @return array
      */
-    public function getTournamentTeamGames(TournamentEntity $tournament, Team $team)
+    public function getTournamentTeamGames(TournamentEntity $tournament, TeamEntity $team)
     {
         $queryBuilder = $this->entityManager
             ->getRepository('AppBundle:Game')
@@ -87,6 +89,7 @@ class Tournament
 
         return $queryBuilder
             ->where('g.tournament = :tournament')
+            ->andWhere('g.status != :status')
             ->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->eq('g.firstTeam', $team->getId()),
@@ -94,16 +97,17 @@ class Tournament
                 )
             )
             ->setParameter('tournament', $tournament->getId())
+            ->setParameter('status', GameEntity::STATUS_NEW)
             ->getQuery()
             ->getResult();
     }
 
     /**
      * @param TournamentEntity $tournament
-     * @param Team $team
+     * @param TeamEntity $team
      * @return array
      */
-    public function parseGameToStat(TournamentEntity $tournament, Team $team)
+    public function parseGameToStat(TournamentEntity $tournament, TeamEntity $team)
     {
         $stat = array(
             'won' => 0,

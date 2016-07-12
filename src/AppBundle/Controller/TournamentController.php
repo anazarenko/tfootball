@@ -8,6 +8,7 @@ use AppBundle\Entity\Team;
 use AppBundle\Entity\Tournament;
 use AppBundle\Entity\TournamentStatistics;
 use AppBundle\Form\TournamentType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
@@ -113,6 +114,7 @@ class TournamentController extends Controller
 
     /**
      * @Route("/game/accept/{id}", requirements={"id" = "\d+"}, name="_tournaments_game_accept")
+     * @Method("POST")
      * @param Request $request
      * @param Game $game
      * @return JsonResponse
@@ -124,8 +126,21 @@ class TournamentController extends Controller
         $firstScore = (int)$request->request->get('firstScore');
         $secondScore = (int)$request->request->get('secondScore');
 
+        if ($firstScore === null || $secondScore === null) {
+            return new JsonResponse(array('status' => 0));
+        }
+
         $game->setFirstScore($firstScore);
         $game->setSecondScore($secondScore);
+        $game->setGameDate(new \DateTime('now'));
+
+        if ($firstScore > $secondScore) {
+            $game->setResult(Game::RESULT_FIRST_WINNER);
+        } elseif ($secondScore > $firstScore) {
+            $game->setResult(Game::RESULT_SECOND_WINNER);
+        } else {
+            $game->setResult(Game::RESULT_DRAW);
+        }
 
         $this->get('app.tournament_service')->acceptGame($game);
 
@@ -139,7 +154,7 @@ class TournamentController extends Controller
 
         $response['statistics'] = $this->renderView(
             'AppBundle:Tournament:tbody.html.twig',
-            array('statistics' => $statistics)
+            array('statistics' => $statistics, 'tournament' => $game->getTournament())
         );
 
         $response['games'] = $this->renderView(

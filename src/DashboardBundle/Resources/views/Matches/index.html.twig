@@ -78,6 +78,8 @@
                                                 confirmed-status
                                             {% elseif confirm.status == constant('STATUS_REJECTED', confirm) %}
                                                 rejected-status
+                                            {% elseif confirm.status == constant('STATUS_TOURNAMENT_NEW', confirm) %}
+                                                tournament-new-status
                                             {% endif %}">
                                         </span>
                                         <ul class="dropdown-menu status-change" data-href="{{ path('_dashboard_matches_status_change', {'id' : confirm.id}) }}" aria-labelledby="dLabel">
