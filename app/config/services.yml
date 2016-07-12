@@ -19,6 +19,10 @@ services:
         class: AppBundle\Service\Statistic
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    app.tournament_service:
+        class: AppBundle\Service\Tournament
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
     app.twig_extension:
             class: AppBundle\Twig\TeamExtension
             public: false
