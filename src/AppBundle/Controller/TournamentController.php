@@ -11,6 +11,7 @@ use AppBundle\Form\TournamentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -38,7 +39,7 @@ class TournamentController extends Controller
     }
 
     /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, requirements={"id" = "\d+"}, name="_tournaments_page")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="_tournaments_page")
      *
      * @param Request $request
      * @param Tournament $tournament
@@ -108,6 +109,45 @@ class TournamentController extends Controller
             'AppBundle:Tournament:create.html.twig',
             array('active' => 'tournaments', 'form' => $form->createView())
         );
+    }
+
+    /**
+     * @Route("/game/accept/{id}", requirements={"id" = "\d+"}, name="_tournaments_game_accept")
+     * @param Request $request
+     * @param Game $game
+     * @return JsonResponse
+     */
+    public function acceptGame(Request $request, Game $game)
+    {
+        $response = array('status' => 1);
+
+        $firstScore = (int)$request->request->get('firstScore');
+        $secondScore = (int)$request->request->get('secondScore');
+
+        $game->setFirstScore($firstScore);
+        $game->setSecondScore($secondScore);
+
+        $this->get('app.tournament_service')->acceptGame($game);
+
+        $statistics = $this->getDoctrine()
+            ->getRepository('AppBundle:TournamentStatistics')
+            ->findBy(array('tournament' => $game->getTournament()->getId()), array('points' => 'desc'));
+
+        $games = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->findBy(array('tournament' => $game->getTournament()->getId(), 'stage' => Game::STAGE_GROUP));
+
+        $response['statistics'] = $this->renderView(
+            'AppBundle:Tournament:tbody.html.twig',
+            array('statistics' => $statistics)
+        );
+
+        $response['games'] = $this->renderView(
+            'AppBundle:Game:tournamentItem.html.twig',
+            array('games' => $games)
+        );
+
+        return new JsonResponse($response);
     }
 
     /**

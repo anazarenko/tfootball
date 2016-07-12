@@ -1,0 +1,15 @@
+{% for stat in statistics %}
+    <tr {% if loop.index <= tournament.playoffTeamCount %}class="playoff-zone"{% endif %}>
+        <td>{{ loop.index }}</td>
+        <td>
+            <a class="team-link" href="{{ path('_profile_id', {'id' : stat.team.id}) }}">
+                {{ stat.team.playerNames|join(' / ') }}
+            </a>
+        </td>
+        <td>{{ stat.gameCount }}</td>
+        <td>{{ stat.won }}</td>
+        <td>{{ stat.drawn }}</td>
+        <td>{{ stat.lost }}</td>
+        <td>{{ stat.points }}</td>
+    </tr>
+{% endfor %}

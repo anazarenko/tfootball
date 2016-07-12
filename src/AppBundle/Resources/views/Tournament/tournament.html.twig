@@ -8,7 +8,7 @@
             <h2>Tournament #{{ tournament.id }}</h2>
         </div>
 
-        <table class="table sortable-table table-bordered table-hover">
+        <table class="table sortable-table table-bordered table-hover table-tournament">
             <thead>
             <tr>
                 <th>#</th>
@@ -21,21 +21,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for stat in statistics %}
-                <tr {% if loop.index <= tournament.playoffTeamCount %}class="playoff-zone"{% endif %}>
-                    <td>{{ loop.index }}</td>
-                    <td>
-                        <a class="team-link" href="{{ path('_profile_id', {'id' : stat.team.id}) }}">
-                            {{ stat.team.playerNames|join(' / ') }}
-                        </a>
-                    </td>
-                    <td>{{ stat.gameCount }}</td>
-                    <td>{{ stat.won }}</td>
-                    <td>{{ stat.drawn }}</td>
-                    <td>{{ stat.lost }}</td>
-                    <td>{{ stat.points }}</td>
-                </tr>
-            {% endfor %}
+                {% include 'AppBundle:Tournament:tbody.html.twig' with {'statistics' : statistics} %}
             </tbody>
         </table>
 
@@ -43,4 +29,15 @@
             {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% javascripts
+        'bundles/app/js/tournamentList.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
