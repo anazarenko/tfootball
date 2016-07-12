@@ -229,6 +229,25 @@ body{
           position: absolute;
           right: 0;
         }
+        &.game-submit {
+          position: absolute;
+          left: 0;
+          height: 50px;
+          line-height: 32px;
+        }
+      }
+
+      .score-input {
+        display: none;
+      }
+
+      &.game-input-active {
+        .score-element {
+          display: none;
+        }
+        .score-input {
+          display: block;
+        }
       }
     }
 
