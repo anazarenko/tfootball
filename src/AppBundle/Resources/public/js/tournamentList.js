@@ -1,5 +1,6 @@
 $(document).ready(function() {
     applyBtnInit();
+    standingInit();
 });
 
 var applyBtnInit = function() {
@@ -28,6 +29,26 @@ var applyBtnInit = function() {
                 }
             });
 
+        }
+    });
+};
+
+var standingInit = function (){
+    // Sortable rows
+    $('.sorted_table').sortable({
+        containerSelector: 'table',
+        itemPath: '> tbody',
+        itemSelector: 'tr',
+        placeholder: '<tr class="placeholder"/>',
+        onDrop: function (item, container, _super, event) {
+            var table = $('.table-tournament');
+            var tr =  table.find('tr');
+            tr.removeClass('playoff-zone');
+            for (var i = 1; i <= table.data('playoff'); i++) {
+                tr.eq(i).addClass('playoff-zone');
+            }
+            item.removeClass(container.group.options.draggedClass).removeAttr("style");
+            $("body").removeClass(container.group.options.bodyClass);
         }
     });
 };

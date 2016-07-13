@@ -1,5 +1,15 @@
 {% extends 'AppBundle::base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets
+        'bundles/app/less/dragged-table.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block title %} - Tournament{% endblock %}
 
 {% block content %}
@@ -8,7 +18,7 @@
             <h2>Tournament #{{ tournament.id }}</h2>
         </div>
 
-        <table class="table sortable-table table-bordered table-hover table-tournament">
+        <table class="table sortable-table sorted_table table-bordered table-hover table-tournament" data-playoff="{{ tournament.playoffTeamCount }}">
             <thead>
             <tr>
                 <th>#</th>
