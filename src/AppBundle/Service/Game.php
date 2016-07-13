@@ -93,14 +93,14 @@ class Game
             }
 
             switch ($game->getResult()) {
-                case 0:
+                case GameEntity::RESULT_DRAW:
                     $sortingGames[$firstTeamID]['drawn'][] = $game;
                     $sortingGames[$firstTeamID]['streak'][] = 'drawn';
                     $sortingGames[$secondTeamID]['drawn'][] = $game;
                     $sortingGames[$secondTeamID]['streak'][] = 'drawn';
                     break;
 
-                case 1:
+                case GameEntity::RESULT_FIRST_WINNER:
                     $sortingGames[$firstTeamID]['won'][] = $game;
                     $sortingGames[$firstTeamID]['streak'][] = 'won';
                     $sortingGames[$secondTeamID]['lost'][] = $game;
@@ -120,7 +120,7 @@ class Game
                     }
                     break;
 
-                case 2:
+                case GameEntity::RESULT_SECOND_WINNER:
                     $sortingGames[$firstTeamID]['lost'][] = $game;
                     $sortingGames[$firstTeamID]['streak'][] = 'lost';
                     $sortingGames[$secondTeamID]['won'][] = $game;

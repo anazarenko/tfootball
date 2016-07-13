@@ -134,6 +134,7 @@ class TournamentController extends Controller
         $game->setFirstScore($firstScore);
         $game->setSecondScore($secondScore);
         $game->setGameDate(new \DateTime('now'));
+        $game->setDifference(abs($firstScore - $secondScore));
 
         if ($firstScore > $secondScore) {
             $game->setResult(Game::RESULT_FIRST_WINNER);
