@@ -177,11 +177,24 @@ class TournamentController extends Controller
     }
 
     /**
+     * @Route("/tournament/{id}/playoff", requirements={"id" = "\d+"}, name="_tournaments_playoff")
+     * @Method("POST")
+     * @param Request $request
+     * @param Tournament $tournament
+     */
+    public function playoffAction(Request $request, Tournament $tournament)
+    {
+        dump($tournament);
+        dump($request->request->get('position'));
+        die;
+    }
+
+    /**
      * @param array $teams
      * @param Tournament $tournament
      * @return array
      */
-    public function validateTeams($teams, Tournament $tournament)
+    protected function validateTeams($teams, Tournament $tournament)
     {
         $response = array('status' => true, 'errorMsg' => '', 'data' => '');
         $teamEntities = array();
@@ -226,7 +239,7 @@ class TournamentController extends Controller
      * @param Team[] $teams
      * @param Tournament $tournament
      */
-    public function createGames($teams, Tournament $tournament)
+    protected function createGames($teams, Tournament $tournament)
     {
         $games = array();
 
@@ -269,7 +282,7 @@ class TournamentController extends Controller
      * @param Team[] $teams
      * @param Tournament $tournament
      */
-    public function createStatistics($teams, Tournament $tournament)
+    protected function createStatistics($teams, Tournament $tournament)
     {
         foreach ($teams as $team) {
             $statistic = new TournamentStatistics();

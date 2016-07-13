@@ -11,5 +11,8 @@
         <td>{{ stat.drawn }}</td>
         <td>{{ stat.lost }}</td>
         <td>{{ stat.points }}</td>
+        {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}
+            <input class="input-position" type="hidden" name="position[{{ stat.team.id }}]" value="{{ loop.index }}">
+        {% endif %}
     </tr>
 {% endfor %}

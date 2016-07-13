@@ -19,6 +19,7 @@
     {% block header %}
         {% include '@App/Header/header.html.twig' %}
     {% endblock %}
+    {% block submenu %}{% endblock %}
     <div class="container">
 
         {% for flash_message in app.session.flashbag.get('error') %}
