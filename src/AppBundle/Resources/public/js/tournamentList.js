@@ -1,5 +1,6 @@
 $(document).ready(function() {
     applyBtnInit();
+    editBtnInit();
     standingInit();
 });
 
@@ -25,11 +26,18 @@ var applyBtnInit = function() {
                         $('#tournament-stat-table').html(response.statistics);
                         $('#tournament-game-list').html(response.games);
                         applyBtnInit();
+                        editBtnInit();
                     }
                 }
             });
 
         }
+    });
+};
+
+var editBtnInit = function(){
+    $('.game-edit').click(function(){
+        $(this).closest('.game-row').addClass('game-input-active');
     });
 };
 

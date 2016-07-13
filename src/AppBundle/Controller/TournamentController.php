@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Confirm;
 use AppBundle\Entity\Game;
+use AppBundle\Entity\Statistics;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\Tournament;
 use AppBundle\Entity\TournamentStatistics;
@@ -140,6 +141,11 @@ class TournamentController extends Controller
             $game->setResult(Game::RESULT_SECOND_WINNER);
         } else {
             $game->setResult(Game::RESULT_DRAW);
+        }
+
+        // If edit game
+        if ($game->getStatus() === Game::STATUS_CONFIRMED) {
+            $this->get('app.team_service')->updateStatistics($game, Statistics::ACTION_REMOVE);
         }
 
         $this->get('app.tournament_service')->acceptGame($game);
