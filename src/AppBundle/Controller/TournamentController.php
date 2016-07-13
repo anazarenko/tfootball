@@ -138,8 +138,12 @@ class TournamentController extends Controller
 
         if ($firstScore > $secondScore) {
             $game->setResult(Game::RESULT_FIRST_WINNER);
+            $game->setWinner($game->getFirstTeam());
+            $game->setLoser($game->getSecondTeam());
         } elseif ($secondScore > $firstScore) {
             $game->setResult(Game::RESULT_SECOND_WINNER);
+            $game->setWinner($game->getSecondTeam());
+            $game->setLoser($game->getFirstTeam());
         } else {
             $game->setResult(Game::RESULT_DRAW);
         }
@@ -246,8 +250,6 @@ class TournamentController extends Controller
                     $game->setType(Game::TYPE_TOURNAMENT);
                     $game->setTournament($tournament);
 
-                    $this->createConfirms($game);
-
                     $games[] = $game;
                 }
             }
@@ -257,6 +259,7 @@ class TournamentController extends Controller
 
         foreach ($games as $game) {
             $this->getDoctrine()->getManager()->persist($game);
+            $this->createConfirms($game);
         }
 
         $this->getDoctrine()->getManager()->flush();

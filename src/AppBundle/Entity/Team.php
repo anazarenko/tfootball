@@ -46,6 +46,16 @@ class Team
     private $statistics;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="winner")
+     */
+    private $wonGames;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="loser")
+     */
+    private $lostGames;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -88,6 +98,8 @@ class Team
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->wonGames = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lostGames = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -114,36 +126,26 @@ class Team
     }
 
     /**
-     * Add users
+     * Set playerNames
      *
-     * @param \AppBundle\Entity\User $users
+     * @param array $playerNames
      * @return Team
      */
-    public function addUser(\AppBundle\Entity\User $users)
+    public function setPlayerNames($playerNames)
     {
-        $this->users[] = $users;
+        $this->playerNames = $playerNames;
 
         return $this;
     }
 
     /**
-     * Remove users
+     * Get playerNames
      *
-     * @param \AppBundle\Entity\User $users
+     * @return array 
      */
-    public function removeUser(\AppBundle\Entity\User $users)
+    public function getPlayerNames()
     {
-        $this->users->removeElement($users);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUsers()
-    {
-        return $this->users;
+        return $this->playerNames;
     }
 
     /**
@@ -193,26 +195,36 @@ class Team
     }
 
     /**
-     * Set playerNames
+     * Add users
      *
-     * @param array $playerNames
+     * @param \AppBundle\Entity\User $users
      * @return Team
      */
-    public function setPlayerNames($playerNames)
+    public function addUser(\AppBundle\Entity\User $users)
     {
-        $this->playerNames = $playerNames;
+        $this->users[] = $users;
 
         return $this;
     }
 
     /**
-     * Get playerNames
+     * Remove users
      *
-     * @return array 
+     * @param \AppBundle\Entity\User $users
      */
-    public function getPlayerNames()
+    public function removeUser(\AppBundle\Entity\User $users)
     {
-        return $this->playerNames;
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 
     /**
@@ -246,6 +258,72 @@ class Team
     public function getStatistics()
     {
         return $this->statistics;
+    }
+
+    /**
+     * Add wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     * @return Team
+     */
+    public function addWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames[] = $wonGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     */
+    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames->removeElement($wonGames);
+    }
+
+    /**
+     * Get wonGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonGames()
+    {
+        return $this->wonGames;
+    }
+
+    /**
+     * Add lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     * @return Team
+     */
+    public function addLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames[] = $lostGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     */
+    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames->removeElement($lostGames);
+    }
+
+    /**
+     * Get lostGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostGames()
+    {
+        return $this->lostGames;
     }
 
     /**

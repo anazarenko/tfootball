@@ -241,6 +241,29 @@ body{
           height: 50px;
           line-height: 32px;
         }
+        &.game-result {
+          position: absolute;
+          left: 0;
+          height: 50px;
+          line-height: 32px;
+          .result {
+            display: inline-block;
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            font-weight: bold;
+            color: #fff;
+            &-win {
+              background-color : #5cb85c;
+            }
+            &-lose {
+              background-color : #C82829;
+            }
+            &-draw {
+              background-color : #ccc;
+            }
+          }
+        }
       }
 
       .score-input {

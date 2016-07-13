@@ -43,9 +43,6 @@ class ProfileController extends Controller
         // Get game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
-        // Get stats repository
-        $statsRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Statistics');
-
         // Get page for pagination
         $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
 
@@ -100,7 +97,10 @@ class ProfileController extends Controller
         // If async request
         if ($request->isXmlHttpRequest()) {
 
-            $games = $this->renderView('AppBundle:Game:item.html.twig', array('games' => $pagination));
+            $games = $this->renderView(
+                'AppBundle:Game:profileItem.html.twig',
+                array('games' => $pagination, 'teamId' => $team->getId())
+            );
             $data = array('status' => 1, 'moreBtn' => $moreBtn, 'games' => $games, 'page' => $page + 1);
 
             $json = json_encode($data);
@@ -120,8 +120,6 @@ class ProfileController extends Controller
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
         $teamStats = isset($teamStats[$team->getId()]) ? $teamStats[$team->getId()] : null;
-
-//        $teamStats = $statsRepository->getStatistic($team);
 
         return $this->render(
             'AppBundle:Profile:index.html.twig',

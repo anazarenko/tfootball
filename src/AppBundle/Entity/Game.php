@@ -141,6 +141,18 @@ class Game
     private $difference;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team", inversedBy="wonGames")
+     * @ORM\JoinColumn(name="winner", referencedColumnName="id")
+     */
+    private $winner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team", inversedBy="lostGames")
+     * @ORM\JoinColumn(name="loser", referencedColumnName="id")
+     */
+    private $loser;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      */
@@ -273,6 +285,29 @@ class Game
     }
 
     /**
+     * Set stage
+     *
+     * @param integer $stage
+     * @return Game
+     */
+    public function setStage($stage)
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    /**
+     * Get stage
+     *
+     * @return integer 
+     */
+    public function getStage()
+    {
+        return $this->stage;
+    }
+
+    /**
      * Set result
      *
      * @param integer $result
@@ -339,6 +374,29 @@ class Game
     public function getSecondScore()
     {
         return $this->secondScore;
+    }
+
+    /**
+     * Set difference
+     *
+     * @param integer $difference
+     * @return Game
+     */
+    public function setDifference($difference)
+    {
+        $this->difference = $difference;
+
+        return $this;
+    }
+
+    /**
+     * Get difference
+     *
+     * @return integer 
+     */
+    public function getDifference()
+    {
+        return $this->difference;
     }
 
     /**
@@ -411,6 +469,29 @@ class Game
     }
 
     /**
+     * Set tournament
+     *
+     * @param \AppBundle\Entity\Tournament $tournament
+     * @return Game
+     */
+    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
+    {
+        $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * Get tournament
+     *
+     * @return \AppBundle\Entity\Tournament 
+     */
+    public function getTournament()
+    {
+        return $this->tournament;
+    }
+
+    /**
      * Set firstTeam
      *
      * @param \AppBundle\Entity\Team $firstTeam
@@ -454,6 +535,52 @@ class Game
     public function getSecondTeam()
     {
         return $this->secondTeam;
+    }
+
+    /**
+     * Set winner
+     *
+     * @param \AppBundle\Entity\Team $winner
+     * @return Game
+     */
+    public function setWinner(\AppBundle\Entity\Team $winner = null)
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    /**
+     * Get winner
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * Set loser
+     *
+     * @param \AppBundle\Entity\Team $loser
+     * @return Game
+     */
+    public function setLoser(\AppBundle\Entity\Team $loser = null)
+    {
+        $this->loser = $loser;
+
+        return $this;
+    }
+
+    /**
+     * Get loser
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getLoser()
+    {
+        return $this->loser;
     }
 
     /**
@@ -543,74 +670,5 @@ class Game
     public function getPlayers()
     {
         return $this->players;
-    }
-
-    /**
-     * Set difference
-     *
-     * @param integer $difference
-     * @return Game
-     */
-    public function setDifference($difference)
-    {
-        $this->difference = $difference;
-
-        return $this;
-    }
-
-    /**
-     * Get difference
-     *
-     * @return integer 
-     */
-    public function getDifference()
-    {
-        return $this->difference;
-    }
-
-    /**
-     * Set stage
-     *
-     * @param integer $stage
-     * @return Game
-     */
-    public function setStage($stage)
-    {
-        $this->stage = $stage;
-
-        return $this;
-    }
-
-    /**
-     * Get stage
-     *
-     * @return integer 
-     */
-    public function getStage()
-    {
-        return $this->stage;
-    }
-
-    /**
-     * Set tournament
-     *
-     * @param \AppBundle\Entity\Tournament $tournament
-     * @return Game
-     */
-    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
-    {
-        $this->tournament = $tournament;
-
-        return $this;
-    }
-
-    /**
-     * Get tournament
-     *
-     * @return \AppBundle\Entity\Tournament 
-     */
-    public function getTournament()
-    {
-        return $this->tournament;
     }
 }

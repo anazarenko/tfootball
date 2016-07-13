@@ -1,0 +1,33 @@
+{% for game in games %}
+    <div class="col-md-12 game game-row">
+        <div class="game-result">
+            {% if game.winner is not null and game.winner.id == teamId %}
+                <span class="result result-win">W</span>
+            {% elseif game.loser is not null and game.loser.id == teamId %}
+                <span class="result result-lose">L</span>
+            {% else %}
+                <span class="result result-draw">D</span>
+            {% endif %}
+        </div>
+        <div class="game-date">{{ game.createdAt|date('d-m-y') }}</div>
+        <div class="game-player first-team {% if game.firstScore > game.secondScore %}winner{% endif %}">
+            {% if game.firstScore > game.secondScore %}
+                <i class="fa fa-soccer-ball-o"></i>
+            {% endif %}
+            <a class="team-link" href="{{ path('_profile_id', {'id' : game.firstTeam.id}) }}">
+                {{ game.firstTeam|members }}
+            </a>
+        </div>
+        <div class="game-score">{{ game.firstScore }}</div>
+        <div class="game-separator">:</div>
+        <div class="game-score">{{ game.secondScore }}</div>
+        <div class="game-player second-team {% if game.firstScore < game.secondScore %}winner{% endif %}">
+            {% if game.firstScore < game.secondScore %}
+                <i class="fa fa-soccer-ball-o"></i>
+            {% endif %}
+            <a class="team-link" href="{{ path('_profile_id', {'id' : game.secondTeam.id}) }}">
+                {{ game.secondTeam|members }}
+            </a>
+        </div>
+    </div>
+{% endfor %}

@@ -252,8 +252,12 @@ class Game
 
         if ($game->getFirstScore() > $game->getSecondScore()) {
             $game->setResult(GameEntity::RESULT_FIRST_WINNER);
+            $game->setWinner($firstTeam);
+            $game->setLoser($secondTeam);
         } elseif ($game->getFirstScore() < $game->getSecondScore()) {
             $game->setResult(GameEntity::RESULT_SECOND_WINNER);
+            $game->setWinner($secondTeam);
+            $game->setLoser($firstTeam);
         } elseif ($game->getFirstScore() == $game->getSecondScore()) {
             $game->setResult(GameEntity::RESULT_DRAW);
         }

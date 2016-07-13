@@ -74,7 +74,7 @@
     {% endif %}
 
     <div class="row game-list main-game-list">
-        {% include 'AppBundle:Game:item.html.twig' with {'games' : pagination} %}
+        {% include 'AppBundle:Game:profileItem.html.twig' with {'games' : pagination, 'teamId' : teamId} %}
     </div>
 
     {% if moreBtn %}

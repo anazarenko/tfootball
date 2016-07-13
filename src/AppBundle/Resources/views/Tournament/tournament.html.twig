@@ -18,7 +18,7 @@
             <h2>Tournament #{{ tournament.id }}</h2>
         </div>
 
-        <table class="table sortable-table sorted_table table-bordered table-hover table-tournament" data-playoff="{{ tournament.playoffTeamCount }}">
+        <table class="table sortable-table table-bordered table-hover table-tournament {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}sorted_table{% endif %}" data-playoff="{{ tournament.playoffTeamCount }}">
             <thead>
             <tr>
                 <th>#</th>
