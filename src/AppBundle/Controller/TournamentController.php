@@ -177,7 +177,7 @@ class TournamentController extends Controller
     }
 
     /**
-     * @Route("/tournament/{id}/playoff", requirements={"id" = "\d+"}, name="_tournaments_playoff")
+     * @Route("/playoff/generate/{id}", requirements={"id" = "\d+"}, name="_tournaments_playoff")
      * @Method("POST")
      * @param Request $request
      * @param Tournament $tournament

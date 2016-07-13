@@ -1,14 +1,10 @@
 $(document).ready(function() {
     applyBtnInit();
     editBtnInit();
-    standingInit();
 
-    $(window).on("scroll", function() {
-        if ($('body').scrollTop() >= 71) {
-            $('.tournament-sub-menu').addClass('fixed');
-        } else {
-            $('.tournament-sub-menu').removeClass('fixed');
-        }
+    $('.btn-finish-group').click(function(){
+        standingInit();
+        $('.btn-start-playoff').show();
     });
 
     // Cache selectors
@@ -36,6 +32,13 @@ $(document).ready(function() {
 
     // Bind to scroll
     $(window).scroll(function(){
+
+        if ($('body').scrollTop() >= 71) {
+            $('.tournament-sub-menu').addClass('fixed');
+        } else {
+            $('.tournament-sub-menu').removeClass('fixed');
+        }
+
         // Get container scroll position
         var fromTop = $(this).scrollTop()+topMenuHeight;
 
