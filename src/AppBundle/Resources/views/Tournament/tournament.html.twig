@@ -19,6 +19,9 @@
                 <ul class="nav navbar-nav">
                     <li><a class="submenu" href="#standing">Standing</a></li>
                     <li><a class="submenu" href="#tournament-game-list">Group stage</a></li>
+                    {% for stage in stages %}
+                        <li><a class="submenu" href="#playoff-stage-{{ stage.id }}">{{ availableStages[stage.id] }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -31,12 +34,12 @@
             <h2>Tournament #{{ tournament.id }}</h2>
         </div>
 
-        {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}
+        {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
             <form method="POST" action="{{ path('_tournaments_playoff', {'id' : tournament.id}) }}">
                 <div class="btn btn-success btn-finish-group" style="margin: 5px 0 20px">Finish group stage</div>
                 <button type="submit" class="btn btn-primary btn-start-playoff" style="margin: 5px 0 20px">Start playoff</button>
         {% endif %}
-                <table id="standing" class="table sortable-table table-bordered table-hover table-tournament {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}sorted_table{% endif %}" data-playoff="{{ tournament.playoffTeamCount }}">
+                <table id="standing" class="table sortable-table table-bordered table-hover table-tournament {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}sorted_table{% endif %}" data-playoff="{{ tournament.playoffTeamCount }}">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -52,13 +55,28 @@
                         {% include 'AppBundle:Tournament:tbody.html.twig' with {'statistics' : statistics} %}
                     </tbody>
                 </table>
-        {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}
+        {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
             </form>
         {% endif %}
 
         <div id="tournament-game-list" class="row game-list main-game-list">
+            <h3>Group matches</h3>
             {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
         </div>
+
+        {% for stage in stages %}
+            <div id="playoff-stage-{{ stage.id }}" class="row game-list playoff-game-list">
+                <h3>{{ availableStages[stage.id] }}</h3>
+                {% for game in playoffGames if game.stage == stage.id %}
+                    {% include 'AppBundle:Game:tournamentPlayoffItem.html.twig' with {'game' : game, 'stage' : stage.id} %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {#<div id="playoff-stage-" class="row game-list main-game-list">#}
+            {#<h3>Group matches</h3>#}
+            {#{% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}#}
+        {#</div>#}
     </div>
 {% endblock %}
 

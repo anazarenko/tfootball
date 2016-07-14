@@ -16,9 +16,10 @@ class Tournament
     const FORM_SINGLE = 1;
     const FORM_DOUBLE = 2;
 
-    const STATUS_PROGRESS = 0;
-    const STATUS_REJECTED = 1;
+    const STATUS_GROUP_STAGE = 0;
+    const STATUS_PLAYOFF = 1;
     const STATUS_FINISHED = 2;
+    const STATUS_REJECTED = 3;
 
     public $availableForm = array(
         self::FORM_SINGLE => 'Single',
@@ -26,9 +27,10 @@ class Tournament
     );
 
     public $availableStatus = array(
-        self::STATUS_PROGRESS => 'Progress',
-        self::STATUS_REJECTED => 'Canceled',
-        self::STATUS_FINISHED => 'Finished'
+        self::STATUS_GROUP_STAGE => 'In Progress',
+        self::STATUS_PLAYOFF => 'In Progress',
+        self::STATUS_FINISHED => 'Finished',
+        self::STATUS_REJECTED => 'Rejected'
     );
 
     /**
@@ -81,6 +83,13 @@ class Tournament
      * @ORM\Column(type="integer")
      */
     private $playoffTeamCount;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $currentStage = \AppBundle\Entity\Game::STAGE_GROUP;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -448,5 +457,28 @@ class Tournament
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set currentStage
+     *
+     * @param integer $currentStage
+     * @return Tournament
+     */
+    public function setCurrentStage($currentStage)
+    {
+        $this->currentStage = $currentStage;
+
+        return $this;
+    }
+
+    /**
+     * Get currentStage
+     *
+     * @return integer 
+     */
+    public function getCurrentStage()
+    {
+        return $this->currentStage;
     }
 }

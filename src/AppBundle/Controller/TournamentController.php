@@ -227,6 +227,9 @@ class TournamentController extends Controller
             }
 
             if (count($playoffTeams) === $tournament->getPlayoffTeamCount()) {
+                $tournament->setCurrentStage(intval(count($playoffTeams)/2));
+                $this->getDoctrine()->getManager()->flush();
+
                 $this->createPlayoffGames($playoffTeams, $tournament);
             }
         }
