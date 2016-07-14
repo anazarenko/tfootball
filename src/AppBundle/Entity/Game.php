@@ -48,7 +48,7 @@ class Game
         self::STATUS_TOURNAMENT_WAITING => 'Tournament waiting'
     );
 
-    public $availableStage = array(
+    public static $availableStages = array(
         self::STAGE_GROUP => 'Group',
         self::STAGE_FINAL => 'Final',
         self::STAGE_SEMIFINAL => 'Semi-final',

@@ -51,11 +51,31 @@ class TournamentController extends Controller
     {
         $statistics = $this->getDoctrine()
             ->getRepository('AppBundle:TournamentStatistics')
-            ->findBy(array('tournament' => $tournament->getId()), array('points' => 'desc'));
+            ->findBy(array('tournament' => $tournament->getId()), array('position' => 'asc', 'points' => 'desc'));
 
         $games = $this->getDoctrine()
             ->getRepository('AppBundle:Game')
             ->findBy(array('tournament' => $tournament->getId(), 'stage' => Game::STAGE_GROUP));
+
+        $playoffGames = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->createQueryBuilder('g')
+            ->where('g.tournament = :tournament')
+            ->andWhere('g.stage != 0')
+            ->setParameter('tournament', $tournament->getId())
+            ->getQuery()
+            ->getResult();
+
+        $stages = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->createQueryBuilder('g')
+            ->select('g.stage as id')
+            ->where('g.tournament = :tournament')
+            ->andWhere('g.stage != 0')
+            ->setParameter('tournament', $tournament->getId())
+            ->groupBy('g.stage')
+            ->getQuery()
+            ->getResult();
 
         return $this->render(
             'AppBundle:Tournament:tournament.html.twig',
@@ -63,7 +83,10 @@ class TournamentController extends Controller
                 'active' => 'tournaments',
                 'statistics' => $statistics,
                 'games' => $games,
-                'tournament' => $tournament
+                'tournament' => $tournament,
+                'playoffGames' => $playoffGames,
+                'stages' => array_reverse($stages),
+                'availableStages' => Game::$availableStages
             )
         );
     }
@@ -170,7 +193,7 @@ class TournamentController extends Controller
 
         $response['games'] = $this->renderView(
             'AppBundle:Game:tournamentItem.html.twig',
-            array('games' => $games)
+            array('games' => $games, 'tournament' => $game->getTournament())
         );
 
         return new JsonResponse($response);
@@ -181,12 +204,34 @@ class TournamentController extends Controller
      * @Method("POST")
      * @param Request $request
      * @param Tournament $tournament
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function playoffAction(Request $request, Tournament $tournament)
     {
-        dump($tournament);
-        dump($request->request->get('position'));
-        die;
+        if ($tournament->getCreator() == $this->getUser() || $this->isGranted('ROLE_ADMIN')) {
+            $statisticRepository = $this->getDoctrine()->getRepository('AppBundle:TournamentStatistics');
+            $positions = array_flip($request->request->get('position'));
+            $playoffTeams = array();
+
+            $tournament->setStatus(Tournament::STATUS_PLAYOFF);
+
+            // Set team position
+            foreach ($positions as $position => $statisticId) {
+                $stat = $statisticRepository->findOneBy(array('id' => $statisticId));
+                $stat->setPosition($position);
+                $this->getDoctrine()->getManager()->flush();
+
+                if ($position <= $tournament->getPlayoffTeamCount()) {
+                    $playoffTeams[$position] = $stat->getTeam();
+                }
+            }
+
+            if (count($playoffTeams) === $tournament->getPlayoffTeamCount()) {
+                $this->createPlayoffGames($playoffTeams, $tournament);
+            }
+        }
+
+        return $this->redirectToRoute('_tournaments_page', array('id' => $tournament->getId()));
     }
 
     /**
@@ -320,4 +365,83 @@ class TournamentController extends Controller
             $this->getDoctrine()->getManager()->persist($confirm);
         }
     }
+
+    /**
+     * @param Team[] $teams
+     * @param Tournament $tournament
+     */
+    protected function createPlayoffGames($teams, Tournament $tournament)
+    {
+        // Stage of matches ( 2 - 1/2, 4 - 1/4...)
+        $stage = intval(count($teams)/2);
+        // Array with correct games position
+        $games = array();
+
+        while (count($teams)) {
+            $firstTeam = array_shift($teams);
+            $secondTeam = array_pop($teams);
+            $gameCount = count($games);
+
+            $game = new Game();
+            $game->setCreator($this->getUser());
+            $game->setStatus(Game::STATUS_NEW);
+            $game->setFirstTeam($firstTeam);
+            $game->setSecondTeam($secondTeam);
+            $game->setForm(Game::FORM_SINGLE);
+            $game->setStage($stage);
+            $game->setType(Game::TYPE_TOURNAMENT);
+            $game->setTournament($tournament);
+
+            if (count($games) % 2 === 0) {
+                $games = array_merge(
+                    array_slice($games, 0, intval($gameCount / 2), true),
+                    array((intval($gameCount / 2) + 1) => $game),
+                    array_slice($games, intval($gameCount / 2), $gameCount - 1, true)
+                );
+            } else {
+                $beforeLength = intval(ceil($gameCount / 2) - 1) !== 0 ?: 1;
+                $afterStart = intval(ceil($gameCount / 2)) - 1;
+
+                $beforeGames = array_slice($games, 0, $beforeLength, true);
+                $currentGame = array(intval(ceil($gameCount / 2)) => $game);
+                $afterGames = array_slice($games, $afterStart, $gameCount - 1, true);
+
+                $games = array_merge($beforeGames, $currentGame);
+
+                foreach ($afterGames as $game) {
+                    array_push($games, $game);
+                }
+            }
+        }
+
+        /** @var Game[] $games */
+        foreach ($games as $game) {
+            $this->getDoctrine()->getManager()->persist($game);
+            $this->createConfirms($game);
+        }
+
+        $this->getDoctrine()->getManager()->flush();
+        $this->createNextRounds($stage, $tournament);
+    }
+
+    protected function createNextRounds($currentStage, Tournament $tournament)
+    {
+        if ($currentStage !== Game::STAGE_FINAL) {
+            do {
+                $currentStage = $currentStage / 2;
+                for ($i = 1; $i <= $currentStage; $i++) {
+                    $game = new Game();
+                    $game->setCreator($this->getUser());
+                    $game->setStatus(Game::STATUS_NEW);
+                    $game->setForm(Game::FORM_SINGLE);
+                    $game->setStage($currentStage);
+                    $game->setType(Game::TYPE_TOURNAMENT);
+                    $game->setTournament($tournament);
+                    $this->getDoctrine()->getManager()->persist($game);
+                }
+                $this->getDoctrine()->getManager()->flush();
+            } while ($currentStage !== Game::STAGE_FINAL);
+        }
+    }
+
 }

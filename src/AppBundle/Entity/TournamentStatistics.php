@@ -82,6 +82,13 @@ class TournamentStatistics
     private $points = 0;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $position = 0;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -385,5 +392,28 @@ class TournamentStatistics
     public function getPoints()
     {
         return $this->points;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     * @return TournamentStatistics
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer 
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

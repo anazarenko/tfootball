@@ -1,5 +1,5 @@
 {% for game in games %}
-    {% if is_granted('ROLE_ADMIN') or tournament.creator == app.user %}
+    {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
         <form class="t-match-form" action="{{ path('_tournaments_game_accept', {'id' : game.id}) }}">
             <div class="col-md-12 game game-row {% if game.firstScore is null and game.secondScore is null %}game-input-active{% endif %}">
                 <div class="btn btn-success score-input game-submit">Apply game</div>

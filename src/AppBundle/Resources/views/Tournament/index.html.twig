@@ -26,7 +26,7 @@
                         <tr>
                             <td>{{ tournament.id }}</td>
                             <td>
-                                {% if tournament.status == constant('STATUS_PROGRESS', tournament) %}
+                                {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) or tournament.status == constant('STATUS_PLAYOFF', tournament) %}
                                     <span class="label label-info">In Progress</span>
                                 {% elseif game.status == constant('STATUS_FINISHED', tournament) %}
                                     <span class="label label-success">Finished</span>
@@ -37,7 +37,7 @@
                             <td>
                                 {% if tournament.form == constant('FORM_SINGLE', tournament) %}
                                     <span>Single</span>
-                                {% elseif tournament.form == constant('FORM_Double', tournament) %}
+                                {% elseif tournament.form == constant('FORM_DOUBLE', tournament) %}
                                     <span>Double</span>
                                 {% endif %}
                             </td>
