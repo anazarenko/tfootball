@@ -33,8 +33,7 @@ class TournamentType extends AbstractType
                 'choices' => array(
                     2 => 2,
                     4 => 4,
-                    8 => 8,
-                    16 => 16,
+                    8 => 8
                 ),
                 'label' => 'Playoff team count'
             ))
