@@ -1,5 +1,5 @@
-{% if tournament.currentStage <= stage and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
-    <form class="t-match-form" action="{{ path('_tournaments_game_accept', {'id' : game.id}) }}">
+{% if tournament.currentStage == stage and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
+    <form class="t-match-form" action="{{ path('_tournaments_playoff_game_accept', {'id' : game.id}) }}">
         <div class="col-md-12 game game-row {% if game.firstScore is null and game.secondScore is null %}game-input-active{% endif %}">
             <div class="btn btn-success score-input game-submit">Apply game</div>
             <div class="btn btn-primary score-element game-edit">Edit game</div>

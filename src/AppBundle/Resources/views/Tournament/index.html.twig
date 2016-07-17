@@ -28,9 +28,9 @@
                             <td>
                                 {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) or tournament.status == constant('STATUS_PLAYOFF', tournament) %}
                                     <span class="label label-info">In Progress</span>
-                                {% elseif game.status == constant('STATUS_FINISHED', tournament) %}
+                                {% elseif tournament.status == constant('STATUS_FINISHED', tournament) %}
                                     <span class="label label-success">Finished</span>
-                                {% elseif game.status == constant('STATUS_REJECTED', tournament) %}
+                                {% elseif tournament.status == constant('STATUS_REJECTED', tournament) %}
                                     <span class="label label-danger">Rejected</span>
                                 {% endif %}
                             </td>

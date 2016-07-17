@@ -150,7 +150,7 @@ class TournamentController extends Controller
         $firstScore = (int)$request->request->get('firstScore');
         $secondScore = (int)$request->request->get('secondScore');
 
-        if ($firstScore === null || $secondScore === null) {
+        if ($game->getStage() != false || $firstScore === null || $secondScore === null) {
             return new JsonResponse(array('status' => 0));
         }
 
@@ -194,6 +194,158 @@ class TournamentController extends Controller
         $response['games'] = $this->renderView(
             'AppBundle:Game:tournamentItem.html.twig',
             array('games' => $games, 'tournament' => $game->getTournament())
+        );
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @Route("/playoff/game/accept/{id}", requirements={"id" = "\d+"}, name="_tournaments_playoff_game_accept")
+     * @Method("POST")
+     * @param Request $request
+     * @param Game $game
+     * @return JsonResponse
+     */
+    public function acceptPlayoffGame(Request $request, Game $game)
+    {
+        $response = array('status' => 1);
+
+        $firstScore = (int)$request->request->get('firstScore');
+        $secondScore = (int)$request->request->get('secondScore');
+
+        if ($game->getStage() == false || $firstScore === null || $secondScore === null) {
+            return new JsonResponse(array('status' => 0));
+        }
+
+        $game->setFirstScore($firstScore);
+        $game->setSecondScore($secondScore);
+        $game->setGameDate(new \DateTime('now'));
+        $game->setDifference(abs($firstScore - $secondScore));
+
+        if ($firstScore > $secondScore) {
+            $game->setResult(Game::RESULT_FIRST_WINNER);
+            $game->setWinner($game->getFirstTeam());
+            $game->setLoser($game->getSecondTeam());
+        } elseif ($secondScore > $firstScore) {
+            $game->setResult(Game::RESULT_SECOND_WINNER);
+            $game->setWinner($game->getSecondTeam());
+            $game->setLoser($game->getFirstTeam());
+        } else {
+            $game->setResult(Game::RESULT_DRAW);
+        }
+
+        // If edit game
+        if ($game->getStatus() === Game::STATUS_CONFIRMED) {
+            $this->get('app.team_service')->updateStatistics($game, Statistics::ACTION_REMOVE);
+        }
+
+        $this->get('app.tournament_service')->acceptGame($game);
+
+        if ($game->getStage() > 0) {
+            $firstTeam = $game->getFirstTeam();
+            $secondTeam = $game->getSecondTeam();
+            $firstTeamScore = 0;
+            $secondTeamScore = 0;
+
+            $stageGames = $this->getDoctrine()
+                ->getRepository('AppBundle:Game')
+                ->createQueryBuilder('g')
+                ->where('g.tournament = :tournament')
+                ->andWhere('g.stage = :stage')
+                ->setParameter('tournament', $game->getTournament()->getId())
+                ->setParameter('stage', $game->getStage())
+                ->getQuery()
+                ->getResult();
+
+            $isCompleteGame = true;
+            $isCompleteStage = true;
+            /** @var Game $stageGame */
+            foreach ($stageGames as $stageGame) {
+
+                if ($stageGame->getFirstScore() === null || $stageGame->getSecondScore() === null) {
+                    $isCompleteStage = false;
+                }
+
+                if ($stageGame->getStageGameNumber() === $game->getStageGameNumber()) {
+                    if ($stageGame->getFirstScore() !== null && $stageGame->getSecondScore() !== null) {
+                        if ($stageGame->getFirstTeam() === $firstTeam && $stageGame->getSecondTeam() === $secondTeam) {
+                            $firstTeamScore += $stageGame->getFirstScore();
+                            $secondTeamScore += $stageGame->getSecondScore();
+                        } elseif ($stageGame->getSecondTeam() === $firstTeam && $stageGame->getFirstTeam() === $secondTeam) {
+                            $firstTeamScore += $stageGame->getSecondScore();
+                            $secondTeamScore += $stageGame->getFirstScore();
+                        } else {
+                            $isCompleteGame = false;
+                        }
+                    }
+                }
+            }
+
+            if ($isCompleteGame && $game->getStage() !== Game::STAGE_FINAL) {
+                $winner = ($firstTeamScore > $secondTeamScore) ? $firstTeam : $secondTeam;
+                $nextStage = intval($game->getStage() / 2);
+                $gameNumber = intval(ceil($game->getStageGameNumber() / 2));
+
+                $nextGame = $this->getDoctrine()
+                    ->getRepository('AppBundle:Game')
+                    ->findOneBy(
+                        array(
+                            'tournament' => $game->getTournament()->getId(),
+                            'stage' => $nextStage,
+                            'stageGameNumber' => $gameNumber
+                        )
+                    );
+
+                if ($game->getStageGameNumber() % 2 !== 0) {
+                    $nextGame->setFirstTeam($winner);
+                } else {
+                    $nextGame->setSecondTeam($winner);
+                }
+
+                $this->getDoctrine()->getManager()->flush();
+            }
+
+            if ($isCompleteStage) {
+                $tournament = $game->getTournament();
+                if ($tournament->getCurrentStage() === Tournament::STAGE_FINAL) {
+                    $tournament->setCurrentStage(null);
+                    $tournament->setStatus(Tournament::STATUS_FINISHED);
+                } else {
+                    $tournament->setCurrentStage(intval($game->getStage() / 2));
+                }
+
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+
+        $playoffGames = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->createQueryBuilder('g')
+            ->where('g.tournament = :tournament')
+            ->andWhere('g.stage != 0')
+            ->setParameter('tournament', $game->getTournament()->getId())
+            ->getQuery()
+            ->getResult();
+
+        $stages = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->createQueryBuilder('g')
+            ->select('g.stage as id')
+            ->where('g.tournament = :tournament')
+            ->andWhere('g.stage != 0')
+            ->setParameter('tournament', $game->getTournament()->getId())
+            ->groupBy('g.stage')
+            ->getQuery()
+            ->getResult();
+
+        $response['playoff'] = $this->renderView(
+            'AppBundle:Tournament:playoff.html.twig',
+            array(
+                'availableStages' => Game::$availableStages,
+                'stages' => array_reverse($stages),
+                'playoffGames' => $playoffGames,
+                'tournament' => $game->getTournament()
+            )
         );
 
         return new JsonResponse($response);
@@ -317,8 +469,11 @@ class TournamentController extends Controller
         }
 
         shuffle($games);
+        $iterator = 1;
 
+        /** @var Game $game */
         foreach ($games as $game) {
+            $game->setStageGameNumber($iterator++);
             $this->getDoctrine()->getManager()->persist($game);
             $this->createConfirms($game);
         }
@@ -379,21 +534,14 @@ class TournamentController extends Controller
         $stage = intval(count($teams)/2);
         // Array with correct games position
         $games = array();
+        $gameNumber = 1;
 
         while (count($teams)) {
             $firstTeam = array_shift($teams);
             $secondTeam = array_pop($teams);
             $gameCount = count($games);
 
-            $game = new Game();
-            $game->setCreator($this->getUser());
-            $game->setStatus(Game::STATUS_NEW);
-            $game->setFirstTeam($firstTeam);
-            $game->setSecondTeam($secondTeam);
-            $game->setForm(Game::FORM_SINGLE);
-            $game->setStage($stage);
-            $game->setType(Game::TYPE_TOURNAMENT);
-            $game->setTournament($tournament);
+            $game = $this->getNewPlayoffGame($firstTeam, $secondTeam, $stage, $tournament);
 
             if (count($games) % 2 === 0) {
                 $games = array_merge(
@@ -419,8 +567,33 @@ class TournamentController extends Controller
 
         /** @var Game[] $games */
         foreach ($games as $game) {
+            $game->setStageGameNumber($gameNumber++);
             $this->getDoctrine()->getManager()->persist($game);
             $this->createConfirms($game);
+            $playoffGameCount = $tournament->getPlayoffGameCount() - 1;
+            $iterator = 0;
+            while ($playoffGameCount > 0) {
+                if (($iterator % 2) === 0) {
+                    $regame = $this->getNewPlayoffGame(
+                        $game->getSecondTeam(),
+                        $game->getFirstTeam(),
+                        $stage,
+                        $tournament
+                    );
+                } else {
+                    $regame = $this->getNewPlayoffGame(
+                        $game->getFirstTeam(),
+                        $game->getSecondTeam(),
+                        $stage,
+                        $tournament
+                    );
+                }
+                $regame->setStageGameNumber($game->getStageGameNumber());
+                $this->getDoctrine()->getManager()->persist($regame);
+                $this->createConfirms($regame);
+                $playoffGameCount--;
+                $iterator++;
+            }
         }
 
         $this->getDoctrine()->getManager()->flush();
@@ -431,20 +604,63 @@ class TournamentController extends Controller
     {
         if ($currentStage !== Game::STAGE_FINAL) {
             do {
+                $gameNumber = 1;
                 $currentStage = $currentStage / 2;
-                for ($i = 1; $i <= $currentStage; $i++) {
-                    $game = new Game();
-                    $game->setCreator($this->getUser());
-                    $game->setStatus(Game::STATUS_NEW);
-                    $game->setForm(Game::FORM_SINGLE);
-                    $game->setStage($currentStage);
-                    $game->setType(Game::TYPE_TOURNAMENT);
-                    $game->setTournament($tournament);
-                    $this->getDoctrine()->getManager()->persist($game);
+
+                if ($currentStage === Game::STAGE_FINAL) {
+                    for ($j = 1; $j <= $tournament->getFinalGameCount(); $j++) {
+                        $game = new Game();
+                        $game->setCreator($this->getUser());
+                        $game->setStatus(Game::STATUS_NEW);
+                        $game->setForm(Game::FORM_SINGLE);
+                        $game->setStage($currentStage);
+                        $game->setType(Game::TYPE_TOURNAMENT);
+                        $game->setTournament($tournament);
+                        $game->setStageGameNumber($gameNumber);
+                        $this->getDoctrine()->getManager()->persist($game);
+                    }
+                } else {
+                    for ($i = 1; $i <= $currentStage; $i++) {
+                        for ($j = 1; $j <= $tournament->getPlayoffGameCount(); $j++) {
+                            $game = new Game();
+                            $game->setCreator($this->getUser());
+                            $game->setStatus(Game::STATUS_NEW);
+                            $game->setForm(Game::FORM_SINGLE);
+                            $game->setStage($currentStage);
+                            $game->setType(Game::TYPE_TOURNAMENT);
+                            $game->setTournament($tournament);
+                            $game->setStageGameNumber($gameNumber);
+                            $this->getDoctrine()->getManager()->persist($game);
+                        }
+
+                        $gameNumber++;
+                    }
                 }
                 $this->getDoctrine()->getManager()->flush();
             } while ($currentStage !== Game::STAGE_FINAL);
         }
+    }
+
+    /**
+     * @param Team $firstTeam
+     * @param Team $secondTeam
+     * @param $stage
+     * @param Tournament $tournament
+     * @return Game
+     */
+    protected function getNewPlayoffGame(Team $firstTeam, Team $secondTeam, $stage, Tournament $tournament)
+    {
+        $game = new Game();
+        $game->setCreator($this->getUser());
+        $game->setStatus(Game::STATUS_NEW);
+        $game->setFirstTeam($firstTeam);
+        $game->setSecondTeam($secondTeam);
+        $game->setForm(Game::FORM_SINGLE);
+        $game->setStage($stage);
+        $game->setType(Game::TYPE_TOURNAMENT);
+        $game->setTournament($tournament);
+
+        return $game;
     }
 
 }

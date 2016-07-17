@@ -99,6 +99,11 @@ class Game
     private $stage;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $stageGameNumber;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tournament", inversedBy="games")
      * @ORM\JoinColumn(name="tournament", referencedColumnName="id")
      */
@@ -670,5 +675,28 @@ class Game
     public function getPlayers()
     {
         return $this->players;
+    }
+
+    /**
+     * Set stageGameNumber
+     *
+     * @param integer $stageGameNumber
+     * @return Game
+     */
+    public function setStageGameNumber($stageGameNumber)
+    {
+        $this->stageGameNumber = $stageGameNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get stageGameNumber
+     *
+     * @return integer 
+     */
+    public function getStageGameNumber()
+    {
+        return $this->stageGameNumber;
     }
 }

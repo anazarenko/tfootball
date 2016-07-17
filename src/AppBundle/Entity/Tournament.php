@@ -21,6 +21,26 @@ class Tournament
     const STATUS_FINISHED = 2;
     const STATUS_REJECTED = 3;
 
+    const STAGE_GROUP = 0;
+    const STAGE_FINAL = 1;
+    const STAGE_SEMIFINAL = 2;
+    const STAGE_QUARTERFINAL = 4;
+    const STAGE_8thFINAL = 8;
+    const STAGE_16thFINAL = 16;
+    const STAGE_32thFINAL = 32;
+    const STAGE_64thFINAL = 64;
+
+    public static $availableStages = array(
+        self::STAGE_GROUP => 'Group',
+        self::STAGE_FINAL => 'Final',
+        self::STAGE_SEMIFINAL => 'Semi-final',
+        self::STAGE_QUARTERFINAL => 'Quarter-final',
+        self::STAGE_8thFINAL => '1/8',
+        self::STAGE_16thFINAL => '1/16',
+        self::STAGE_32thFINAL => '1/32',
+        self::STAGE_64thFINAL => '1/64',
+    );
+
     public $availableForm = array(
         self::FORM_SINGLE => 'Single',
         self::FORM_DOUBLE => 'Double'

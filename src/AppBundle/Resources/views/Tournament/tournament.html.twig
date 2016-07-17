@@ -64,19 +64,17 @@
             {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
         </div>
 
-        {% for stage in stages %}
-            <div id="playoff-stage-{{ stage.id }}" class="row game-list playoff-game-list">
-                <h3>{{ availableStages[stage.id] }}</h3>
-                {% for game in playoffGames if game.stage == stage.id %}
-                    {% include 'AppBundle:Game:tournamentPlayoffItem.html.twig' with {'game' : game, 'stage' : stage.id} %}
-                {% endfor %}
-            </div>
-        {% endfor %}
-
-        {#<div id="playoff-stage-" class="row game-list main-game-list">#}
-            {#<h3>Group matches</h3>#}
-            {#{% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}#}
-        {#</div>#}
+        <div id="playoff">
+            {% include 'AppBundle:Tournament:playoff.html.twig' with {'availableStages' : availableStages, 'stages' : stages, 'playoffGames' : playoffGames} %}
+        </div>
+        {#{% for stage in stages %}#}
+            {#<div id="playoff-stage-{{ stage.id }}" class="row game-list playoff-game-list">#}
+                {#<h3>{{ availableStages[stage.id] }}</h3>#}
+                {#{% for game in playoffGames if game.stage == stage.id %}#}
+                    {#{% include 'AppBundle:Game:tournamentPlayoffItem.html.twig' with {'game' : game, 'stage' : stage.id} %}#}
+                {#{% endfor %}#}
+            {#</div>#}
+        {#{% endfor %}#}
     </div>
 {% endblock %}
 

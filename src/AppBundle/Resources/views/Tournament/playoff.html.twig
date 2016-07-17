@@ -1,0 +1,8 @@
+{% for stage in stages %}
+    <div id="playoff-stage-{{ stage.id }}" class="row game-list playoff-game-list">
+        <h3>{{ availableStages[stage.id] }}</h3>
+        {% for game in playoffGames if game.stage == stage.id %}
+            {% include 'AppBundle:Game:tournamentPlayoffItem.html.twig' with {'game' : game, 'stage' : stage.id} %}
+        {% endfor %}
+    </div>
+{% endfor %}

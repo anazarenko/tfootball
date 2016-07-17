@@ -80,8 +80,15 @@ var applyBtnInit = function() {
                 data: form.serialize(),
                 success: function (response) {
                     if (response.status == 1) {
-                        $('#tournament-stat-table').html(response.statistics);
-                        $('#tournament-game-list').html(response.games);
+                        if (response.statistics) {
+                            $('#tournament-stat-table').html(response.statistics);
+                        }
+                        if (response.games) {
+                            $('#tournament-game-list').html(response.games);
+                        }
+                        if (response.playoff) {
+                            $('#playoff').html(response.playoff);
+                        }
                         applyBtnInit();
                         editBtnInit();
                     }
