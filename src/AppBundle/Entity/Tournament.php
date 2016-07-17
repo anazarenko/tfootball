@@ -123,6 +123,18 @@ class Tournament
     private $games;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Team", inversedBy="wonTournaments")
+     * @ORM\JoinColumn(name="winner_id", referencedColumnName="id")
+     */
+    private $winner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team", inversedBy="lostTournaments")
+     * @ORM\JoinColumn(name="runner_up_id", referencedColumnName="id")
+     */
+    private $runnerUp;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\TournamentStatistics", mappedBy="tournament")
      */
     private $statistics;
@@ -500,5 +512,51 @@ class Tournament
     public function getCurrentStage()
     {
         return $this->currentStage;
+    }
+
+    /**
+     * Set winner
+     *
+     * @param \AppBundle\Entity\Team $winner
+     * @return Tournament
+     */
+    public function setWinner(\AppBundle\Entity\Team $winner = null)
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    /**
+     * Get winner
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * Set runnerUp
+     *
+     * @param \AppBundle\Entity\Team $runnerUp
+     * @return Tournament
+     */
+    public function setRunnerUp(\AppBundle\Entity\Team $runnerUp = null)
+    {
+        $this->runnerUp = $runnerUp;
+
+        return $this;
+    }
+
+    /**
+     * Get runnerUp
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getRunnerUp()
+    {
+        return $this->runnerUp;
     }
 }

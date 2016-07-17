@@ -308,6 +308,8 @@ class TournamentController extends Controller
             if ($isCompleteStage) {
                 $tournament = $game->getTournament();
                 if ($tournament->getCurrentStage() === Tournament::STAGE_FINAL) {
+                    $tournament->setWinner($game->getWinner());
+                    $tournament->setRunnerUp($game->getLoser());
                     $tournament->setCurrentStage(null);
                     $tournament->setStatus(Tournament::STATUS_FINISHED);
                 } else {

@@ -56,6 +56,16 @@ class Team
     private $lostGames;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="winner")
+     */
+    private $wonTournaments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="runnerUp")
+     */
+    private $lostTournaments;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -100,6 +110,8 @@ class Team
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->wonGames = new \Doctrine\Common\Collections\ArrayCollection();
         $this->lostGames = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->wonTournaments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lostTournaments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -357,5 +369,71 @@ class Team
     public function getTournaments()
     {
         return $this->tournaments;
+    }
+
+    /**
+     * Add wonTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $wonTournaments
+     * @return Team
+     */
+    public function addWonTournament(\AppBundle\Entity\Tournament $wonTournaments)
+    {
+        $this->wonTournaments[] = $wonTournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $wonTournaments
+     */
+    public function removeWonTournament(\AppBundle\Entity\Tournament $wonTournaments)
+    {
+        $this->wonTournaments->removeElement($wonTournaments);
+    }
+
+    /**
+     * Get wonTournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonTournaments()
+    {
+        return $this->wonTournaments;
+    }
+
+    /**
+     * Add lostTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $lostTournaments
+     * @return Team
+     */
+    public function addLostTournament(\AppBundle\Entity\Tournament $lostTournaments)
+    {
+        $this->lostTournaments[] = $lostTournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $lostTournaments
+     */
+    public function removeLostTournament(\AppBundle\Entity\Tournament $lostTournaments)
+    {
+        $this->lostTournaments->removeElement($lostTournaments);
+    }
+
+    /**
+     * Get lostTournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostTournaments()
+    {
+        return $this->lostTournaments;
     }
 }

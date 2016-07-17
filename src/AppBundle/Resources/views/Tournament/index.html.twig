@@ -18,11 +18,19 @@
                             <th>Id</th>
                             <th>Status</th>
                             <th>Format</th>
+                            <th>Winner</th>
+                            <th>Runner Up</th>
+                            <th>Date</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for tournament in tournaments %}
+                        {% if tournament.games | length %}
+                            {% set finalGame = tournament.games[0] %}
+                        {% else %}
+                            {% set finalGame = null %}
+                        {% endif %}
                         <tr>
                             <td>{{ tournament.id }}</td>
                             <td>
@@ -41,6 +49,17 @@
                                     <span>Double</span>
                                 {% endif %}
                             </td>
+                            <td>
+                                {% if tournament.winner is not null %}
+                                    <a href="{{ path('_profile_id', {'id' : tournament.winner.id}) }}">{{ tournament.winner.playerNames | join('/') }}</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if tournament.runnerUp is not null %}
+                                    <a href="{{ path('_profile_id', {'id' : tournament.runnerUp.id}) }}">{{ tournament.runnerUp.playerNames | join('/') }}</a>
+                                {% endif %}
+                            </td>
+                            <td>{{ tournament.updatedTimestamps | date('d-m-Y') }}</td>
                             <td><a href="{{ path('_tournaments_page', {'id' : tournament.id}) }}">View</a></td>
                         </tr>
                     {% endfor %}
