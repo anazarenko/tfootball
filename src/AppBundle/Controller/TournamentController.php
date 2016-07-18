@@ -274,9 +274,9 @@ class TournamentController extends Controller
                         } elseif ($stageGame->getSecondTeam() === $firstTeam && $stageGame->getFirstTeam() === $secondTeam) {
                             $firstTeamScore += $stageGame->getSecondScore();
                             $secondTeamScore += $stageGame->getFirstScore();
-                        } else {
-                            $isCompleteGame = false;
                         }
+                    }  else {
+                        $isCompleteGame = false;
                     }
                 }
             }
