@@ -24,7 +24,7 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round(1) }}%</td>
                 <td class="streak-container">
-                    {% for result in twig_team.getStreak(row['team'].id) %}
+                    {% for result in twig_statistic.streak(row['team']) %}
                         <span class="streak streak-{{ result }}"></span>
                     {% endfor %}
                 </td>
@@ -61,7 +61,7 @@
                 <td>{{ row['lost']|length }}</td>
                 <td>{{ row['wonPercent']|round(1) }}%</td>
                 <td class="streak-container">
-                    {% for result in twig_team.getStreak(row['team'].id) %}
+                    {% for result in twig_statistic.streak(row['team']) %}
                         <span class="streak streak-{{ result }}"></span>
                     {% endfor %}
                 </td>

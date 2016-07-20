@@ -229,6 +229,62 @@ body{
           position: absolute;
           right: 0;
         }
+        &.game-submit {
+          position: absolute;
+          left: 0;
+          height: 50px;
+          line-height: 32px;
+        }
+        &.game-edit {
+          position: absolute;
+          left: 0;
+          height: 50px;
+          line-height: 32px;
+        }
+        &.game-result {
+          position: absolute;
+          left: 0;
+          height: 50px;
+          line-height: 32px;
+          .result {
+            display: inline-block;
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            font-weight: bold;
+            color: #fff;
+            &-win {
+              background-color : #5cb85c;
+            }
+            &-lose {
+              background-color : #C82829;
+            }
+            &-draw {
+              background-color : #ccc;
+            }
+          }
+        }
+        &.tournament-game {
+          position: absolute;
+          left: 60px;
+          height: 50px;
+          width: 50px;
+          background: url("/web/bundles/app/images/championship-icon.png") no-repeat center;
+          background-size: contain;
+        }
+      }
+
+      .score-input {
+        display: none;
+      }
+
+      &.game-input-active {
+        .score-element {
+          display: none;
+        }
+        .score-input {
+          display: block;
+        }
       }
     }
 
@@ -579,4 +635,86 @@ div.pagination{
     width: 170px;
   }
 
+}
+
+#stats-page{
+
+  .top{
+    a{
+      float: right;
+    }
+  }
+
+  .create-tournament{
+    width: 700px;
+    margin: auto;
+
+    .errors{
+      color: red;
+    }
+
+    .participant-list{
+      margin: 10px 0;
+
+      .panel{
+        position: relative;
+        .remove-icon{
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          cursor: pointer;
+          z-index: 10;
+        }
+      }
+
+    }
+
+    .buttons{
+      .add-participant{
+        float: right;
+      }
+    }
+
+  }
+
+}
+
+.tournament-page{
+  .playoff-zone{
+    background-color: rgba(92, 184, 92, 0.2);
+  }
+
+  .game-score{
+    height: 50px;
+  }
+
+  .game-score-input{
+    height: 50px;
+    input{
+      width: 50px;
+      height: 50px;
+      text-align: center;
+    }
+  }
+}
+
+.tournament-sub-menu {
+  display: none;
+  .navbar-collapse {
+    padding: 0;
+  }
+  &.fixed {
+    display: block;
+    box-sizing: content-box;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    border-radius: 0;
+  }
+}
+
+.btn-start-playoff {
+  display: none;
 }

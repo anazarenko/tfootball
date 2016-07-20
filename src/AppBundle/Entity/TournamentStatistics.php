@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Statistics
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\StatisticsRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\TournamentStatisticsRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Statistics
+class TournamentStatistics
 {
-    const STREAK_COUNT = 5;
 
     const ACTION_REMOVE = 0;
     const ACTION_ADD = 1;
@@ -29,14 +28,10 @@ class Statistics
     private $id;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tournament", inversedBy="statistics")
+     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
      */
-    private $month;
-
-    /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
-     */
-    private $year;
+    private $tournament;
 
     /**
      * @ORM\ManyToOne(targetEntity="Team", inversedBy="statistics")
@@ -80,11 +75,18 @@ class Statistics
     private $wonPercentage = 0;
 
     /**
-     * @var array
+     * @var integer
      *
-     * @ORM\Column(type="simple_array", nullable=true)
+     * @ORM\Column(type="integer", options={"default" = 0})
      */
-    private $streak;
+    private $points = 0;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $position = 0;
 
     /**
      * @ORM\Column(type="datetime")
@@ -118,6 +120,7 @@ class Statistics
         $this->setGameCount($this->getWon() + $this->getDrawn() + $this->getLost());
         if ($this->getGameCount() > 0) {
             $this->setWonPercentage(round((($this->getWon() / $this->getGameCount()) * 100), 1));
+            $this->setPoints($this->getWon() * 3 + $this->getDrawn() * 1);
         }
     }
 
@@ -132,56 +135,50 @@ class Statistics
     }
 
     /**
-     * Set month
+     * Get modifiedAt
      *
-     * @param integer $month
-     * @return Statistics
+     * @return \DateTime 
      */
-    public function setMonth($month)
+    public function getModifiedAt()
     {
-        $this->month = $month;
-
-        return $this;
+        return $this->modifiedAt;
     }
 
-    /**
-     * Get month
-     *
-     * @return integer
-     */
-    public function getMonth()
+    public function addWon()
     {
-        return $this->month;
+        $this->setWon($this->getWon() + 1);
     }
 
-    /**
-     * Set year
-     *
-     * @param integer $year
-     * @return Statistics
-     */
-    public function setYear($year)
+    public function addDrawn()
     {
-        $this->year = $year;
-
-        return $this;
+        $this->setDrawn($this->getDrawn() + 1);
     }
 
-    /**
-     * Get year
-     *
-     * @return integer
-     */
-    public function getYear()
+    public function addLost()
     {
-        return $this->year;
+        $this->setLost($this->getLost() + 1);
+    }
+
+    public function removeWon()
+    {
+        $this->setWon($this->getWon() - 1);
+    }
+
+    public function removeDrawn()
+    {
+        $this->setDrawn($this->getDrawn() - 1);
+    }
+
+    public function removeLost()
+    {
+        $this->setLost($this->getLost() - 1);
     }
 
     /**
      * Set won
      *
      * @param integer $won
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setWon($won)
     {
@@ -204,7 +201,7 @@ class Statistics
      * Set drawn
      *
      * @param integer $drawn
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setDrawn($drawn)
     {
@@ -227,7 +224,7 @@ class Statistics
      * Set lost
      *
      * @param integer $lost
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setLost($lost)
     {
@@ -250,7 +247,7 @@ class Statistics
      * Set gameCount
      *
      * @param integer $gameCount
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setGameCount($gameCount)
     {
@@ -272,8 +269,8 @@ class Statistics
     /**
      * Set wonPercentage
      *
-     * @param integer $wonPercentage
-     * @return Statistics
+     * @param float $wonPercentage
+     * @return TournamentStatistics
      */
     public function setWonPercentage($wonPercentage)
     {
@@ -285,42 +282,18 @@ class Statistics
     /**
      * Get wonPercentage
      *
-     * @return integer 
+     * @return float 
      */
     public function getWonPercentage()
     {
         return $this->wonPercentage;
     }
 
-
-    /**
-     * Set streak
-     *
-     * @param array $streak
-     * @return Statistics
-     */
-    public function setStreak($streak)
-    {
-        $this->streak = $streak;
-
-        return $this;
-    }
-
-    /**
-     * Get streak
-     *
-     * @return array
-     */
-    public function getStreak()
-    {
-        return $this->streak;
-    }
-
     /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setCreatedAt($createdAt)
     {
@@ -343,7 +316,7 @@ class Statistics
      * Set modifiedAt
      *
      * @param \DateTime $modifiedAt
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setModifiedAt($modifiedAt)
     {
@@ -353,74 +326,33 @@ class Statistics
     }
 
     /**
-     * Get modifiedAt
+     * Set tournament
      *
-     * @return \DateTime 
+     * @param \AppBundle\Entity\Tournament $tournament
+     * @return TournamentStatistics
      */
-    public function getModifiedAt()
+    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
     {
-        return $this->modifiedAt;
+        $this->tournament = $tournament;
+
+        return $this;
     }
 
-    public function addWon()
+    /**
+     * Get tournament
+     *
+     * @return \AppBundle\Entity\Tournament 
+     */
+    public function getTournament()
     {
-        $this->setWon($this->getWon() + 1);
-
-        // Update streak
-        $streak = $this->getStreak() ?: array();
-        if (count($streak) === self::STREAK_COUNT) {
-            array_pop($streak);
-        }
-        array_unshift($streak, 'won');
-        $this->setStreak($streak);
-    }
-
-    public function addDrawn()
-    {
-        $this->setDrawn($this->getDrawn() + 1);
-
-        // Update streak
-        $streak = $this->getStreak() ?: array();
-        if (count($streak) === self::STREAK_COUNT) {
-            array_pop($streak);
-        }
-        array_unshift($streak, 'drawn');
-        $this->setStreak($streak);
-    }
-
-    public function addLost()
-    {
-        $this->setLost($this->getLost() + 1);
-
-        // Update streak
-        $streak = $this->getStreak() ?: array();
-        if (count($streak) === self::STREAK_COUNT) {
-            array_pop($streak);
-        }
-        array_unshift($streak, 'lost');
-        $this->setStreak($streak);
-    }
-
-    public function removeWon()
-    {
-        $this->setWon($this->getWon() - 1);
-    }
-
-    public function removeDrawn()
-    {
-        $this->setDrawn($this->getDrawn() - 1);
-    }
-
-    public function removeLost()
-    {
-        $this->setLost($this->getLost() - 1);
+        return $this->tournament;
     }
 
     /**
      * Set team
      *
      * @param \AppBundle\Entity\Team $team
-     * @return Statistics
+     * @return TournamentStatistics
      */
     public function setTeam(\AppBundle\Entity\Team $team = null)
     {
@@ -437,5 +369,51 @@ class Statistics
     public function getTeam()
     {
         return $this->team;
+    }
+
+    /**
+     * Set points
+     *
+     * @param integer $points
+     * @return TournamentStatistics
+     */
+    public function setPoints($points)
+    {
+        $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * Get points
+     *
+     * @return integer 
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     * @return TournamentStatistics
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer 
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

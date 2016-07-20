@@ -1,0 +1,90 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% stylesheets
+        'bundles/app/less/dragged-table.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block title %} - Tournament{% endblock %}
+
+{% block submenu %}
+    <nav class="navbar navbar-default tournament-sub-menu">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a class="submenu" href="#standing">Standing</a></li>
+                    <li><a class="submenu" href="#tournament-game-list">Group stage</a></li>
+                    {% for stage in stages %}
+                        <li><a class="submenu" href="#playoff-stage-{{ stage.id }}">{{ availableStages[stage.id] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div id="tournament" class="tournament-page">
+        <div class="top">
+            <h2>Tournament #{{ tournament.id }}</h2>
+        </div>
+
+        {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
+            <form method="POST" action="{{ path('_tournaments_playoff', {'id' : tournament.id}) }}">
+                <div class="btn btn-success btn-finish-group" style="margin: 5px 0 20px">Finish group stage</div>
+                <button type="submit" class="btn btn-primary btn-start-playoff" style="margin: 5px 0 20px">Start playoff</button>
+        {% endif %}
+                <table id="standing" class="table sortable-table table-bordered table-hover table-tournament {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}sorted_table{% endif %}" data-playoff="{{ tournament.playoffTeamCount }}">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Games</th>
+                        <th>Won</th>
+                        <th>Drawn</th>
+                        <th>Lost</th>
+                        <th>Points</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tournament-stat-table">
+                        {% include 'AppBundle:Tournament:tbody.html.twig' with {'statistics' : statistics} %}
+                    </tbody>
+                </table>
+        {% if tournament.status == constant('STATUS_GROUP_STAGE', tournament) and (is_granted('ROLE_ADMIN') or tournament.creator == app.user) %}
+            </form>
+        {% endif %}
+
+        <div id="tournament-game-list" class="row game-list main-game-list">
+            <h3>Group matches</h3>
+            {% include 'AppBundle:Game:tournamentItem.html.twig' with {'games' : games} %}
+        </div>
+
+        <div id="playoff">
+            {% include 'AppBundle:Tournament:playoff.html.twig' with {'availableStages' : availableStages, 'stages' : stages, 'playoffGames' : playoffGames} %}
+        </div>
+        {#{% for stage in stages %}#}
+            {#<div id="playoff-stage-{{ stage.id }}" class="row game-list playoff-game-list">#}
+                {#<h3>{{ availableStages[stage.id] }}</h3>#}
+                {#{% for game in playoffGames if game.stage == stage.id %}#}
+                    {#{% include 'AppBundle:Game:tournamentPlayoffItem.html.twig' with {'game' : game, 'stage' : stage.id} %}#}
+                {#{% endfor %}#}
+            {#</div>#}
+        {#{% endfor %}#}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% javascripts
+        'bundles/app/js/tournamentList.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

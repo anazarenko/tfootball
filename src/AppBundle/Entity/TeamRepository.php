@@ -20,6 +20,7 @@ class TeamRepository extends EntityRepository
      */
     public function findTeamByMembers($teamMembers) {
 
+        // Get player count in team
         $playerCount = count($teamMembers);
 
         $qb = $this->createQueryBuilder('t');
@@ -31,6 +32,7 @@ class TeamRepository extends EntityRepository
 
             $teamIDs = array();
 
+            // If user does not have any team, return null
             if (!$member->getTeams()->count()) {
                 return null;
             }

@@ -17,25 +17,46 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Game
 {
-
     const TYPE_FRIENDLY = 0;
     const TYPE_TOURNAMENT = 1;
 
     const STATUS_NEW = 0;
     const STATUS_CONFIRMED = 1;
     const STATUS_REJECTED = 2;
+    const STATUS_TOURNAMENT_WAITING = 3;
 
-    const FORM_SINGLE = 0;
-    const FORM_DOUBLE = 1;
+    const FORM_SINGLE = 1;
+    const FORM_DOUBLE = 2;
 
     const RESULT_FIRST_WINNER = 1;
     const RESULT_SECOND_WINNER = 2;
     const RESULT_DRAW = 0;
 
+    const STAGE_GROUP = 0;
+    const STAGE_FINAL = 1;
+    const STAGE_SEMIFINAL = 2;
+    const STAGE_QUARTERFINAL = 4;
+    const STAGE_8thFINAL = 8;
+    const STAGE_16thFINAL = 16;
+    const STAGE_32thFINAL = 32;
+    const STAGE_64thFINAL = 64;
+
     public $availableStatus = array(
         self::STATUS_NEW => 'New',
         self::STATUS_CONFIRMED => 'Confirmed',
-        self::STATUS_REJECTED => 'Rejected'
+        self::STATUS_REJECTED => 'Rejected',
+        self::STATUS_TOURNAMENT_WAITING => 'Tournament waiting'
+    );
+
+    public static $availableStages = array(
+        self::STAGE_GROUP => 'Group',
+        self::STAGE_FINAL => 'Final',
+        self::STAGE_SEMIFINAL => 'Semi-final',
+        self::STAGE_QUARTERFINAL => 'Quarter-final',
+        self::STAGE_8thFINAL => '1/8',
+        self::STAGE_16thFINAL => '1/16',
+        self::STAGE_32thFINAL => '1/32',
+        self::STAGE_64thFINAL => '1/64',
     );
 
     public $availableForm = array(
@@ -65,12 +86,28 @@ class Game
     /**
      * @ORM\Column(type="smallint")
      */
-    private $form = 0;
+    private $form = 1;
 
     /**
      * @ORM\Column(type="smallint")
      */
     private $type = 0;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $stage;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $stageGameNumber;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tournament", inversedBy="games")
+     * @ORM\JoinColumn(name="tournament", referencedColumnName="id")
+     */
+    private $tournament;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team")
@@ -107,6 +144,18 @@ class Game
      * @ORM\Column(type="integer", nullable=true)
      */
     private $difference;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team", inversedBy="wonGames")
+     * @ORM\JoinColumn(name="winner", referencedColumnName="id")
+     */
+    private $winner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team", inversedBy="lostGames")
+     * @ORM\JoinColumn(name="loser", referencedColumnName="id")
+     */
+    private $loser;
 
     /**
      * @ORM\Column(type="datetime")
@@ -241,6 +290,29 @@ class Game
     }
 
     /**
+     * Set stage
+     *
+     * @param integer $stage
+     * @return Game
+     */
+    public function setStage($stage)
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    /**
+     * Get stage
+     *
+     * @return integer 
+     */
+    public function getStage()
+    {
+        return $this->stage;
+    }
+
+    /**
      * Set result
      *
      * @param integer $result
@@ -307,6 +379,29 @@ class Game
     public function getSecondScore()
     {
         return $this->secondScore;
+    }
+
+    /**
+     * Set difference
+     *
+     * @param integer $difference
+     * @return Game
+     */
+    public function setDifference($difference)
+    {
+        $this->difference = $difference;
+
+        return $this;
+    }
+
+    /**
+     * Get difference
+     *
+     * @return integer 
+     */
+    public function getDifference()
+    {
+        return $this->difference;
     }
 
     /**
@@ -379,6 +474,29 @@ class Game
     }
 
     /**
+     * Set tournament
+     *
+     * @param \AppBundle\Entity\Tournament $tournament
+     * @return Game
+     */
+    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
+    {
+        $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * Get tournament
+     *
+     * @return \AppBundle\Entity\Tournament 
+     */
+    public function getTournament()
+    {
+        return $this->tournament;
+    }
+
+    /**
      * Set firstTeam
      *
      * @param \AppBundle\Entity\Team $firstTeam
@@ -422,6 +540,52 @@ class Game
     public function getSecondTeam()
     {
         return $this->secondTeam;
+    }
+
+    /**
+     * Set winner
+     *
+     * @param \AppBundle\Entity\Team $winner
+     * @return Game
+     */
+    public function setWinner(\AppBundle\Entity\Team $winner = null)
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    /**
+     * Get winner
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    /**
+     * Set loser
+     *
+     * @param \AppBundle\Entity\Team $loser
+     * @return Game
+     */
+    public function setLoser(\AppBundle\Entity\Team $loser = null)
+    {
+        $this->loser = $loser;
+
+        return $this;
+    }
+
+    /**
+     * Get loser
+     *
+     * @return \AppBundle\Entity\Team 
+     */
+    public function getLoser()
+    {
+        return $this->loser;
     }
 
     /**
@@ -514,25 +678,25 @@ class Game
     }
 
     /**
-     * Set difference
+     * Set stageGameNumber
      *
-     * @param integer $difference
+     * @param integer $stageGameNumber
      * @return Game
      */
-    public function setDifference($difference)
+    public function setStageGameNumber($stageGameNumber)
     {
-        $this->difference = $difference;
+        $this->stageGameNumber = $stageGameNumber;
 
         return $this;
     }
 
     /**
-     * Get difference
+     * Get stageGameNumber
      *
      * @return integer 
      */
-    public function getDifference()
+    public function getStageGameNumber()
     {
-        return $this->difference;
+        return $this->stageGameNumber;
     }
 }

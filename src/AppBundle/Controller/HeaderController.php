@@ -69,6 +69,9 @@ class HeaderController extends Controller
         // Get game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
+        // Get User repository
+        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
+
         $filterFirstTeam = $request->request->get('firstTeam') ? $request->request->get('firstTeam') : null;
         $filterSecondTeam = $request->request->get('secondTeam') ? $request->request->get('secondTeam') : null;
 
@@ -115,24 +118,7 @@ class HeaderController extends Controller
         // Get array of sorting matches for team
         $teamStats = $this->get('app.game_service')->parseGamesByPlayers($gamesStatsQuery->getResult());
 
-        // Get User repository
-        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
-
-        $statQB = $statRepository->createQueryBuilder('stat');
-        $statistics = $statQB
-            ->select(array('stat', 'team'))
-            ->join('stat.team', 'team')
-            ->where(
-                $statQB->expr()->orX(
-                    $statQB->expr()->eq('stat.team', $firstTeam->getId()),
-                    $statQB->expr()->eq('stat.team', $secondTeam->getId())
-                )
-            )
-            ->andWhere('stat.month = 0')
-            ->andWhere('stat.year = 0')
-            ->orderBy('stat.wonPercentage', 'DESC')
-            ->getQuery()
-            ->getArrayResult();
+        $statistics = $statRepository->getStatH2H($firstTeam, $secondTeam)->getArrayResult();
 
         if (!count($teamStats)) {
             if ($request->isXmlHttpRequest()) {
@@ -170,7 +156,6 @@ class HeaderController extends Controller
                     'firstTeamStats' => $firstTeamStats,
                     'secondTeamStats' => $secondTeamStats,
                     'statistics' => $statistics,
-//                    'games' => $this->renderView('AppBundle:Game:item.html.twig', array('games' => $games))
                     'games' => $games
                 )
             );

@@ -40,6 +40,9 @@ class HeadToHeadController extends Controller
         // Get game repository
         $gameRepository = $games = $this->getDoctrine()->getRepository('AppBundle:Game');
 
+        // Get User repository
+        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
+
         // Get page for pagination
         $page = (!empty($request->request->getInt('page'))) ? $request->request->getInt('page') : 1;
 
@@ -151,24 +154,7 @@ class HeadToHeadController extends Controller
             );
         }
 
-        // Get User repository
-        $statRepository = $this->getDoctrine()->getRepository('AppBundle:Statistics');
-
-        $statQB = $statRepository->createQueryBuilder('stat');
-        $statistics = $statQB
-            ->select(array('stat', 'team'))
-            ->join('stat.team', 'team')
-            ->where(
-                $statQB->expr()->orX(
-                    $statQB->expr()->eq('stat.team', $firstTeam->getId()),
-                    $statQB->expr()->eq('stat.team', $secondTeam->getId())
-                )
-            )
-            ->andWhere('stat.month = 0')
-            ->andWhere('stat.year = 0')
-            ->orderBy('stat.wonPercentage', 'DESC')
-            ->getQuery()
-            ->getArrayResult();
+        $statistics = $statRepository->getStatH2H($firstTeam, $secondTeam)->getArrayResult();
 
         $firstTeamStats = $teamStats[$firstTeam->getId()];
         $secondTeamStats = $teamStats[$secondTeam->getId()];

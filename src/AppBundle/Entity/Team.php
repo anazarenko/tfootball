@@ -46,6 +46,26 @@ class Team
     private $statistics;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="winner")
+     */
+    private $wonGames;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Game", mappedBy="loser")
+     */
+    private $lostGames;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="winner")
+     */
+    private $wonTournaments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="runnerUp")
+     */
+    private $lostTournaments;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -54,6 +74,11 @@ class Team
      * @ORM\Column(type="datetime")
      */
     private $modifiedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tournament", mappedBy="teams", cascade={"persist"})
+     */
+    private $tournaments;
 
     /**
      * @ORM\PrePersist
@@ -67,7 +92,6 @@ class Team
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
-
 
     /**
      * Get id
@@ -84,6 +108,10 @@ class Team
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->wonGames = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lostGames = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->wonTournaments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lostTournaments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -110,36 +138,26 @@ class Team
     }
 
     /**
-     * Add users
+     * Set playerNames
      *
-     * @param \AppBundle\Entity\User $users
+     * @param array $playerNames
      * @return Team
      */
-    public function addUser(\AppBundle\Entity\User $users)
+    public function setPlayerNames($playerNames)
     {
-        $this->users[] = $users;
+        $this->playerNames = $playerNames;
 
         return $this;
     }
 
     /**
-     * Remove users
+     * Get playerNames
      *
-     * @param \AppBundle\Entity\User $users
+     * @return array 
      */
-    public function removeUser(\AppBundle\Entity\User $users)
+    public function getPlayerNames()
     {
-        $this->users->removeElement($users);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUsers()
-    {
-        return $this->users;
+        return $this->playerNames;
     }
 
     /**
@@ -189,26 +207,36 @@ class Team
     }
 
     /**
-     * Set playerNames
+     * Add users
      *
-     * @param array $playerNames
+     * @param \AppBundle\Entity\User $users
      * @return Team
      */
-    public function setPlayerNames($playerNames)
+    public function addUser(\AppBundle\Entity\User $users)
     {
-        $this->playerNames = $playerNames;
+        $this->users[] = $users;
 
         return $this;
     }
 
     /**
-     * Get playerNames
+     * Remove users
      *
-     * @return array 
+     * @param \AppBundle\Entity\User $users
      */
-    public function getPlayerNames()
+    public function removeUser(\AppBundle\Entity\User $users)
     {
-        return $this->playerNames;
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 
     /**
@@ -242,5 +270,170 @@ class Team
     public function getStatistics()
     {
         return $this->statistics;
+    }
+
+    /**
+     * Add wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     * @return Team
+     */
+    public function addWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames[] = $wonGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonGames
+     *
+     * @param \AppBundle\Entity\Game $wonGames
+     */
+    public function removeWonGame(\AppBundle\Entity\Game $wonGames)
+    {
+        $this->wonGames->removeElement($wonGames);
+    }
+
+    /**
+     * Get wonGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonGames()
+    {
+        return $this->wonGames;
+    }
+
+    /**
+     * Add lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     * @return Team
+     */
+    public function addLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames[] = $lostGames;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostGames
+     *
+     * @param \AppBundle\Entity\Game $lostGames
+     */
+    public function removeLostGame(\AppBundle\Entity\Game $lostGames)
+    {
+        $this->lostGames->removeElement($lostGames);
+    }
+
+    /**
+     * Get lostGames
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostGames()
+    {
+        return $this->lostGames;
+    }
+
+    /**
+     * Add tournaments
+     *
+     * @param \AppBundle\Entity\Tournament $tournaments
+     * @return Team
+     */
+    public function addTournament(\AppBundle\Entity\Tournament $tournaments)
+    {
+        $this->tournaments[] = $tournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove tournaments
+     *
+     * @param \AppBundle\Entity\Tournament $tournaments
+     */
+    public function removeTournament(\AppBundle\Entity\Tournament $tournaments)
+    {
+        $this->tournaments->removeElement($tournaments);
+    }
+
+    /**
+     * Get tournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTournaments()
+    {
+        return $this->tournaments;
+    }
+
+    /**
+     * Add wonTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $wonTournaments
+     * @return Team
+     */
+    public function addWonTournament(\AppBundle\Entity\Tournament $wonTournaments)
+    {
+        $this->wonTournaments[] = $wonTournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove wonTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $wonTournaments
+     */
+    public function removeWonTournament(\AppBundle\Entity\Tournament $wonTournaments)
+    {
+        $this->wonTournaments->removeElement($wonTournaments);
+    }
+
+    /**
+     * Get wonTournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWonTournaments()
+    {
+        return $this->wonTournaments;
+    }
+
+    /**
+     * Add lostTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $lostTournaments
+     * @return Team
+     */
+    public function addLostTournament(\AppBundle\Entity\Tournament $lostTournaments)
+    {
+        $this->lostTournaments[] = $lostTournaments;
+
+        return $this;
+    }
+
+    /**
+     * Remove lostTournaments
+     *
+     * @param \AppBundle\Entity\Tournament $lostTournaments
+     */
+    public function removeLostTournament(\AppBundle\Entity\Tournament $lostTournaments)
+    {
+        $this->lostTournaments->removeElement($lostTournaments);
+    }
+
+    /**
+     * Get lostTournaments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLostTournaments()
+    {
+        return $this->lostTournaments;
     }
 }
