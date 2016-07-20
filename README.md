@@ -12,6 +12,10 @@ v.1.0.1
 
  - Fixed dashboard dropdown with confrim`s statuses
 
+v.1.1
+
+ - Tournament creation
+
 ### Todo List
 
 - Remote api
